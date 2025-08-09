@@ -1,9 +1,9 @@
-﻿#include <iostream>
+﻿#include "NoctalEngine.h"
 
 using namespace std;
 
 int main()
 {
-	cout << "Hello Sandbox." << endl;
+	NoctalEngine::Print();
 	return 0;
 }

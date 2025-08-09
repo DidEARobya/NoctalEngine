@@ -15,4 +15,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${outputdir}/${PROJEC
 set(CMAKE_OBJECT_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/int/${outputdir}/${PROJECT_NAME})
 
 target_link_libraries(Sandbox PUBLIC NoctalEngine)
+include_directories("${CMAKE_SOURCE_DIR}/NoctalEngine")
+
 # TODO: Add tests and install targets if needed.

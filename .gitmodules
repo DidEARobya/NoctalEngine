@@ -1,0 +1,3 @@
+[submodule "NoctalEngine/vendor/spdlog"]
+	path = NoctalEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git

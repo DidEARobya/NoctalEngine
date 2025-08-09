@@ -20,4 +20,8 @@ add_custom_command(TARGET NoctalEngine POST_BUILD
         ${PROJECT_BINARY_DIR}/Sandbox
 )
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/spdlog)
+target_link_libraries(NoctalEngine PUBLIC spdlog::spdlog)
+target_include_directories(NoctalEngine PUBLIC ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/)
+
 # TODO: Add tests and install targets if needed.
