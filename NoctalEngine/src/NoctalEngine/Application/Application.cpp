@@ -6,6 +6,7 @@
 #include "NoctalEngine/Events/WindowEvents.h"
 #include "NoctalEngine/Rendering/Renderer.h"
 #include "NoctalEngine/Input/InputManager.h"
+#include "NoctalEngine/Input/Layer.h"
 #include <conio.h>
 
 namespace NoctalEngine
@@ -29,6 +30,11 @@ namespace NoctalEngine
 	{
 		while (m_AppRunning)
 		{
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnUpdate();
+			}
+
 			m_Window->OnUpdate();
 
 			Renderer::Instance().BeginRender();
@@ -38,6 +44,17 @@ namespace NoctalEngine
 			//OnUpdateEvent event;
 			//OnEvent(event);
 		}
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		m_LayerStack.PushOverlay(layer);
 	}
 
 	bool Application::CloseApplication(const WindowClosedEvent& closeEvent)
@@ -50,6 +67,16 @@ namespace NoctalEngine
 	{
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowClosedEvent>(NOCTAL_BIND_EVENT_FN(CloseApplication));
+
+		for (auto iterator = m_LayerStack.end(); iterator != m_LayerStack.begin();)
+		{
+			(*--iterator)->OnEvent(event);
+
+			if (event.IsHandled() == true)
+			{
+				break;
+			}
+		}
 
 		NE_ENGINE_TRACE("Event");
 		InputManager::OnEvent(event);
