@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_library (NoctalEngine SHARED "NoctalEngine.cpp" "NoctalEngine.h")
+add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET NoctalEngine PROPERTY CXX_STANDARD 20)
@@ -20,8 +20,17 @@ add_custom_command(TARGET NoctalEngine POST_BUILD
         ${PROJECT_BINARY_DIR}/Sandbox
 )
 
+target_precompile_headers(NoctalEngine PUBLIC "src/nepch.h")
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/spdlog)
 target_link_libraries(NoctalEngine PUBLIC spdlog::spdlog)
-target_include_directories(NoctalEngine PUBLIC ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/SDL3)
+target_link_libraries(NoctalEngine PUBLIC SDL3::SDL3)
+
+target_include_directories(NoctalEngine PUBLIC 
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/
+)
 
 # TODO: Add tests and install targets if needed.
