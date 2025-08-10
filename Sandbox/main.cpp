@@ -1,7 +1,19 @@
-﻿#include "NoctalEngine.h"
+﻿#include <NoctalEngine.h>
 
-int main()
+class Sandbox : public NoctalEngine::Application
 {
-	NoctalEngine::Print();
-	return 0;
+public:
+	Sandbox()
+	{
+
+	}
+	~Sandbox()
+	{
+
+	}
+};
+
+NoctalEngine::Application* NoctalEngine::CreateApplication()
+{
+	return new Sandbox();
 }

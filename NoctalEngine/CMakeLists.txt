@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp")
+add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp" "src/NoctalEngine/Logging/Logger.h" "src/NoctalEngine/Logging/Logger.cpp" "src/NoctalEngine/Core.h" "src/NoctalEngine/EntryPoint.h" "src/NoctalEngine/Application/Application.h" "src/NoctalEngine/Application/Application.cpp" "src/NoctalEngine/Window/Window.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.cpp" "src/NoctalEngine/Events/Event.h" "src/NoctalEngine/Events/KeyboardEvents.h" "src/NoctalEngine/Events/MouseEvents.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET NoctalEngine PROPERTY CXX_STANDARD 20)
@@ -33,4 +33,5 @@ target_include_directories(NoctalEngine PUBLIC
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/
 )
 
+target_compile_definitions(NoctalEngine PUBLIC NE_PLATFORM_WINDOWS NE_BUILD_DLL)
 # TODO: Add tests and install targets if needed.
