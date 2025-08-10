@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "SDL/SDLRenderer.h"
+#include "OpenGL/OpenGLRenderer.h"
 
 namespace NoctalEngine
 {
@@ -9,7 +10,7 @@ namespace NoctalEngine
 	{
 		if (m_Instance->m_WrappedRenderer == nullptr)
 		{
-			m_Instance->m_WrappedRenderer = std::make_unique<SDLRenderer>();
+			m_Instance->m_WrappedRenderer = std::make_unique<OpenGLRenderer>();
 		}
 
 		NE_ENGINE_ASSERT(m_Instance->m_WrappedRenderer, "Renderer failed to create WrappedRenderer (Renderer)");

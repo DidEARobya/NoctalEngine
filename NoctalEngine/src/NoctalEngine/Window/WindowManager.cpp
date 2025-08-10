@@ -1,5 +1,6 @@
 #include "nepch.h"
 #include "WindowManager.h"
+#include "GLAD/include/glad/glad.h"
 #include <SDL3/SDL.h>
 
 namespace NoctalEngine

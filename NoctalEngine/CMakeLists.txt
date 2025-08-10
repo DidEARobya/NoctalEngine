@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp" "src/NoctalEngine/Logging/Logger.h" "src/NoctalEngine/Logging/Logger.cpp" "src/NoctalEngine/Core.h" "src/NoctalEngine/EntryPoint.h" "src/NoctalEngine/Application/Application.h" "src/NoctalEngine/Application/Application.cpp" "src/NoctalEngine/Window/Window.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.cpp" "src/NoctalEngine/Events/Event.h" "src/NoctalEngine/Events/KeyboardEvents.h" "src/NoctalEngine/Events/MouseEvents.h" "src/NoctalEngine/Rendering/Renderer.h" "src/NoctalEngine/Rendering/SDL/SDLRenderer.h" "src/NoctalEngine/Rendering/SDL/SDLRenderer.cpp" "src/NoctalEngine/Rendering/WrappedRenderer.h" "src/NoctalEngine/Rendering/Renderer.cpp" "src/NoctalEngine/Window/WindowManager.h" "src/NoctalEngine/Window/WindowManager.cpp" "src/NoctalEngine/Input/InputManager.h" "src/NoctalEngine/Input/InputManager.cpp" "src/NoctalEngine/Input/Layer.h" "src/NoctalEngine/Input/Layer.cpp" "src/NoctalEngine/Input/LayerStack.h" "src/NoctalEngine/Input/LayerStack.cpp")
+add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp" "src/NoctalEngine/Logging/Logger.h" "src/NoctalEngine/Logging/Logger.cpp" "src/NoctalEngine/Core.h" "src/NoctalEngine/EntryPoint.h" "src/NoctalEngine/Application/Application.h" "src/NoctalEngine/Application/Application.cpp" "src/NoctalEngine/Window/Window.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.cpp" "src/NoctalEngine/Events/Event.h" "src/NoctalEngine/Events/KeyboardEvents.h" "src/NoctalEngine/Events/MouseEvents.h" "src/NoctalEngine/Rendering/Renderer.h" "src/NoctalEngine/Rendering/SDL/SDLRenderer.h" "src/NoctalEngine/Rendering/SDL/SDLRenderer.cpp" "src/NoctalEngine/Rendering/WrappedRenderer.h" "src/NoctalEngine/Rendering/Renderer.cpp" "src/NoctalEngine/Window/WindowManager.h" "src/NoctalEngine/Window/WindowManager.cpp" "src/NoctalEngine/Input/InputManager.h" "src/NoctalEngine/Input/InputManager.cpp" "src/NoctalEngine/Input/Layer.h" "src/NoctalEngine/Input/Layer.cpp" "src/NoctalEngine/Input/LayerStack.h" "src/NoctalEngine/Input/LayerStack.cpp" "src/NoctalEngine/Rendering/OpenGL/OpenGLRenderer.h" "src/NoctalEngine/Rendering/OpenGL/OpenGLRenderer.cpp")
 set_property(TARGET NoctalEngine PROPERTY
   MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
@@ -22,6 +22,8 @@ add_custom_command(TARGET NoctalEngine POST_BUILD
         ${PROJECT_BINARY_DIR}/Sandbox
 )
 
+find_package(OpenGL REQUIRED)
+
 target_precompile_headers(NoctalEngine PUBLIC "src/nepch.h")
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/spdlog)
@@ -30,9 +32,14 @@ target_link_libraries(NoctalEngine PUBLIC spdlog::spdlog)
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/SDL3)
 target_link_libraries(NoctalEngine PUBLIC SDL3::SDL3)
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD)
+target_link_libraries(NoctalEngine PUBLIC GLAD OpenGL::GL)
+
 target_include_directories(NoctalEngine PUBLIC 
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD/include
+
 )
 
 target_compile_definitions(NoctalEngine PUBLIC NE_PLATFORM_WINDOWS NE_BUILD_DLL)
