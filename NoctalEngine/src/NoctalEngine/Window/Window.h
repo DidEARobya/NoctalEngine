@@ -19,8 +19,6 @@ namespace NoctalEngine
 	class NOCTAL_ENGINE_API Window
 	{
 	public:
-		using EventCallbackFn = std::function<void(Event&)>;
-		
 		virtual ~Window() {};
 
 		virtual void OnUpdate() = 0;
@@ -28,12 +26,24 @@ namespace NoctalEngine
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetVSync(bool enable) = 0;
 		virtual bool IsVSync() const = 0;
 
+		virtual void SetEventCallback(const std::function<void(Event&)> callback) = 0;
+
 		virtual SDL_Window* GetSDLWindow() const = 0;
 		static Window* Create(const WindowProperties& props = WindowProperties());
+
+	public:
+		struct WindowData
+		{
+			std::string Title;
+			unsigned int Width;
+			unsigned int Height;
+			std::function<void(Event&)> eventCallback;
+		};
+
+		WindowData WindowData;
 
 	protected:
 		SDL_Window* m_Window;

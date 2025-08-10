@@ -1,5 +1,6 @@
 #include "nepch.h"
 #include "WindowsWindow.h"
+#include "NoctalEngine/Input/InputManager.h"
 #include <SDL3/SDL.h>
 
 namespace NoctalEngine
@@ -23,6 +24,7 @@ namespace NoctalEngine
 
 	void WindowsWindow::OnUpdate()
 	{
+		InputManager::Update(this);
 		SDL_GL_SwapWindow(m_Window);
 	}
 
@@ -38,18 +40,11 @@ namespace NoctalEngine
 
 	void WindowsWindow::Init(const WindowProperties& properties)
 	{
-		m_WindowData.Title = properties.Title;
-		m_WindowData.Width = properties.Width;
-		m_WindowData.Height = properties.Height;
+		WindowData.Title = properties.Title;
+		WindowData.Width = properties.Width;
+		WindowData.Height = properties.Height;
 
-		NE_ENGINE_INFO("Creating Window {0} ({1}, {2})", properties.Title, properties.Width, properties.Height);
-
-		if (s_IsSDLInitialised == false)
-		{
-			bool sdlSuccess = SDL_Init(SDL_INIT_VIDEO);
-			s_IsSDLInitialised = sdlSuccess;
-		}
-
+		NE_ENGINE_INFO("Creating Window {0} ({1}, {2}) (WindowsWindow)", properties.Title, properties.Width, properties.Height);
 		m_Window = SDL_CreateWindow(properties.Title.c_str(), properties.Width, properties.Height, 0);
 	}
 

@@ -16,7 +16,7 @@ namespace NoctalEngine
 		void OnEvent(Event& event);
 
 	private:
-		std::unique_ptr<Window> m_Window;
+		Window* m_Window = nullptr;
 		bool m_AppRunning = true;
 	};
 

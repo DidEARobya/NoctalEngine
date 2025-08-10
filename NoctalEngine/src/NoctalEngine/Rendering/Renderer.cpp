@@ -1,37 +1,73 @@
 #include "Renderer.h"
-#include "WrappedRenderer.h"
+#include "SDL/SDLRenderer.h"
 
 namespace NoctalEngine
 {
-	std::unique_ptr<Renderer> Renderer::m_Instance;
+	std::unique_ptr<Renderer> Renderer::m_Instance = std::make_unique<Renderer>();
 
 	void Renderer::Init(const Window* windowRef)
 	{
-		WrappedRenderer::Instance().Init(windowRef);
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			m_Instance->m_WrappedRenderer = std::make_unique<SDLRenderer>();
+		}
+
+		NE_ENGINE_ASSERT(m_Instance->m_WrappedRenderer, "Renderer failed to create WrappedRenderer (Renderer)");
+		m_Instance->m_WrappedRenderer->Init(windowRef);
 	}
 
 	void Renderer::Destroy()
 	{
-		WrappedRenderer::Instance().Destroy();
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			return;
+		}
+
+		m_Instance->m_WrappedRenderer->Destroy();
 	}
 
 	void Renderer::BeginRender()
 	{
-		WrappedRenderer::Instance().BeginRender();
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			return;
+		}
+
+		m_Instance->m_WrappedRenderer->BeginRender();
 	}
 
 	void Renderer::Render()
 	{
-		WrappedRenderer::Instance().Render();
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			return;
+		}
+
+		m_Instance->m_WrappedRenderer->Render();
 	}
 
 	void Renderer::EndRender()
 	{
-		WrappedRenderer::Instance().EndRender();
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			return;
+		}
+
+		m_Instance->m_WrappedRenderer->EndRender();
 	}
 
 	void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
 	{
-		WrappedRenderer::Instance().OnWindowResize(width, height);
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			return;
+		}
+
+		m_Instance->m_WrappedRenderer->OnWindowResize(width, height);
 	}
 }

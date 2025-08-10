@@ -4,11 +4,11 @@
 
 struct SDL_Renderer;
 
-class SDLRenderer : public WrappedRenderer
+class NOCTAL_ENGINE_API SDLRenderer : public WrappedRenderer
 {
 public:
     SDLRenderer() = default;
-    ~SDLRenderer() override;
+    ~SDLRenderer() = default;
 
     virtual void Init(const NoctalEngine::Window* windowRef) override;
     virtual void Destroy() override;
@@ -18,10 +18,6 @@ public:
     virtual void EndRender() override;
 
     virtual void OnWindowResize(const uint32_t width, const uint32_t height) override;
-protected:
-    static std::unique_ptr<Renderer> m_Instance;
-    const NoctalEngine::Window* m_WindowRef;
-
 private:
     SDL_Renderer* m_SDLRenderer = nullptr;
 };

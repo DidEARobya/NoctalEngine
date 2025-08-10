@@ -5,7 +5,7 @@ struct SDL_Window;
 namespace NoctalEngine
 {
 
-	class WindowsWindow : public Window
+	class NOCTAL_ENGINE_API WindowsWindow : public Window
 	{
 	public:
 		WindowsWindow(const WindowProperties& properties);
@@ -13,10 +13,11 @@ namespace NoctalEngine
 
 		void OnUpdate() override;
 
-		inline unsigned int GetWidth() const override { return m_WindowData.Width; }
-		inline unsigned int GetHeight() const override { return m_WindowData.Height; }
+		inline unsigned int GetWidth() const override { return WindowData.Width; }
+		inline unsigned int GetHeight() const override { return WindowData.Height; }
 
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_WindowData.EventCallback = callback; }
+		virtual void SetEventCallback(const std::function<void(Event&)> callback) { WindowData.eventCallback = callback; };
+
 		void SetVSync(bool enabled);
 		bool IsVSync() const;
 
@@ -24,16 +25,5 @@ namespace NoctalEngine
 	private:
 		virtual void Init(const WindowProperties& properties);
 		virtual void Shutdown();
-
-	private:
-		struct WindowData
-		{
-			std::string Title;
-			unsigned int Width;
-			unsigned int Height;
-			EventCallbackFn EventCallback;
-		};
-
-		WindowData m_WindowData;
 	};
 }
