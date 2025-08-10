@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Events/Event.h"
+#include "NoctalEngine/Rendering/Renderer.h"
 
 namespace NoctalEngine
 {
@@ -11,6 +12,8 @@ namespace NoctalEngine
 	{
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT(OnEvent));
+
+		Renderer::Instance().Init(m_Window.get());
 	}
 
 	Application::~Application()
@@ -22,10 +25,14 @@ namespace NoctalEngine
 		while (m_AppRunning)
 		{
 			m_Window->OnUpdate();
+
+			Renderer::Instance().BeginRender();
+			Renderer::Instance().Render();
+			Renderer::Instance().EndRender();
 		}
 	}
 
-	void OnEvent(Event& event)
+	void Application::OnEvent(Event& event)
 	{
 		NE_ENGINE_INFO("Event");
 	}

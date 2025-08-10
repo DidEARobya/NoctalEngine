@@ -1,6 +1,5 @@
 #pragma once
 #include "NoctalEngine/Window/Window.h"
-
 struct SDL_Window;
 
 namespace NoctalEngine
@@ -21,13 +20,12 @@ namespace NoctalEngine
 		void SetVSync(bool enabled);
 		bool IsVSync() const;
 
+		SDL_Window* GetSDLWindow() const override { return m_Window; };
 	private:
 		virtual void Init(const WindowProperties& properties);
 		virtual void Shutdown();
 
 	private:
-		SDL_Window* m_Window = nullptr;
-
 		struct WindowData
 		{
 			std::string Title;

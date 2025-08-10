@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp" "src/NoctalEngine/Logging/Logger.h" "src/NoctalEngine/Logging/Logger.cpp" "src/NoctalEngine/Core.h" "src/NoctalEngine/EntryPoint.h" "src/NoctalEngine/Application/Application.h" "src/NoctalEngine/Application/Application.cpp" "src/NoctalEngine/Window/Window.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.cpp" "src/NoctalEngine/Events/Event.h" "src/NoctalEngine/Events/KeyboardEvents.h" "src/NoctalEngine/Events/MouseEvents.h")
+add_library (NoctalEngine SHARED "src/NoctalEngine.cpp" "src/NoctalEngine.h" "src/nepch.h" "src/nepch.cpp" "src/NoctalEngine/Logging/Logger.h" "src/NoctalEngine/Logging/Logger.cpp" "src/NoctalEngine/Core.h" "src/NoctalEngine/EntryPoint.h" "src/NoctalEngine/Application/Application.h" "src/NoctalEngine/Application/Application.cpp" "src/NoctalEngine/Window/Window.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.h" "src/NoctalEngine/Platform/Windows/WindowsWindow.cpp" "src/NoctalEngine/Events/Event.h" "src/NoctalEngine/Events/KeyboardEvents.h" "src/NoctalEngine/Events/MouseEvents.h" "src/NoctalEngine/Rendering/Renderer.h" "src/NoctalEngine/Rendering/SDL/SDLRenderer.h" "src/NoctalEngine/Rendering/SDL/SDLRenderer.cpp" "src/NoctalEngine/Rendering/WrappedRenderer.h" "src/NoctalEngine/Rendering/Renderer.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET NoctalEngine PROPERTY CXX_STANDARD 20)

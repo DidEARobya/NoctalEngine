@@ -1,6 +1,8 @@
 #pragma once
 #include "NoctalEngine/Core.h"
 
+struct SDL_Window;
+
 namespace NoctalEngine
 {
 	class Event;
@@ -30,6 +32,10 @@ namespace NoctalEngine
 		virtual void SetVSync(bool enable) = 0;
 		virtual bool IsVSync() const = 0;
 
+		virtual SDL_Window* GetSDLWindow() const = 0;
 		static Window* Create(const WindowProperties& props = WindowProperties());
+
+	protected:
+		SDL_Window* m_Window;
 	};
 }
