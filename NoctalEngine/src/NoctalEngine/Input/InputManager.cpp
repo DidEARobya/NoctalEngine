@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "NoctalEngine/Events/MouseEvents.h"
 #include "NoctalEngine/Events/KeyboardEvents.h"
+#include "NoctalEngine/Events/WindowEvents.h"
 #include "NoctalEngine/Window/Window.h"
 #include "SDL3/SDL.h"
 
@@ -23,34 +24,57 @@ namespace NoctalEngine
 
         while (SDL_PollEvent(&input))
         {
-            if (input.type == SDL_EVENT_KEY_DOWN)
+            //---- WINDOW EVENTS ----
+            if (input.type == SDL_EventType::SDL_EVENT_WINDOW_CLOSE_REQUESTED)
+            {
+                WindowClosedEvent event;
+                focussedWindow->WindowData.eventCallback(event);
+            }
+            //---- WINDOW EVENTS ----
+            
+            //---- KEY EVENTS ----
+            if (input.type == SDL_EventType::SDL_EVENT_KEY_DOWN)
             {
                 KeyPressedEvent event(input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
 
-            if (input.type == SDL_EVENT_KEY_UP)
+            if (input.type == SDL_EventType::SDL_EVENT_KEY_UP)
             {
                 KeyReleasedEvent event(input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
-
-            if (input.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+            //---- KEY EVENTS ----
+            
+            //---- MOUSE EVENTS ----
+            if (input.type == SDL_EventType::SDL_EVENT_MOUSE_BUTTON_DOWN)
             {
                 MouseButtonPressedEvent event(input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
 
-            if (input.type == SDL_EVENT_MOUSE_BUTTON_UP)
+            if (input.type == SDL_EventType::SDL_EVENT_MOUSE_BUTTON_UP)
             {
                 MouseButtonReleasedEvent event(input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
 
-            if (input.key.scancode == SDL_SCANCODE_ESCAPE)
+            if (input.type == SDL_EventType::SDL_EVENT_MOUSE_MOTION)
             {
-                //Game::Instance()->EndGame();
+                float x;
+                float y;
+
+                SDL_GetMouseState(&x, &y);
+
+                MouseMoveEvent event(x, y);
+                focussedWindow->WindowData.eventCallback(event);
             }
+            if (input.type == SDL_EventType::SDL_EVENT_MOUSE_WHEEL)
+            {
+                MouseScrollEvent event(input.wheel.direction, input.wheel.direction);
+                focussedWindow->WindowData.eventCallback(event);
+            }
+            //---- MOUSE EVENTS ----
         }
     }
 

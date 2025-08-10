@@ -30,7 +30,7 @@ namespace NoctalEngine
 
         EVENT_TYPE(MOUSE_SCROLL)
 
-            inline float GetXOffset() const { return m_ScrollXOffset; }
+        inline float GetXOffset() const { return m_ScrollXOffset; }
         inline float GetYOffset() const { return m_ScrollYOffset; }
     private:
         float m_ScrollXOffset = 0.0f;

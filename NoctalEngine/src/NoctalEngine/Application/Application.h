@@ -5,6 +5,7 @@ namespace NoctalEngine
 {
 	class Window;
 	class Event;
+	class WindowClosedEvent;
 
 	class NOCTAL_ENGINE_API Application
 	{
@@ -14,6 +15,8 @@ namespace NoctalEngine
 
 		void Run();
 		void OnEvent(Event& event);
+
+		bool CloseApplication(const WindowClosedEvent& closeEvent);
 
 	private:
 		Window* m_Window = nullptr;

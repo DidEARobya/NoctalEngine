@@ -18,7 +18,7 @@ namespace NoctalEngine
 	void WindowManager::TerminateWindowAPI()
 	{
 		SDL_Quit();
-		NE_ENGINE_TRACE("SDL Quit (WindowAPI)");
+		NE_ENGINE_INFO("SDL Quit (WindowAPI)");
 	}
 
 	Window* WindowManager::CreateWindowInternal(const WindowProperties& properties)

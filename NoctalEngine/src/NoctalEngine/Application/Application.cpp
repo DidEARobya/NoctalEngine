@@ -10,12 +10,10 @@
 
 namespace NoctalEngine
 {
-#define BIND_EVENT(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 	Application::Application()
 	{
 		m_Window = WindowManager::CreateWindowInternal();
-		m_Window->SetEventCallback(BIND_EVENT(OnEvent));
+		m_Window->SetEventCallback(NOCTAL_BIND_EVENT_FN(OnEvent));
 
 		Renderer::Instance().Init(m_Window);
 	}
@@ -40,13 +38,20 @@ namespace NoctalEngine
 			//OnUpdateEvent event;
 			//OnEvent(event);
 		}
+	}
 
-		_getch();
+	bool Application::CloseApplication(const WindowClosedEvent& closeEvent)
+	{
+		m_AppRunning = false;
+		return true;
 	}
 
 	void Application::OnEvent(Event& event)
 	{
-		NE_ENGINE_INFO("Event");
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowClosedEvent>(NOCTAL_BIND_EVENT_FN(CloseApplication));
+
+		NE_ENGINE_TRACE("Event");
 		InputManager::OnEvent(event);
 	}
 }
