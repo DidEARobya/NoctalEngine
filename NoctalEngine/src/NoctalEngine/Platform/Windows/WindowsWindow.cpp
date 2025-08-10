@@ -1,7 +1,6 @@
 #include "nepch.h"
 #include "WindowsWindow.h"
 #include <SDL3/SDL.h>
-#include "NoctalEngine/Logging/Logger.h"
 
 namespace NoctalEngine
 {

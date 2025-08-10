@@ -4,6 +4,7 @@
 namespace NoctalEngine
 {
 	class Window;
+	class Event;
 
 	class NOCTAL_ENGINE_API Application
 	{
@@ -12,6 +13,7 @@ namespace NoctalEngine
 		virtual ~Application();
 
 		void Run();
+		void OnEvent(Event& event);
 
 	private:
 		std::unique_ptr<Window> m_Window;
