@@ -13,7 +13,7 @@ namespace NoctalEngine
 			m_Instance->m_WrappedRenderer = std::make_unique<OpenGLRenderer>();
 		}
 
-		NE_ENGINE_ASSERT(m_Instance->m_WrappedRenderer, "Renderer failed to create WrappedRenderer (Renderer)");
+		NE_ENGINE_ASSERT(m_Instance->m_WrappedRenderer, "Renderer failed to create WrappedRenderer");
 		m_Instance->m_WrappedRenderer->Init(windowRef);
 	}
 
@@ -21,7 +21,7 @@ namespace NoctalEngine
 	{
 		if (m_Instance->m_WrappedRenderer == nullptr)
 		{
-			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
 			return;
 		}
 
@@ -32,7 +32,7 @@ namespace NoctalEngine
 	{
 		if (m_Instance->m_WrappedRenderer == nullptr)
 		{
-			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
 			return;
 		}
 
@@ -43,7 +43,7 @@ namespace NoctalEngine
 	{
 		if (m_Instance->m_WrappedRenderer == nullptr)
 		{
-			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
 			return;
 		}
 
@@ -54,7 +54,7 @@ namespace NoctalEngine
 	{
 		if (m_Instance->m_WrappedRenderer == nullptr)
 		{
-			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
 			return;
 		}
 
@@ -65,7 +65,7 @@ namespace NoctalEngine
 	{
 		if (m_Instance->m_WrappedRenderer == nullptr)
 		{
-			NE_ENGINE_FATAL("WrappedRenderer is uninitalised (Renderer)");
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
 			return;
 		}
 

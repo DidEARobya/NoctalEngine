@@ -1,6 +1,8 @@
 #pragma once
 #include "NoctalEngine/Rendering/WrappedRenderer.h"
+#include "GLAD/include/glad/glad.h"
 #include "NoctalEngine/Window/Window.h"
+#include <SDL3/SDL.h>
 
 class NOCTAL_ENGINE_API OpenGLRenderer : public WrappedRenderer
 {
@@ -16,4 +18,7 @@ public:
     virtual void EndRender() override;
 
     virtual void OnWindowResize(const uint32_t width, const uint32_t height) override;
+
+private:
+    SDL_GLContext m_GLContext;
 };

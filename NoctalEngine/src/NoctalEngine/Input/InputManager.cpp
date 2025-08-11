@@ -16,7 +16,7 @@ namespace NoctalEngine
     {
         if (focussedWindow == nullptr)
         {
-            NE_ENGINE_ERROR("InputManager attempted to update without a focussed Window (InputManager)");
+            NE_ENGINE_ERROR("InputManager attempted to update without a focussed Window");
             return;
         }
 

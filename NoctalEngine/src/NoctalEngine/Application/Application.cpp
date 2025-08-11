@@ -13,9 +13,14 @@ namespace NoctalEngine
 {
 	Application::Application()
 	{
-		m_Window = WindowManager::CreateWindowInternal();
-		m_Window->SetEventCallback(NOCTAL_BIND_EVENT_FN(OnEvent));
+		WindowProperties properties = WindowProperties();
+		properties.TestAPI = TestGraphicsAPI::OPEN_GL;
 
+		WindowManager::InitWindowAPI();
+		m_Window = WindowManager::CreateWindowInternal(properties);
+		NE_ENGINE_ASSERT(m_Window, "Window creation failed");
+
+		m_Window->SetEventCallback(NOCTAL_BIND_EVENT_FN(OnEvent));
 		Renderer::Instance().Init(m_Window);
 	}
 
