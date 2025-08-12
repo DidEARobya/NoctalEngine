@@ -49,7 +49,6 @@ namespace NoctalEngine
 				layer->OnUpdate(deltaTime);
 			}
 
-
 			Renderer::Instance().Render();
 			Renderer::Instance().EndRender();
 

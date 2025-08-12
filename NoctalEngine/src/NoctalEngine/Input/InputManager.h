@@ -18,7 +18,5 @@ namespace NoctalEngine
     private:
         static std::unordered_map<uint32_t, bool> m_KeyCodeMap;
         static std::unordered_map<uint32_t, bool> m_MouseButtonMap;
-
-        //static ScarlettMath::Vec2 mMousePosition;
     };
 }

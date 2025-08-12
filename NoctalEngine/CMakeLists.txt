@@ -44,5 +44,9 @@ target_include_directories(NoctalEngine PUBLIC
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/ImGui
 )
 
+target_include_directories(ImGui PUBLIC 
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/SDL3/include
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/ImGui
+)
 target_compile_definitions(NoctalEngine PUBLIC NE_PLATFORM_WINDOWS NE_BUILD_DLL NE_ENABLE_ASSERTS)
 # TODO: Add tests and install targets if needed.

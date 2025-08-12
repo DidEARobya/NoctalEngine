@@ -5,6 +5,7 @@
 #include "NoctalEngine/Events/WindowEvents.h"
 #include "NoctalEngine/Window/Window.h"
 #include "SDL3/SDL.h"
+#include "backends/imgui_impl_sdl3.h"
 
 namespace NoctalEngine
 {
@@ -30,18 +31,32 @@ namespace NoctalEngine
                 WindowClosedEvent event;
                 focussedWindow->WindowData.eventCallback(event);
             }
+            if (input.type == SDL_EventType::SDL_EVENT_WINDOW_RESIZED)
+            {
+                WindowResizeEvent event(focussedWindow->GetWidth(), focussedWindow->GetHeight());
+                focussedWindow->WindowData.eventCallback(event);
+            }
             //---- WINDOW EVENTS ----
-            
+
             //---- KEY EVENTS ----
             if (input.type == SDL_EventType::SDL_EVENT_KEY_DOWN)
             {
-                KeyPressedEvent event(input.key.scancode);
+                KeyPressedEvent event(input.key.key, input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
 
             if (input.type == SDL_EventType::SDL_EVENT_KEY_UP)
             {
-                KeyReleasedEvent event(input.key.scancode);
+                KeyReleasedEvent event(input.key.key, input.key.scancode);
+                focussedWindow->WindowData.eventCallback(event);
+            }
+
+            
+            if (input.type == SDL_EventType::SDL_EVENT_TEXT_INPUT)
+            {
+                ImGui_ImplSDL3_ProcessEvent(&input);
+
+                KeyTypedEvent event(input.key.key, input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
             //---- KEY EVENTS ----
@@ -49,13 +64,13 @@ namespace NoctalEngine
             //---- MOUSE EVENTS ----
             if (input.type == SDL_EventType::SDL_EVENT_MOUSE_BUTTON_DOWN)
             {
-                MouseButtonPressedEvent event(input.key.scancode);
+                MouseButtonPressedEvent event(input.button.button);
                 focussedWindow->WindowData.eventCallback(event);
             }
 
             if (input.type == SDL_EventType::SDL_EVENT_MOUSE_BUTTON_UP)
             {
-                MouseButtonReleasedEvent event(input.key.scancode);
+                MouseButtonReleasedEvent event(input.button.button);
                 focussedWindow->WindowData.eventCallback(event);
             }
 
@@ -66,12 +81,12 @@ namespace NoctalEngine
 
                 SDL_GetMouseState(&x, &y);
 
-                MouseMoveEvent event(x, y);
+                MouseMovedEvent event(x, y);
                 focussedWindow->WindowData.eventCallback(event);
             }
             if (input.type == SDL_EventType::SDL_EVENT_MOUSE_WHEEL)
             {
-                MouseScrollEvent event(input.wheel.direction, input.wheel.direction);
+                MouseScrollEvent event(input.wheel.integer_x, input.wheel.integer_y);
                 focussedWindow->WindowData.eventCallback(event);
             }
             //---- MOUSE EVENTS ----
@@ -105,12 +120,6 @@ namespace NoctalEngine
                 m_MouseButtonMap[event.GetMouseButton()] = false;
                 return false;
             });
-
-        //dispatcher.Dispatch<MouseMovedEvent>([](const MouseMovedEvent& event)
-        //    {
-        //        mMousePosition = { event.GetXPos(), event.GetYPos() };
-        //        return false;
-        //    });
     }
 
 }

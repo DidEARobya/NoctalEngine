@@ -3,24 +3,19 @@
 
 namespace NoctalEngine
 {
-    class MouseEvent : public Event
+    class MouseMovedEvent final : public Event
     {
     public:
-        inline explicit MouseEvent(const float mouseX, const float mouseY) : m_MouseX(mouseX), m_MouseY(mouseY) {}
+        inline MouseMovedEvent(const float mouseX, const float mouseY) : m_MouseX(mouseX), m_MouseY(mouseY) {}
 
         inline float GetMouseXPos() const { return m_MouseX; }
         inline float GetMouseYPos() const { return m_MouseY; }
+
+        EVENT_TYPE(MOUSE_MOVE)
+
     protected:
         float m_MouseX = 0.0f;
         float m_MouseY = 0.0f;
-    };
-
-    class MouseMoveEvent final : public MouseEvent
-    {
-    public:
-        inline MouseMoveEvent(const float mouseX, const float mouseY) : MouseEvent(mouseX, mouseY) {}
-
-        EVENT_TYPE(MOUSE_MOVE)
     };
 
     class MouseScrollEvent final : public Event

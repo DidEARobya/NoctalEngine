@@ -3,12 +3,14 @@
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
 #include "ImGui/backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_sdl3.h"
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
 	m_GLContext = SDL_GL_CreateContext(windowRef->GetSDLWindow());
 	NE_ENGINE_SDL_ASSERT(m_GLContext);
 	NE_ENGINE_INFO("SDL successfully loaded OpenGL_Context");
+
 
 	int status = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 	NE_ENGINE_ASSERT(status, "GLAD failed to initialise");
@@ -32,6 +34,7 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
 	ImGui_ImplOpenGL3_Init();
+	ImGui_ImplSDL3_InitForOpenGL(windowRef->GetSDLWindow(), m_GLContext);
 }
 
 void OpenGLRenderer::Destroy()
