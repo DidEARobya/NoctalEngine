@@ -12,4 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "NoctalEngine/Logging/Logger.h"
+#include "NoctalEngine/Debugging/Logger.h"
+
+#define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+#include "ImGui/imgui.h"
+

@@ -1,6 +1,7 @@
 #pragma once
 #include "NoctalEngine/Core.h"
 #include "NoctalEngine/Input/LayerStack.h"
+#include "NoctalEngine/Utility/Timer.h"
 
 namespace NoctalEngine
 {
@@ -23,11 +24,15 @@ namespace NoctalEngine
 
 		bool CloseApplication(const WindowClosedEvent& closeEvent);
 
+		inline static Application& Get() { return *s_Instance; };
+		inline Window& GetWindow() { return *m_Window; };
+
 	private:
 		Window* m_Window = nullptr;
 		bool m_AppRunning = true;
-
+		Timer m_Timer;
 		LayerStack m_LayerStack;
+		inline static Application* s_Instance;
 	};
 
 	Application* CreateApplication();

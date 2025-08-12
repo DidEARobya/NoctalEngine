@@ -13,6 +13,10 @@ namespace NoctalEngine
 {
 	Application::Application()
 	{
+		s_Instance = this;
+
+		NE_ENGINE_ASSERT(s_Instance != nullptr, "Application already exists");
+
 		WindowProperties properties = WindowProperties();
 		properties.TestAPI = TestGraphicsAPI::OPEN_GL;
 
@@ -35,14 +39,17 @@ namespace NoctalEngine
 	{
 		while (m_AppRunning)
 		{
-			for (Layer* layer : m_LayerStack)
-			{
-				layer->OnUpdate();
-			}
-
+			const auto deltaTime = m_Timer.Mark();
 			m_Window->OnUpdate();
 
 			Renderer::Instance().BeginRender();
+
+			for (Layer* layer : m_LayerStack)
+			{
+				layer->OnUpdate(deltaTime);
+			}
+
+
 			Renderer::Instance().Render();
 			Renderer::Instance().EndRender();
 
@@ -60,6 +67,7 @@ namespace NoctalEngine
 	void Application::PushOverlay(Layer* layer)
 	{
 		m_LayerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 
 	bool Application::CloseApplication(const WindowClosedEvent& closeEvent)
