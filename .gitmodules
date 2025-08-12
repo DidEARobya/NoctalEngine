@@ -4,3 +4,6 @@
 [submodule "NoctalEngine/vendor/SDL3"]
 	path = NoctalEngine/vendor/SDL3
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "NoctalEngine/vendor/ImGui"]
+	path = NoctalEngine/vendor/ImGui
+	url = https://github.com/DidEARobya/imgui-CMake.git

@@ -34,11 +34,14 @@ target_link_libraries(NoctalEngine PUBLIC SDL3::SDL3)
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD)
 target_link_libraries(NoctalEngine PUBLIC GLAD)
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/ImGui)
+target_link_libraries(NoctalEngine PUBLIC ImGui)
+
 target_include_directories(NoctalEngine PUBLIC 
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/
-                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD/include
-
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD/include/
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/ImGui
 )
 
 target_compile_definitions(NoctalEngine PUBLIC NE_PLATFORM_WINDOWS NE_BUILD_DLL NE_ENABLE_ASSERTS)
