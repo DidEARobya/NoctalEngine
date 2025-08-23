@@ -6,6 +6,8 @@
 #include "NoctalEngine/Events/MouseEvents.h"
 #include "NoctalEngine/Events/WindowEvents.h"
 #include "ImGui/backends/imgui_impl_sdl3.cpp"
+#include "NoctalEngine/Input/InputManager.h"
+#include "NoctalEngine/Input/KeyCodes.h"
 
 namespace NoctalEngine
 {
@@ -41,6 +43,17 @@ namespace NoctalEngine
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		}
 
+		ImGui::End();
+
+		if (ImGui::Begin("Mouse Position"))
+		{
+			float mouseX;
+			float mouseY;
+			InputManager::GetMousePosition(mouseX, mouseY);
+
+			ImGui::Text("Mouse Position %.0f X : %.0f Y", mouseX, mouseY);
+		}
+
 		ImGui::End();	
 	}
 
@@ -53,6 +66,7 @@ namespace NoctalEngine
 		dispatcher.Dispatch<MouseScrollEvent>(NOCTAL_BIND_EVENT_FN(OnMouseScrollEvent));
 		dispatcher.Dispatch<KeyPressedEvent>(NOCTAL_BIND_EVENT_FN(OnKeyPressedEvent));
 		dispatcher.Dispatch<KeyReleasedEvent>(NOCTAL_BIND_EVENT_FN(OnKeyReleasedEvent));
+		// Char reading from custom polling has to be fixed, ImGui SDL event function used for char events, for now.
 		//dispatcher.Dispatch<KeyTypedEvent>(NOCTAL_BIND_EVENT_FN(OnKeyTypedEvent));
 		dispatcher.Dispatch<WindowResizeEvent>(NOCTAL_BIND_EVENT_FN(OnWindowResizeEvent));
 	}

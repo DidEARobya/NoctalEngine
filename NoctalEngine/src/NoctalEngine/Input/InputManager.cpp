@@ -4,6 +4,7 @@
 #include "NoctalEngine/Events/KeyboardEvents.h"
 #include "NoctalEngine/Events/WindowEvents.h"
 #include "NoctalEngine/Window/Window.h"
+#include "KeyCodes.h"
 #include "SDL3/SDL.h"
 #include "backends/imgui_impl_sdl3.h"
 
@@ -50,7 +51,6 @@ namespace NoctalEngine
                 KeyReleasedEvent event(input.key.key, input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }
-
             
             if (input.type == SDL_EventType::SDL_EVENT_TEXT_INPUT)
             {
@@ -120,6 +120,11 @@ namespace NoctalEngine
                 m_MouseButtonMap[event.GetMouseButton()] = false;
                 return false;
             });
+    }
+
+    void InputManager::GetMousePosition(float& mouseX, float& mouseY)
+    {
+        SDL_GetMouseState(&mouseX, &mouseY);
     }
 
 }

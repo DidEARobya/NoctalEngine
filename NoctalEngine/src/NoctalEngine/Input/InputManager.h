@@ -14,6 +14,7 @@ namespace NoctalEngine
         static inline bool IsMouseButtonDown(const uint16_t mouseCode) { return m_MouseButtonMap[mouseCode]; }
         static void OnEvent(Event& e);
 
+        static void GetMousePosition(float& mouseX, float& mouseY);
         //[[nodiscard]] static inline ScarlettMath::Vec2 GetMousePosition() { return mMousePosition; }
     private:
         static std::unordered_map<uint32_t, bool> m_KeyCodeMap;
