@@ -1,4 +1,5 @@
 #pragma once
+
 #ifdef NE_PLATFORM_WINDOWS
 	#if NE_DYNAMIC_LINK
 		#ifdef NE_BUILD_DLL

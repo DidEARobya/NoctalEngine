@@ -1,4 +1,5 @@
-﻿#include <NoctalEngine.h>
+﻿#pragma once
+#include <NoctalEngine.h>
 
 class Sandbox : public NoctalEngine::Application
 {

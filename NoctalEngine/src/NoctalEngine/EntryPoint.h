@@ -4,7 +4,7 @@
 
 extern NoctalEngine::Application* NoctalEngine::CreateApplication();
 
-int main(int argc, char** argv)
+int main(int argc, char* args[])
 {
 	NoctalEngine::Logger::InitLoggers();
 
