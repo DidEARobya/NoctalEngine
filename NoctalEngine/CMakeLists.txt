@@ -11,6 +11,8 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET NoctalEngine PROPERTY CXX_STANDARD 20)
 endif()
 
+set_target_properties(NoctalEngine PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${outputdir}/${PROJECT_NAME})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${outputdir}/${PROJECT_NAME})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${outputdir}/${PROJECT_NAME})
@@ -24,17 +26,21 @@ add_custom_command(TARGET NoctalEngine POST_BUILD
 
 target_precompile_headers(NoctalEngine PUBLIC "src/nepch.h")
 
+set(SDL_SHARED OFF)
+set(SDL_STATIC ON)
+set(SDL_TEST OFF)
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/spdlog)
-target_link_libraries(NoctalEngine PUBLIC spdlog::spdlog)
-
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/SDL3)
-target_link_libraries(NoctalEngine PUBLIC SDL3::SDL3)
-
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD)
-target_link_libraries(NoctalEngine PUBLIC GLAD)
-
 add_subdirectory(${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/ImGui)
-target_link_libraries(NoctalEngine PUBLIC ImGui)
+
+target_link_libraries(NoctalEngine PUBLIC 
+                            ImGui 
+                            spdlog::spdlog 
+                            SDL3::SDL3-static 
+                            GLAD
+)
 
 target_include_directories(NoctalEngine PUBLIC 
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src

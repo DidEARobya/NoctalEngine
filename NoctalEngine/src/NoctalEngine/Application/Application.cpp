@@ -7,6 +7,7 @@
 #include "NoctalEngine/Rendering/Renderer.h"
 #include "NoctalEngine/Input/InputManager.h"
 #include "NoctalEngine/Input/Layer.h"
+#include "NoctalEngine/Debugging/ImGuiLayer.h"
 #include <conio.h>
 
 namespace NoctalEngine
@@ -22,10 +23,15 @@ namespace NoctalEngine
 
 		WindowManager::InitWindowAPI();
 		m_Window = WindowManager::CreateWindowInternal(properties);
+
 		NE_ENGINE_ASSERT(m_Window, "Window creation failed");
 
 		m_Window->SetEventCallback(NOCTAL_BIND_EVENT_FN(OnEvent));
+
 		Renderer::Instance().Init(m_Window);
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()

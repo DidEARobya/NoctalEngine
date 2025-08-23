@@ -9,6 +9,7 @@ namespace NoctalEngine
 	class Event;
 	class WindowClosedEvent;
 	class Layer;
+	class ImGuiLayer;
 
 	class NOCTAL_ENGINE_API Application
 	{
@@ -28,7 +29,9 @@ namespace NoctalEngine
 		inline Window& GetWindow() { return *m_Window; };
 
 	private:
-		Window* m_Window = nullptr;
+		Window* m_Window;
+		ImGuiLayer* m_ImGuiLayer;
+
 		bool m_AppRunning = true;
 		Timer m_Timer;
 		LayerStack m_LayerStack;
