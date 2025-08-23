@@ -7,3 +7,6 @@
 [submodule "NoctalEngine/vendor/ImGui"]
 	path = NoctalEngine/vendor/ImGui
 	url = https://github.com/DidEARobya/imgui-CMake.git
+[submodule "NoctalEngine/vendor/glm"]
+	path = NoctalEngine/vendor/glm
+	url = https://github.com/g-truc/glm.git

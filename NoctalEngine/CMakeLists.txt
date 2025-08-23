@@ -41,6 +41,7 @@ target_include_directories(NoctalEngine PUBLIC
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/GLAD/include/
                     ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/ImGui
+                    ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/vendor/glm/
 )
 
 target_include_directories(ImGui PUBLIC 
