@@ -36,7 +36,7 @@ namespace NoctalEngine
             }
             if (input.type == SDL_EventType::SDL_EVENT_WINDOW_RESIZED)
             {
-                WindowResizeEvent event(focussedWindow->GetWidth(), focussedWindow->GetHeight());
+                WindowResizeEvent event((float)focussedWindow->GetWidth(), (float)focussedWindow->GetHeight());
                 focussedWindow->WindowData.eventCallback(event);
             }
             //---- WINDOW EVENTS ----
@@ -86,7 +86,7 @@ namespace NoctalEngine
             }
             if (input.type == SDL_EventType::SDL_EVENT_MOUSE_WHEEL)
             {
-                MouseScrollEvent event(input.wheel.integer_x, input.wheel.integer_y);
+                MouseScrollEvent event((float)input.wheel.integer_x, (float)input.wheel.integer_y);
                 focussedWindow->WindowData.eventCallback(event);
             }
             //---- MOUSE EVENTS ----

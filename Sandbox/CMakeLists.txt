@@ -5,7 +5,7 @@
 # Add source to this project's executable.
 add_executable (Sandbox "main.cpp")
 set_property(TARGET Sandbox PROPERTY
-  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Sandbox PROPERTY CXX_STANDARD 20)

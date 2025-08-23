@@ -62,7 +62,7 @@ void OpenGLRenderer::BeginRender()
 {
 	ImGuiIO& io = ImGui::GetIO();
 	NoctalEngine::Application& app = NoctalEngine::Application::Get();
-	io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+	io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL3_NewFrame();

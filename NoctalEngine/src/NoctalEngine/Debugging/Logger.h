@@ -5,13 +5,13 @@
 
 namespace NoctalEngine
 {
-	class NOCTAL_ENGINE_API Logger
+	class Logger
 	{
 	public:
 		static void InitLoggers();
 
-		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger();
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger();
+		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return s_EngineLogger; };
+		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; };
 
 	private:
 		static std::shared_ptr<spdlog::logger> s_EngineLogger;

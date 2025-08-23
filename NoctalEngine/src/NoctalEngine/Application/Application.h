@@ -29,8 +29,8 @@ namespace NoctalEngine
 		inline Window& GetWindow() { return *m_Window; };
 
 	private:
-		Window* m_Window;
-		ImGuiLayer* m_ImGuiLayer;
+		Window* m_Window = nullptr;
+		ImGuiLayer* m_ImGuiLayer = nullptr;
 
 		bool m_AppRunning = true;
 		Timer m_Timer;

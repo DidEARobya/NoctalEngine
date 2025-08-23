@@ -3,6 +3,8 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
@@ -18,6 +20,8 @@ add_subdirectory (NoctalEngine)
 # Include sub-projects.
 project (Sandbox)
 add_subdirectory(Sandbox)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sandbox)
 
 
 
