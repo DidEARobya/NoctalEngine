@@ -5,6 +5,7 @@
 #include "ImGui/backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl3.h"
 #include "glm/glm.hpp"
+#include "SDL3/SDL.h"
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
@@ -26,12 +27,25 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 
 	glViewport(0, 0, windowRef->GetWidth(), windowRef->GetHeight());
 
+	IMGUI_CHECKVERSION();
+
 	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
 
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 	io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	ImGui::StyleColorsDark();
 
 	ImGui_ImplOpenGL3_Init();
 	ImGui_ImplSDL3_InitForOpenGL(windowRef->GetSDLWindow(), m_GLContext);
@@ -39,6 +53,9 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 
 void OpenGLRenderer::Destroy()
 {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void OpenGLRenderer::BeginRender()
@@ -48,6 +65,7 @@ void OpenGLRenderer::BeginRender()
 	io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
 	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
 	glClearColor(1.0f, 0.5f, 1.0f, 0.0f);
@@ -61,9 +79,18 @@ void OpenGLRenderer::Render()
 
 void OpenGLRenderer::EndRender()
 {
-	glLoadIdentity();
+	ImGuiIO& io = ImGui::GetIO();
+
 	ImGui::EndFrame();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* window = SDL_GL_GetCurrentWindow();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(window, m_GLContext);
+	}
 }
 
 void OpenGLRenderer::OnWindowResize(const uint32_t width, const uint32_t height)

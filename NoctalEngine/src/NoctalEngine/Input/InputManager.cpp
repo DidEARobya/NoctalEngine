@@ -26,6 +26,8 @@ namespace NoctalEngine
 
         while (SDL_PollEvent(&input))
         {
+            ImGui_ImplSDL3_ProcessEvent(&input);
+
             //---- WINDOW EVENTS ----
             if (input.type == SDL_EventType::SDL_EVENT_WINDOW_CLOSE_REQUESTED)
             {
@@ -54,8 +56,6 @@ namespace NoctalEngine
             
             if (input.type == SDL_EventType::SDL_EVENT_TEXT_INPUT)
             {
-                ImGui_ImplSDL3_ProcessEvent(&input);
-
                 KeyTypedEvent event(input.key.key, input.key.scancode);
                 focussedWindow->WindowData.eventCallback(event);
             }

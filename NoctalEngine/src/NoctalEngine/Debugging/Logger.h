@@ -1,6 +1,7 @@
 #pragma once
 #include "NoctalEngine/Core.h"
 #include "spdlog/spdlog.h"
+#include "imgui.h"
 
 namespace NoctalEngine
 {

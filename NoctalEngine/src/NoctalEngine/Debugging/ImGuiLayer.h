@@ -21,7 +21,7 @@ namespace NoctalEngine
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnUpdate(float deltaTime) override;
-		void OnEvent(Event& event) override;
+		//void OnEvent(Event& event) override;
 
 	private:
 		bool OnMouseButtonPressedEvent(const MouseButtonPressedEvent& event);

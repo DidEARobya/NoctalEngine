@@ -1,6 +1,5 @@
 ﻿#include <NoctalEngine.h>
 
-
 class Sandbox : public NoctalEngine::Application
 {
 public:
