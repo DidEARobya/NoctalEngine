@@ -30,10 +30,6 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 
 	glViewport(0, 0, windowRef->GetWidth(), windowRef->GetHeight());
 
-	NE_ENGINE_INFO("   Vendor: {0}", (const char*)glGetString(GL_VENDOR));
-	NE_ENGINE_INFO("   Renderer: {0}", (const char*)glGetString(GL_RENDERER));
-	NE_ENGINE_INFO("   Version: {0}", (const char*)glGetString(GL_VERSION));
-
 	IMGUI_CHECKVERSION();
 
 	ImGui::CreateContext();
@@ -64,7 +60,7 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 		0.0f, 0.5f, 0.0f
 	};
 
-	//m_Bindables.push_back(std::make_unique<NoctalEngine::OpenGLVertexBuffer>(vertices));
+	//m_Bindables.push_back(std::make_unique<OpenGLVertexBuffer>(vertices));
 
 	glGenVertexArrays(1, &m_VertexArray);
 	glBindVertexArray(m_VertexArray);
@@ -78,11 +74,42 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 
 	unsigned int indices[3] = { 0, 1, 2 };
 
-	m_Bindables.push_back(std::make_unique<NoctalEngine::OpenGLIndexBuffer>(indices));
+	//m_Bindables.push_back(std::make_unique<OpenGLIndexBuffer>(indices));
 	glGenBuffers(1, &m_IndexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	std::string vertexSource = R"(
+		#version 330 core
+
+		layout(location = 0) in vec3 a_Position;
+		
+		out vec3 v_Position;
+
+		void main()
+		{
+			v_Position = a_Position;
+			gl_Position = vec4(a_Position, 1.0);
+		}	
+
+	)";
+
+	std::string pixelSource = R"(
+		#version 330 core
+
+		layout(location = 0) out vec4 colour;
+
+		in vec3 v_Position;
+
+		void main()
+		{
+			colour = vec4(v_Position * 0.5 + 0.5, 1.0);
+		}	
+
+	)";
+
+	m_Bindables.push_back(std::make_unique<OpenGLShader>(vertexSource, pixelSource));
 }
 
 void OpenGLRenderer::Destroy()
@@ -102,17 +129,17 @@ void OpenGLRenderer::BeginRender()
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 0);
 }
 
 void OpenGLRenderer::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//for (auto& bindable : m_Bindables)
-	//{
-	//	bindable->Bind();
-	//}
+	for (auto& bindable : m_Bindables)
+	{
+		bindable->Bind();
+	}
 
 	glBindVertexArray(m_VertexArray);
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
@@ -140,4 +167,19 @@ void OpenGLRenderer::EndRender()
 
 void OpenGLRenderer::OnWindowResize(const uint32_t width, const uint32_t height)
 {
+}
+
+const char* OpenGLRenderer::GetVendor()
+{
+	return (const char*)glGetString(GL_VENDOR);
+}
+
+const char* OpenGLRenderer::GetRenderer()
+{
+	return (const char*)glGetString(GL_RENDERER);
+}
+
+const char* OpenGLRenderer::GetVersion()
+{
+	return (const char*)glGetString(GL_VERSION);
 }

@@ -21,6 +21,11 @@ namespace NoctalEngine
         void EndRender();
 
         void OnWindowResize(const uint32_t width, const uint32_t height);
+
+        const char* GetVendor();
+        const char* GetRenderer();
+        const char* GetVersion();
+
     protected:
         static std::unique_ptr<Renderer> m_Instance;
         std::unique_ptr<WrappedRenderer> m_WrappedRenderer = nullptr;

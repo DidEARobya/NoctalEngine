@@ -21,7 +21,11 @@ public:
 
     virtual void OnWindowResize(const uint32_t width, const uint32_t height) = 0;
 
+    virtual const char* GetVendor() = 0;
+    virtual const char* GetRenderer() = 0;
+    virtual const char* GetVersion() = 0;
+
 protected:
     SDL_Window* m_Window = nullptr;
-    std::vector<std::unique_ptr<NoctalEngine::Bindable>> m_Bindables;
+    std::vector<std::unique_ptr<Bindable>> m_Bindables;
 };

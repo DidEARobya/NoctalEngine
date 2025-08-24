@@ -7,6 +7,7 @@
 #include "NoctalEngine/Events/WindowEvents.h"
 #include "ImGui/backends/imgui_impl_sdl3.cpp"
 #include "NoctalEngine/Input/InputManager.h"
+#include "NoctalEngine/Rendering/Renderer.h"
 
 namespace NoctalEngine
 {
@@ -44,13 +45,11 @@ namespace NoctalEngine
 
 		ImGui::End();
 
-		if (ImGui::Begin("Mouse Position"))
+		if (ImGui::Begin("Renderer"))
 		{
-			float mouseX;
-			float mouseY;
-			InputManager::GetMousePosition(mouseX, mouseY);
-
-			ImGui::Text("Mouse Position %.0f X : %.0f Y", mouseX, mouseY);
+			ImGui::Text("Vendor: %s", Renderer::Instance().GetVendor());
+			ImGui::Text("Renderer: %s", Renderer::Instance().GetRenderer());
+			ImGui::Text("Version: %s", Renderer::Instance().GetVersion());
 		}
 
 		ImGui::End();	

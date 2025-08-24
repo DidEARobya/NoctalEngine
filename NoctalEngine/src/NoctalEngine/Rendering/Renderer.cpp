@@ -71,4 +71,37 @@ namespace NoctalEngine
 
 		m_Instance->m_WrappedRenderer->OnWindowResize(width, height);
 	}
+
+	const char* Renderer::GetVendor()
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return "";
+		}
+
+		return m_Instance->m_WrappedRenderer->GetVendor();
+	}
+
+	const char* Renderer::GetRenderer()
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return "";
+		}
+
+		return m_Instance->m_WrappedRenderer->GetRenderer();
+	}
+
+	const char* Renderer::GetVersion()
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return "";
+		}
+
+		return m_Instance->m_WrappedRenderer->GetVersion();
+	}
 }

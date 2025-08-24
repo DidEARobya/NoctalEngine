@@ -1,9 +1,7 @@
 #pragma once
 #include "NoctalEngine/Rendering/IndexBuffer.h"
 
-namespace NoctalEngine
-{
-	class OpenGLIndexBuffer : public IndexBuffer
+	class OpenGLIndexBuffer : public NoctalEngine::IndexBuffer
 	{
 	public:
 		OpenGLIndexBuffer(const unsigned int indices[3]);
@@ -13,4 +11,3 @@ namespace NoctalEngine
 	private:
 		unsigned int m_IndexBuffer;
 	};
-}
