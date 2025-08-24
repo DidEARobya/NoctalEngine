@@ -2,6 +2,10 @@
 
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Rendering/Bindable.h"
+#include "NoctalEngine/Rendering/Shader.h"
+#include "NoctalEngine/Rendering/VertexBuffer.h"
+#include "NoctalEngine/Rendering/IndexBuffer.h"
+#include "NoctalEngine/Rendering/BufferLayout.h"
 
 class Renderer;
 struct SDL_Window;
@@ -24,6 +28,10 @@ public:
     virtual const char* GetVendor() = 0;
     virtual const char* GetRenderer() = 0;
     virtual const char* GetVersion() = 0;
+
+    virtual NoctalEngine::Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource) = 0;
+    virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
+    virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 
 protected:
     SDL_Window* m_Window = nullptr;

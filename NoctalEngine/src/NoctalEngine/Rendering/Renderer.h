@@ -4,6 +4,10 @@
 namespace NoctalEngine
 {
     class Window;
+    class Shader;
+    class VertexBuffer;
+    class IndexBuffer;
+    class BufferLayout;
 
     class Renderer
     {
@@ -25,6 +29,10 @@ namespace NoctalEngine
         const char* GetVendor();
         const char* GetRenderer();
         const char* GetVersion();
+
+        Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource);
+        VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
+        IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
 
     protected:
         static std::unique_ptr<Renderer> m_Instance;

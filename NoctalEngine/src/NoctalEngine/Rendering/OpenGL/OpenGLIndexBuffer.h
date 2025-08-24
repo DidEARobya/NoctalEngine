@@ -4,10 +4,14 @@
 	class OpenGLIndexBuffer : public NoctalEngine::IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(const unsigned int indices[3]);
+		OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
+		virtual ~OpenGLIndexBuffer() override;
+
+		virtual uint32_t GetCount() const override { return m_Count; };
 
 		virtual void Bind() override;
 
 	private:
-		unsigned int m_IndexBuffer;
+		uint32_t m_RendererID = 0;
+		uint32_t m_Count = 0;
 	};

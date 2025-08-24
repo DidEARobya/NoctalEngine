@@ -6,9 +6,6 @@ namespace NoctalEngine
 	class VertexBuffer : public Bindable
 	{
 	public:
-		VertexBuffer() = default;
-
-	protected:
-		unsigned int m_Stride = 0;
+		virtual ~VertexBuffer() {};
 	};
 }

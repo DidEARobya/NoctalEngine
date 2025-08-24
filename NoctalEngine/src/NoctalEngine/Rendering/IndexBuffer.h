@@ -6,10 +6,9 @@ namespace NoctalEngine
 	class IndexBuffer : public Bindable
 	{
 	public:
-		IndexBuffer() = default;
-		unsigned int GetCount() const { return m_Count; };
+		virtual ~IndexBuffer() {};
+		virtual uint32_t GetCount() const = 0;
 
 	protected:
-		unsigned int m_Count = 0;
 	};
 }

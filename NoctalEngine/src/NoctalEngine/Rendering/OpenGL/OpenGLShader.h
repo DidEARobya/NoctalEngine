@@ -1,8 +1,8 @@
 #pragma once
-#include "NoctalEngine/Rendering/Bindable.h"
+#include "NoctalEngine/Rendering/Shader.h"
 
 
-	class OpenGLShader : public Bindable
+	class OpenGLShader : public NoctalEngine::Shader
 	{
 	public:
 		OpenGLShader(const std::string& vertexSource, const std::string& pixelSource);
@@ -11,5 +11,5 @@
 		virtual void Bind() override;
 
 	private:
-		uint32_t m_RendererID;
+		uint32_t m_RendererID = 0;
 	};

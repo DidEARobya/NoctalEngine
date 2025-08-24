@@ -103,5 +103,37 @@ namespace NoctalEngine
 		}
 
 		return m_Instance->m_WrappedRenderer->GetVersion();
+	}	
+	
+	Shader* Renderer::CreateShader(const std::string& vertexSource, const std::string& pixelSource)
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return nullptr;
+		}
+
+		return m_Instance->m_WrappedRenderer->CreateShader(vertexSource, pixelSource);
+	}
+
+	VertexBuffer* Renderer::CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout)
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return nullptr;
+		}
+
+		return m_Instance->m_WrappedRenderer->CreateVertexBuffer(vertices, size, layout);
+	}
+	IndexBuffer* Renderer::CreateIndexBuffer(uint32_t* indices, uint32_t size)
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return nullptr;
+		}
+
+		return m_Instance->m_WrappedRenderer->CreateIndexBuffer(indices, size);
 	}
 }

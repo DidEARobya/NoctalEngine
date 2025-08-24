@@ -1,9 +1,7 @@
 #pragma once
 #include "NoctalEngine/Rendering/WrappedRenderer.h"
 #include "GLAD/include/glad/glad.h"
-#include "NoctalEngine/Window/Window.h"
 #include <SDL3/SDL.h>
-#include "OpenGLShader.h"
 
 class OpenGLRenderer : public WrappedRenderer
 {
@@ -23,9 +21,14 @@ public:
     virtual const char* GetVendor() override;
     virtual const char* GetRenderer() override;
     virtual const char* GetVersion() override;
+
+    virtual NoctalEngine::Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource) override;
+    virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) override;
+    virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
+
 private:
     SDL_GLContext m_GLContext = nullptr;
-    unsigned int m_IndexBuffer;
-    unsigned int m_VertexArray;
-    unsigned int m_VertexBuffer;
+    uint32_t m_VertexArray = 0;
+    std::unique_ptr<NoctalEngine::IndexBuffer> m_IndexBuffer;
+
 };
