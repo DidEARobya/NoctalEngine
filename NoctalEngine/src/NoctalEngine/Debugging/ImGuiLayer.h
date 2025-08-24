@@ -12,7 +12,7 @@ namespace NoctalEngine
 	class KeyTypedEvent;
 	class WindowResizeEvent;
 
-	class NOCTAL_ENGINE_API ImGuiLayer : public Layer
+	class ImGuiLayer : public Layer
 	{
 	public:
 		ImGuiLayer();

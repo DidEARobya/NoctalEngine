@@ -1,15 +1,7 @@
 #pragma once
 
 #ifdef NE_PLATFORM_WINDOWS
-	#if NE_DYNAMIC_LINK
-		#ifdef NE_BUILD_DLL
-			#define NOCTAL_ENGINE_API __declspec(dllexport)
-		#else
-			#define NOCTAL_ENGINE_API __declspec(dllimport)
-		#endif // NE_BUILD_DLL
-	#else
-		#define NOCTAL_ENGINE_API
-	#endif
+
 #else
 	#error NoctalEngine only supports Windows
 #endif // DEBUG

@@ -3,7 +3,7 @@
 
 namespace NoctalEngine
 {
-	class NOCTAL_ENGINE_API Timer
+	class Timer
 	{
 	public:
 		Timer();

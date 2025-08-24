@@ -32,7 +32,7 @@ namespace NoctalEngine
 #define EVENT_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
                          virtual EventType GetEventType() const override { return GetStaticType(); }
 
-	class NOCTAL_ENGINE_API Event
+	class Event
 	{
 		friend class EventDispatcher;
 

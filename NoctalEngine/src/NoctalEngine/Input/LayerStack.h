@@ -6,7 +6,7 @@ namespace NoctalEngine
 {
 	class Layer;
 
-	class NOCTAL_ENGINE_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();

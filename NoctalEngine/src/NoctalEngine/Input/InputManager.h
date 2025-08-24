@@ -4,7 +4,7 @@ namespace NoctalEngine
     class Event;
     class Window;
 
-    class NOCTAL_ENGINE_API InputManager
+    class InputManager
     {
         friend class Engine;
     public:

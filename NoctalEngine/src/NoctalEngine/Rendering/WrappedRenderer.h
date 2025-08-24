@@ -1,11 +1,12 @@
 #pragma once
 
 #include "NoctalEngine/Window/Window.h"
+#include "NoctalEngine/Rendering/Bindable.h"
 
 class Renderer;
 struct SDL_Window;
 
-class NOCTAL_ENGINE_API WrappedRenderer
+class WrappedRenderer
 {
 public:
     WrappedRenderer() = default;
@@ -19,4 +20,8 @@ public:
     virtual void EndRender() = 0;
 
     virtual void OnWindowResize(const uint32_t width, const uint32_t height) = 0;
+
+protected:
+    SDL_Window* m_Window = nullptr;
+    std::vector<std::unique_ptr<NoctalEngine::Bindable>> m_Bindables;
 };

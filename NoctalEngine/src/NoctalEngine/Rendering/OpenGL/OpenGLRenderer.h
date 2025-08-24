@@ -4,7 +4,7 @@
 #include "NoctalEngine/Window/Window.h"
 #include <SDL3/SDL.h>
 
-class NOCTAL_ENGINE_API OpenGLRenderer : public WrappedRenderer
+class OpenGLRenderer : public WrappedRenderer
 {
 public:
     OpenGLRenderer() = default;
@@ -20,5 +20,8 @@ public:
     virtual void OnWindowResize(const uint32_t width, const uint32_t height) override;
 
 private:
-    SDL_GLContext m_GLContext;
+    SDL_GLContext m_GLContext = nullptr;
+    unsigned int m_IndexBuffer;
+    unsigned int m_VertexArray;
+    unsigned int m_VertexBuffer;
 };

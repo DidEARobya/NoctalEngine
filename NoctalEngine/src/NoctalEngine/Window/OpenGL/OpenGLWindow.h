@@ -5,7 +5,7 @@ struct SDL_Window;
 
 namespace NoctalEngine
 {
-	class NOCTAL_ENGINE_API OpenGLWindow : public Window
+	class OpenGLWindow : public Window
 	{
 	public:
 		OpenGLWindow(const WindowProperties& properties);

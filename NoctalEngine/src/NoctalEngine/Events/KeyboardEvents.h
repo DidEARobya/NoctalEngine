@@ -3,7 +3,7 @@
 
 namespace NoctalEngine
 {
-	class NOCTAL_ENGINE_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		inline KeyEvent(const uint32_t keyCode, const uint32_t scanCode) : m_KeyCode{ keyCode }, m_ScanCode{ scanCode } {}

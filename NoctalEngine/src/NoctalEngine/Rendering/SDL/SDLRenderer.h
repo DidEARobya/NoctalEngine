@@ -4,7 +4,7 @@
 
 struct SDL_Renderer;
 
-class NOCTAL_ENGINE_API SDLRenderer : public WrappedRenderer
+class SDLRenderer : public WrappedRenderer
 {
 public:
     SDLRenderer() = default;

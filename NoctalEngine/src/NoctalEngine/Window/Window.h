@@ -25,7 +25,7 @@ namespace NoctalEngine
 		WindowProperties(TestGraphicsAPI testApi = TestGraphicsAPI::OPEN_GL, const std::string& title = "Noctal Engine", unsigned int width = 1280, unsigned int height = 720) : TestAPI(testApi), Title(title), Width(width), Height(height) {}
 	};
 
-	class NOCTAL_ENGINE_API Window
+	class Window
 	{
 	public:
 		Window() = default;

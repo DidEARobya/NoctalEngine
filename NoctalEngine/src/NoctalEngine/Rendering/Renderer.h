@@ -5,7 +5,7 @@ namespace NoctalEngine
 {
     class Window;
 
-    class NOCTAL_ENGINE_API Renderer
+    class Renderer
     {
     public:
         Renderer() = default;

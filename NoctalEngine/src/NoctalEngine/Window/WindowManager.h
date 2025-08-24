@@ -3,7 +3,7 @@
 
 namespace NoctalEngine
 {
-	class NOCTAL_ENGINE_API WindowManager
+	class WindowManager
 	{
 	public:
 		static void InitWindowAPI();

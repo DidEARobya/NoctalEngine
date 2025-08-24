@@ -57,7 +57,7 @@ namespace NoctalEngine
 
 			Renderer::Instance().Render();
 			Renderer::Instance().EndRender();
-
+			
 			//OnUpdateEvent event;
 			//OnEvent(event);
 		}
