@@ -1,6 +1,5 @@
 #pragma once
 #include "NoctalEngine/Rendering/VertexBuffer.h"
-#include "NoctalEngine/Rendering/BufferLayout.h"
 #include "GLAD/glad.h"
 
 class OpenGLVertexBuffer : public NoctalEngine::VertexBuffer
@@ -11,7 +10,7 @@ public:
 
 	virtual void Bind() override;
 
-	virtual const NoctalEngine::BufferLayout& GetBufferLayout() const { return m_Layout; };
+	virtual const NoctalEngine::BufferLayout* GetLayout() const override { return &m_Layout; };
 
 private:
 	GLenum ShaderDataTypeToOpenGLBaseType(NoctalEngine::ShaderDataType type);

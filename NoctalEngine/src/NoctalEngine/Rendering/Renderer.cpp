@@ -136,4 +136,25 @@ namespace NoctalEngine
 
 		return m_Instance->m_WrappedRenderer->CreateIndexBuffer(indices, size);
 	}
+	void Renderer::SetIndexBuffer(IndexBuffer* indexBuffer)
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return;
+		}
+
+		return m_Instance->m_WrappedRenderer->SetIndexBuffer(indexBuffer);
+	}
+
+	void Renderer::DrawIndexed()
+	{
+		if (m_Instance->m_WrappedRenderer == nullptr)
+		{
+			NE_ENGINE_FATAL("WrappedRenderer is uninitalised");
+			return;
+		}
+
+		return m_Instance->m_WrappedRenderer->DrawIndexed();
+	}
 }

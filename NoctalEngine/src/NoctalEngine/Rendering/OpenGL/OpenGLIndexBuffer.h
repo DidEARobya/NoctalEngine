@@ -11,6 +11,8 @@
 
 		virtual void Bind() override;
 
+		virtual const NoctalEngine::BufferLayout* GetLayout() const override { return nullptr; };
+
 	private:
 		uint32_t m_RendererID = 0;
 		uint32_t m_Count = 0;

@@ -6,6 +6,7 @@
 #include "NoctalEngine/Rendering/VertexBuffer.h"
 #include "NoctalEngine/Rendering/IndexBuffer.h"
 #include "NoctalEngine/Rendering/BufferLayout.h"
+#include "NoctalEngine/Rendering/Drawables/Drawable.h"
 
 class Renderer;
 struct SDL_Window;
@@ -33,7 +34,10 @@ public:
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 
+    virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
+    virtual void DrawIndexed() = 0;
+
 protected:
-    SDL_Window* m_Window = nullptr;
-    std::vector<std::unique_ptr<Bindable>> m_Bindables;
+    SDL_Window* m_Window = nullptr;  
+    std::vector<std::unique_ptr<Drawable>> m_Drawables;
 };

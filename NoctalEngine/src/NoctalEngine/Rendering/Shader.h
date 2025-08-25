@@ -5,5 +5,6 @@ namespace NoctalEngine
 {
 	class Shader : public Bindable
 	{
+		virtual const BufferLayout* GetLayout() const override = 0;
 	};
 }

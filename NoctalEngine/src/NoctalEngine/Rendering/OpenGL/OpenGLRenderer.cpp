@@ -9,6 +9,7 @@
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLShader.h"
 #include "OpenGLVertexBuffer.h"
+#include "OpenGLDrawable.h"
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
@@ -54,63 +55,8 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	ImGui_ImplOpenGL3_Init();
 	ImGui_ImplSDL3_InitForOpenGL(windowRef->GetSDLWindow(), m_GLContext);
 
-	float vertices[3 * 7]
-	{
-		-0.5f, -0.5f, 0.0f,		1.0, 0.0f, 1.0f, 1.0f,
-		 0.5f, -0.5f, 0.0f,		0.0, 0.0f, 1.0f, 1.0f,
-		 0.0f,  0.5f, 0.0f,		1.0, 1.0f, 0.0f, 1.0f
-	};
-
-	glGenVertexArrays(1, &m_VertexArray);
-	glBindVertexArray(m_VertexArray);
-
-	NoctalEngine::BufferLayout layout = {
-		{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
-		{ NoctalEngine::ShaderDataType::FLOAT_4, "a_Colour"}
-	};
-
-	m_Bindables.push_back(std::make_unique<OpenGLVertexBuffer>(vertices, sizeof(vertices), layout));
-
-	uint32_t indices[3] = { 0, 1, 2 };
-	m_IndexBuffer.reset(CreateIndexBuffer(indices, sizeof(indices) / sizeof(uint32_t)));
-
-	//m_Bindables.push_back(std::make_unique<OpenGLIndexBuffer>(indices));
-
-	std::string vertexSource = R"(
-		#version 330 core
-
-		layout(location = 0) in vec3 a_Position;
-		layout(location = 1) in vec4 a_Colour;
-
-		out vec3 v_Position;
-		out vec4 v_Colour;
-
-		void main()
-		{
-			v_Position = a_Position;
-			v_Colour = a_Colour;
-			gl_Position = vec4(a_Position, 1.0);
-		}	
-
-	)";
-
-	std::string pixelSource = R"(
-		#version 330 core
-
-		layout(location = 0) out vec4 colour;
-
-		in vec3 v_Position;
-		in vec4 v_Colour;
-
-		void main()
-		{
-			colour = vec4(v_Position * 0.5 + 0.5, 1.0);
-			colour = v_Colour;
-		}	
-
-	)";
-
-	m_Bindables.push_back(std::make_unique<OpenGLShader>(vertexSource, pixelSource));
+	m_Drawables.push_back(std::make_unique<OpenGLDrawable>(true));
+	m_Drawables.push_back(std::make_unique<OpenGLDrawable>(false));
 }
 
 void OpenGLRenderer::Destroy()
@@ -137,15 +83,10 @@ void OpenGLRenderer::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (auto& bindable : m_Bindables)
+	for (auto& drawable : m_Drawables)
 	{
-		bindable->Bind();
+		drawable->Draw();
 	}
-
-	m_IndexBuffer->Bind();
-
-	glBindVertexArray(m_VertexArray);
-	glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 	ImGui::Render();
 }
@@ -200,4 +141,9 @@ NoctalEngine::VertexBuffer* OpenGLRenderer::CreateVertexBuffer(float* vertices, 
 NoctalEngine::IndexBuffer* OpenGLRenderer::CreateIndexBuffer(uint32_t* indices, uint32_t size)
 {
 	return new OpenGLIndexBuffer(indices, size);
+}
+
+void OpenGLRenderer::DrawIndexed()
+{
+	//glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 }

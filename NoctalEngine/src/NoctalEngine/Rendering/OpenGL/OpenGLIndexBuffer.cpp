@@ -1,5 +1,6 @@
 #pragma once
 #include "OpenGLIndexBuffer.h"
+#include "NoctalEngine/Rendering/Renderer.h"
 #include "glad/glad.h"
 
 OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count) : m_Count(count)

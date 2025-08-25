@@ -34,6 +34,9 @@ namespace NoctalEngine
         VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
         IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
 
+        void SetIndexBuffer(IndexBuffer* indexBuffer);
+        void DrawIndexed();
+
     protected:
         static std::unique_ptr<Renderer> m_Instance;
         std::unique_ptr<WrappedRenderer> m_WrappedRenderer = nullptr;
