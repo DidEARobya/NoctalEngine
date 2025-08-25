@@ -18,5 +18,6 @@ OpenGLIndexBuffer::~OpenGLIndexBuffer()
 void OpenGLIndexBuffer::Bind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+	NoctalEngine::Renderer::Instance().SetIndexBuffer(this);
 }
 

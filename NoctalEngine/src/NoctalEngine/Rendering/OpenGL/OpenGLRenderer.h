@@ -1,6 +1,6 @@
 #pragma once
 #include "NoctalEngine/Rendering/WrappedRenderer.h"
-#include "GLAD/include/glad/glad.h"
+
 #include <SDL3/SDL.h>
 
 class OpenGLRenderer : public WrappedRenderer
@@ -12,7 +12,7 @@ public:
     virtual void Init(const NoctalEngine::Window* windowRef) override;
     virtual void Destroy() override;
 
-    virtual void BeginRender() override;
+    virtual void BeginRender(const glm::mat4& camera) override;
     virtual void Render() override;
     virtual void EndRender() override;
 
@@ -26,9 +26,12 @@ public:
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) override;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
 
-    virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override {};
+    virtual void CreateDrawable(NoctalEngine::Geometry geometry) override;
+
+    virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
 
 private:
+    NoctalEngine::IndexBuffer* m_IndexBuffer;
     SDL_GLContext m_GLContext = nullptr;
 };

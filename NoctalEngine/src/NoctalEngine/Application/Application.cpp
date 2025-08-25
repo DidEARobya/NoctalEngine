@@ -12,7 +12,7 @@
 
 namespace NoctalEngine
 {
-	Application::Application()
+	Application::Application() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		s_Instance = this;
 
@@ -48,7 +48,7 @@ namespace NoctalEngine
 			const auto deltaTime = m_Timer.Mark();
 			m_Window->OnUpdate();
 
-			Renderer::Instance().BeginRender();
+			Renderer::Instance().BeginRender(m_Camera.GetViewProjectionMatrix());
 
 			for (Layer* layer : m_LayerStack)
 			{

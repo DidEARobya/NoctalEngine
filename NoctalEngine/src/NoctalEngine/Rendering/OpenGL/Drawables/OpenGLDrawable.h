@@ -1,12 +1,13 @@
 #pragma once
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "NoctalEngine/Rendering/BufferLayout.h"
+#include "NoctalEngine/Rendering/Geometry/Geometry.h"
 #include "GLAD/glad.h"
 
 class OpenGLDrawable : public Drawable
 {
 public:
-	OpenGLDrawable(bool doSquare);
+	OpenGLDrawable(NoctalEngine::Geometry geometry);
 	virtual ~OpenGLDrawable() override;
 
 	//virtual void Update(float deltaTime) noexcept = 0;

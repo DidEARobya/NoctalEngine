@@ -9,6 +9,7 @@
 		~OpenGLShader();
 
 		virtual void Bind() override;
+		virtual void SetUniformMat4(const std::string& name, const glm::mat4 matrix) override;
 
 		virtual const NoctalEngine::BufferLayout* GetLayout() const override { return nullptr; };
 

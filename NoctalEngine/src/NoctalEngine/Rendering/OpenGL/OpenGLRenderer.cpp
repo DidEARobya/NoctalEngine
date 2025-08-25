@@ -2,14 +2,15 @@
 #include "OpenGLRenderer.h"
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
-#include "ImGui/backends/imgui_impl_opengl3.h"
-#include "backends/imgui_impl_sdl3.h"
-#include "glm/glm.hpp"
-#include "SDL3/SDL.h"
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLShader.h"
 #include "OpenGLVertexBuffer.h"
-#include "OpenGLDrawable.h"
+#include "Drawables/OpenGLDrawable.h"
+
+#include <ImGui/backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_sdl3.h>
+#include <glm/glm.hpp>
+#include <GLAD/include/glad/glad.h>
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
@@ -54,9 +55,6 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 
 	ImGui_ImplOpenGL3_Init();
 	ImGui_ImplSDL3_InitForOpenGL(windowRef->GetSDLWindow(), m_GLContext);
-
-	m_Drawables.push_back(std::make_unique<OpenGLDrawable>(true));
-	m_Drawables.push_back(std::make_unique<OpenGLDrawable>(false));
 }
 
 void OpenGLRenderer::Destroy()
@@ -66,8 +64,10 @@ void OpenGLRenderer::Destroy()
 	ImGui::DestroyContext();
 }
 
-void OpenGLRenderer::BeginRender()
+void OpenGLRenderer::BeginRender(const glm::mat4& camera)
 {
+	m_CameraViewProjectionMatrix = camera;
+
 	ImGuiIO& io = ImGui::GetIO();
 	NoctalEngine::Application& app = NoctalEngine::Application::Get();
 	io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
@@ -76,7 +76,7 @@ void OpenGLRenderer::BeginRender()
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
-	glClearColor(0.1f, 0.1f, 0.1f, 0);
+	glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 }
 
 void OpenGLRenderer::Render()
@@ -143,7 +143,12 @@ NoctalEngine::IndexBuffer* OpenGLRenderer::CreateIndexBuffer(uint32_t* indices, 
 	return new OpenGLIndexBuffer(indices, size);
 }
 
+void OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry geometry)
+{
+	m_Drawables.push_back(std::make_unique<OpenGLDrawable>(geometry));
+}
+
 void OpenGLRenderer::DrawIndexed()
 {
-	//glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 }

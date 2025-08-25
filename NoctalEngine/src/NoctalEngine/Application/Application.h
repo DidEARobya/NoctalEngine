@@ -2,6 +2,7 @@
 #include "NoctalEngine/Core.h"
 #include "NoctalEngine/Input/LayerStack.h"
 #include "NoctalEngine/Utility/Timer.h"
+#include "NoctalEngine/Rendering/Camera/OrthographicCamera.h"
 
 namespace NoctalEngine
 {
@@ -10,7 +11,6 @@ namespace NoctalEngine
 	class WindowClosedEvent;
 	class Layer;
 	class ImGuiLayer;
-
 	class Application
 	{
 	public:
@@ -28,6 +28,8 @@ namespace NoctalEngine
 		inline static Application& Get() { return *s_Instance; };
 		inline Window& GetWindow() { return *m_Window; };
 
+	protected:
+		OrthographicCamera m_Camera;
 	private:
 		Window* m_Window = nullptr;
 		ImGuiLayer* m_ImGuiLayer = nullptr;

@@ -1,5 +1,6 @@
 #pragma once
 #include "WrappedRenderer.h"
+#include "Geometry/Geometry.h"
 
 namespace NoctalEngine
 {
@@ -15,12 +16,12 @@ namespace NoctalEngine
         Renderer() = default;
         ~Renderer() = default;
 
-        static Renderer& Instance() { return *m_Instance; }
+        static Renderer& Instance() { NE_ENGINE_ASSERT(s_Instance, "Renderer is invalid"); return *s_Instance; }
 
         void Init(const Window* windowRef);
         void Destroy();
 
-        void BeginRender();
+        void BeginRender(const glm::mat4& camera);
         void Render();
         void EndRender();
 
@@ -34,11 +35,15 @@ namespace NoctalEngine
         VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
         IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
 
+        void CreateDrawable(Geometry geometry);
+
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         void DrawIndexed();
 
+        const glm::mat4& GetCameraViewProjectionMatrix() const;
+
     protected:
-        static std::unique_ptr<Renderer> m_Instance;
+        static std::unique_ptr<Renderer> s_Instance;
         std::unique_ptr<WrappedRenderer> m_WrappedRenderer = nullptr;
     };
 

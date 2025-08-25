@@ -4,9 +4,10 @@
 class Sandbox : public NoctalEngine::Application
 {
 public:
-	Sandbox()
+	Sandbox() : NoctalEngine::Application()
 	{
-
+		NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::SQUARE);
+		NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TRIANGLE);
 	}
 	~Sandbox()
 	{

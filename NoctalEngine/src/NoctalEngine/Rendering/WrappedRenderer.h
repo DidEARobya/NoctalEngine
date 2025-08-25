@@ -7,6 +7,7 @@
 #include "NoctalEngine/Rendering/IndexBuffer.h"
 #include "NoctalEngine/Rendering/BufferLayout.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
+#include "Geometry/Geometry.h"
 
 class Renderer;
 struct SDL_Window;
@@ -20,7 +21,7 @@ public:
     virtual void Init(const NoctalEngine::Window* windowRef) = 0;
     virtual void Destroy() = 0;
 
-    virtual void BeginRender() = 0;
+    virtual void BeginRender(const glm::mat4& camera) = 0;
     virtual void Render() = 0;
     virtual void EndRender() = 0;
 
@@ -34,10 +35,15 @@ public:
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 
+    virtual void CreateDrawable(NoctalEngine::Geometry geometry) = 0;
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
     virtual void DrawIndexed() = 0;
+
+    const glm::mat4& GetCameraViewProjectionMatrix() const { return m_CameraViewProjectionMatrix; };
 
 protected:
     SDL_Window* m_Window = nullptr;  
     std::vector<std::unique_ptr<Drawable>> m_Drawables;
+
+    glm::mat4 m_CameraViewProjectionMatrix;
 };
