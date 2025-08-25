@@ -27,7 +27,7 @@ OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& p
 
 		glDeleteShader(vertexShader);
 
-		NE_ENGINE_ERROR("{0}", infoLog.data());
+		NE_ENGINE_ERROR("{}", infoLog.data());
 		NE_ENGINE_ASSERT(false, "Vertex Shader Compilation Failure");
 		return;
 	}
@@ -52,7 +52,7 @@ OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& p
 		glDeleteShader(fragmentShader);
 		glDeleteShader(vertexShader);
 
-		NE_ENGINE_ERROR("{0}", infoLog.data());
+		NE_ENGINE_ERROR("{}", infoLog.data());
 		NE_ENGINE_ASSERT(false, "Pixel Shader Compilation Failure");
 		return;
 	}
@@ -80,7 +80,7 @@ OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& p
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
-		NE_ENGINE_ERROR("{0}", infoLog.data());
+		NE_ENGINE_ERROR("{}", infoLog.data());
 		NE_ENGINE_ASSERT(false, "Shader Program Link Failure");
 		return;
 	}

@@ -64,10 +64,8 @@ void OpenGLRenderer::Destroy()
 	ImGui::DestroyContext();
 }
 
-void OpenGLRenderer::BeginRender(const glm::mat4& camera)
+void OpenGLRenderer::BeginRender()
 {
-	m_CameraViewProjectionMatrix = camera;
-
 	ImGuiIO& io = ImGui::GetIO();
 	NoctalEngine::Application& app = NoctalEngine::Application::Get();
 	io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
@@ -93,6 +91,8 @@ void OpenGLRenderer::Render()
 
 void OpenGLRenderer::EndRender()
 {
+	m_CameraViewProjectionMatrix = NoctalEngine::Application::Get().GetCameraViewProjection();
+
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::EndFrame();

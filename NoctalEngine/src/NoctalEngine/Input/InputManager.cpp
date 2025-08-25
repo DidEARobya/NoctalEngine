@@ -10,9 +10,9 @@
 
 namespace NoctalEngine
 {
-    std::unordered_map<uint32_t, bool>    InputManager::m_KeyCodeMap = { };
-    std::unordered_map<uint32_t, bool>    InputManager::m_MouseButtonMap = { };
-    //ScarlettMath::Vec2                  InputManager::mMousePosition = { 0.0f, 0.0f };
+    std::unordered_map<uint32_t, bool>      InputManager::m_KeyCodeMap = { };
+    std::unordered_map<uint8_t, bool>       InputManager::m_MouseButtonMap = { };
+    glm::vec2                               InputManager::m_MousePosition = { 0.0f, 0.0f };
 
     void InputManager::Update(Window* focussedWindow)
     {
@@ -81,6 +81,8 @@ namespace NoctalEngine
 
                 SDL_GetMouseState(&x, &y);
 
+                m_MousePosition = glm::vec2(x, y);
+
                 MouseMovedEvent event(x, y);
                 focussedWindow->WindowData.eventCallback(event);
             }
@@ -121,10 +123,4 @@ namespace NoctalEngine
                 return false;
             });
     }
-
-    void InputManager::GetMousePosition(float& mouseX, float& mouseY)
-    {
-        SDL_GetMouseState(&mouseX, &mouseY);
-    }
-
 }

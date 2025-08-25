@@ -263,16 +263,16 @@ namespace NoctalEngine
 #define KEY_LHYPER                 0x20000006u /**< Extended key Left Hyper */
 #define KEY_RHYPER                 0x20000007u /**< Extended key Right Hyper */
 
-#define MOUSE_BUTTON_1 MOUSE_BUTTON_1  0;
-#define MOUSE_BUTTON_2 MOUSE_BUTTON_2  1;
-#define MOUSE_BUTTON_3 MOUSE_BUTTON_3  2;
-#define MOUSE_BUTTON_4 MOUSE_BUTTON_4  3;
-#define MOUSE_BUTTON_5 MOUSE_BUTTON_5  4;
-#define MOUSE_BUTTON_6 MOUSE_BUTTON_6  5;
-#define MOUSE_BUTTON_7 MOUSE_BUTTON_7  6;
-#define MOUSE_BUTTON_8 MOUSE_BUTTON_8  7;
-#define MOUSE_BUTTON_LAST              MOUSE_BUTTON_8;
-#define MOUSE_BUTTON_LEFT              MOUSE_BUTTON_1;
-#define MOUSE_BUTTON_MIDDLE            MOUSE_BUTTON_3;
-#define MOUSE_BUTTON_RIGHT             MOUSE_BUTTON_2;
+#define MOUSE_BUTTON_1					1
+#define MOUSE_BUTTON_2					2
+#define MOUSE_BUTTON_3					3
+#define MOUSE_BUTTON_4					4
+#define MOUSE_BUTTON_5					5
+#define MOUSE_BUTTON_6					6
+#define MOUSE_BUTTON_7					7
+#define MOUSE_BUTTON_8					8
+#define MOUSE_BUTTON_LAST               MOUSE_BUTTON_8
+#define MOUSE_BUTTON_LEFT               MOUSE_BUTTON_1
+#define MOUSE_BUTTON_MIDDLE             MOUSE_BUTTON_2
+#define MOUSE_BUTTON_RIGHT              MOUSE_BUTTON_3
 }

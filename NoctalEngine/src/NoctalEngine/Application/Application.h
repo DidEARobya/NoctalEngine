@@ -11,6 +11,8 @@ namespace NoctalEngine
 	class WindowClosedEvent;
 	class Layer;
 	class ImGuiLayer;
+	class AppLayer;
+
 	class Application
 	{
 	public:
@@ -25,19 +27,28 @@ namespace NoctalEngine
 
 		bool CloseApplication(const WindowClosedEvent& closeEvent);
 
+		virtual const glm::mat4& GetCameraViewProjection() const = 0;
+
 		inline static Application& Get() { return *s_Instance; };
 		inline Window& GetWindow() { return *m_Window; };
 
+		static float DeltaTime() { return s_Instance->m_DeltaTime; };
+
 	protected:
-		OrthographicCamera m_Camera;
+		AppLayer* m_GameLayer = nullptr;
+
 	private:
 		Window* m_Window = nullptr;
 		ImGuiLayer* m_ImGuiLayer = nullptr;
 
-		bool m_AppRunning = true;
 		Timer m_Timer;
+
+		bool m_AppRunning = true;
+
 		LayerStack m_LayerStack;
 		inline static Application* s_Instance;
+
+		float m_DeltaTime;
 	};
 
 	Application* CreateApplication();

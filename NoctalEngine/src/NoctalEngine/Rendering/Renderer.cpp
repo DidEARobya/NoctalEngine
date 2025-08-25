@@ -24,11 +24,11 @@ namespace NoctalEngine
 		s_Instance->m_WrappedRenderer->Destroy();
 	}
 
-	void Renderer::BeginRender(const glm::mat4& camera)
+	void Renderer::BeginRender()
 	{
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
 
-		s_Instance->m_WrappedRenderer->BeginRender(camera);
+		s_Instance->m_WrappedRenderer->BeginRender();
 	}
 
 	void Renderer::Render()

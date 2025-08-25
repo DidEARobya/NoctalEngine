@@ -21,7 +21,7 @@ namespace NoctalEngine
         void Init(const Window* windowRef);
         void Destroy();
 
-        void BeginRender(const glm::mat4& camera);
+        void BeginRender();
         void Render();
         void EndRender();
 

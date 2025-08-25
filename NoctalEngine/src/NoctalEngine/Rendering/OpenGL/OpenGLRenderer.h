@@ -12,7 +12,7 @@ public:
     virtual void Init(const NoctalEngine::Window* windowRef) override;
     virtual void Destroy() override;
 
-    virtual void BeginRender(const glm::mat4& camera) override;
+    virtual void BeginRender() override;
     virtual void Render() override;
     virtual void EndRender() override;
 

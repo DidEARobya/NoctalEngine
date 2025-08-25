@@ -21,7 +21,7 @@ public:
     virtual void Init(const NoctalEngine::Window* windowRef) = 0;
     virtual void Destroy() = 0;
 
-    virtual void BeginRender(const glm::mat4& camera) = 0;
+    virtual void BeginRender() = 0;
     virtual void Render() = 0;
     virtual void EndRender() = 0;
 

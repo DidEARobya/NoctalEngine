@@ -12,7 +12,7 @@
 
 namespace NoctalEngine
 {
-	Application::Application() : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+	Application::Application()
 	{
 		s_Instance = this;
 
@@ -37,6 +37,7 @@ namespace NoctalEngine
 	Application::~Application()
 	{
 		Renderer::Instance().Destroy();
+
 		WindowManager::DestroyWindow(m_Window);
 		WindowManager::TerminateWindowAPI();
 	}
@@ -45,14 +46,14 @@ namespace NoctalEngine
 	{
 		while (m_AppRunning)
 		{
-			const auto deltaTime = m_Timer.Mark();
+			m_DeltaTime = m_Timer.Mark();
 			m_Window->OnUpdate();
 
-			Renderer::Instance().BeginRender(m_Camera.GetViewProjectionMatrix());
+			Renderer::Instance().BeginRender();
 
 			for (Layer* layer : m_LayerStack)
 			{
-				layer->OnUpdate(deltaTime);
+				layer->OnUpdate(m_DeltaTime);
 			}
 
 			Renderer::Instance().Render();

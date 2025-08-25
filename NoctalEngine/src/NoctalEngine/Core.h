@@ -18,9 +18,9 @@
 #ifdef NE_ENABLE_ASSERTS
 	#include "SDL3/SDL_error.h"
 //Fix (__VA_ARGS__ not being passed properly)
-	#define NE_ASSERT(x, ...) { if(!(x)) { NE_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK(); }}
-	#define NE_ENGINE_ASSERT(x, ...) { if(!(x)) { NE_ENGINE_ERROR("Assertion Failed: {0}", __VA_ARGS__); DEBUG_BREAK(); }}
-	#define NE_ENGINE_SDL_ASSERT(x) { if(!(x)) { NE_ENGINE_ERROR("Assertion Failed: SDL Error: {0}", SDL_GetError()); DEBUG_BREAK(); }}
+	#define NE_ASSERT(x, fmt, ...) { if(!(x)) { NE_ENGINE_ERROR("Assertion Failed: " fmt, ##__VA_ARGS__); DEBUG_BREAK(); }}	
+	#define NE_ENGINE_ASSERT(x, fmt, ...) { if(!(x)) { NE_ENGINE_ERROR("Assertion Failed: " fmt, ##__VA_ARGS__); DEBUG_BREAK(); }}	
+	#define NE_ENGINE_SDL_ASSERT(x, fmt, ...) { if(!(x)) { NE_ENGINE_ERROR("Assertion Failed: " fmt, SDL_GetError()); DEBUG_BREAK(); }}	
 #else
 	#define NE_ASSERT(x, ...)
 	#define NE_ENGINE_ASSERT(x, ...)

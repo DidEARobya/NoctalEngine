@@ -3,15 +3,6 @@
 
 namespace NoctalEngine
 {
-	class MouseButtonPressedEvent;
-	class MouseButtonReleasedEvent;
-	class MouseMovedEvent;
-	class MouseScrollEvent;
-	class KeyPressedEvent;
-	class KeyReleasedEvent;
-	class KeyTypedEvent;
-	class WindowResizeEvent;
-
 	class ImGuiLayer : public Layer
 	{
 	public:
