@@ -35,7 +35,7 @@ public:
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 
-    virtual void CreateDrawable(NoctalEngine::Geometry geometry) = 0;
+    virtual std::shared_ptr<Drawable> CreateDrawable(NoctalEngine::Geometry geometry) = 0;
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
     virtual void DrawIndexed() = 0;
 
@@ -43,7 +43,7 @@ public:
 
 protected:
     SDL_Window* m_Window = nullptr;  
-    std::vector<std::unique_ptr<Drawable>> m_Drawables;
+    std::vector<std::shared_ptr<Drawable>> m_Drawables;
 
-    glm::mat4 m_CameraViewProjectionMatrix;
+    glm::mat4 m_CameraViewProjectionMatrix = { 0.0f };
 };

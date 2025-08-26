@@ -83,7 +83,7 @@ void OpenGLRenderer::Render()
 
 	for (auto& drawable : m_Drawables)
 	{
-		drawable->Draw();
+		drawable.get()->Draw();
 	}
 
 	ImGui::Render();
@@ -130,7 +130,7 @@ const char* OpenGLRenderer::GetVersion()
 
 NoctalEngine::Shader* OpenGLRenderer::CreateShader(const std::string& vertexSource, const std::string& pixelSource)
 {
-	return new OpenGLShader(vertexSource, pixelSource);
+	return nullptr;//new OpenGLShader(vertexSource, pixelSource);
 }
 
 NoctalEngine::VertexBuffer* OpenGLRenderer::CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout)
@@ -143,9 +143,12 @@ NoctalEngine::IndexBuffer* OpenGLRenderer::CreateIndexBuffer(uint32_t* indices, 
 	return new OpenGLIndexBuffer(indices, size);
 }
 
-void OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry geometry)
+std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry geometry)
 {
-	m_Drawables.push_back(std::make_unique<OpenGLDrawable>(geometry));
+	std::shared_ptr<Drawable> drawable = std::make_shared<OpenGLDrawable>(geometry);
+	m_Drawables.push_back(drawable);
+
+	return drawable;
 }
 
 void OpenGLRenderer::DrawIndexed()

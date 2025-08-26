@@ -26,12 +26,12 @@ public:
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) override;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
 
-    virtual void CreateDrawable(NoctalEngine::Geometry geometry) override;
+    virtual std::shared_ptr<Drawable>CreateDrawable(NoctalEngine::Geometry geometry) override;
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
 
 private:
-    NoctalEngine::IndexBuffer* m_IndexBuffer;
+    NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
     SDL_GLContext m_GLContext = nullptr;
 };

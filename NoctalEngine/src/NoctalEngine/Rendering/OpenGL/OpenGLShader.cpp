@@ -3,8 +3,9 @@
 #include "GLAD/glad.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "NoctalEngine/Rendering/Renderer.h"
+#include "NoctalEngine/Rendering/Drawables/Drawable.h"
 
-OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& pixelSource)
+OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& pixelSource, const Drawable& parent) : m_Parent(parent)
 {
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -98,6 +99,7 @@ void OpenGLShader::Bind()
 {
 	glUseProgram(m_RendererID);
 	SetUniformMat4("u_ViewProjection", NoctalEngine::Renderer::Instance().GetCameraViewProjectionMatrix());
+	SetUniformMat4("u_Transform", m_Parent.GetTransform());
 }
 
 void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4 matrix)

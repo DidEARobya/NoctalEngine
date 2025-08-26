@@ -35,7 +35,7 @@ namespace NoctalEngine
         VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
         IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
 
-        void CreateDrawable(Geometry geometry);
+        std::shared_ptr<Drawable> CreateDrawable(Geometry geometry);
 
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         void DrawIndexed();

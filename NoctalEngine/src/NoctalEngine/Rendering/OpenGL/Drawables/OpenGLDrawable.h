@@ -3,6 +3,7 @@
 #include "NoctalEngine/Rendering/BufferLayout.h"
 #include "NoctalEngine/Rendering/Geometry/Geometry.h"
 #include "GLAD/glad.h"
+#include "glm/glm.hpp"
 
 class OpenGLDrawable : public Drawable
 {
@@ -11,6 +12,12 @@ public:
 	virtual ~OpenGLDrawable() override;
 
 	//virtual void Update(float deltaTime) noexcept = 0;
+	virtual const glm::mat4& GetTransform() const override;
+
+	virtual void SetPosition(const glm::vec3& position) { m_Position = position; };
+	virtual glm::vec3 GetPosition() { return m_Position; };
+
+	virtual void SetScale(const glm::mat4& scale) { m_Scale = scale; };;
 
 	virtual void Draw() const override;
 
@@ -21,6 +28,9 @@ private:
 	GLenum ShaderDataTypeToOpenGLBaseType(NoctalEngine::ShaderDataType type);
 
 private:
+	glm::vec3 m_Position;
+	glm::mat4 m_Scale;
+
 	uint32_t m_RendererID = 0;
 
 	const class NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;

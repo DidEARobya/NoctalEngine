@@ -8,6 +8,7 @@
 #include "NoctalEngine/Events/KeyboardEvents.h"
 #include "NoctalEngine/Input/KeyCodes.h"
 #include "NoctalEngine/Input/InputManager.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 //---- ENTRY POINT ----
 #include "NoctalEngine/EntryPoint.h"

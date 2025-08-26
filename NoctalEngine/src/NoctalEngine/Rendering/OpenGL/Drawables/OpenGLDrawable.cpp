@@ -3,9 +3,11 @@
 #include "NoctalEngine/Rendering/VertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/OpenGLVertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/OpenGLShader.h"
+#include "NoctalEngine/Rendering/OpenGL/OpenGLTransformCBuffer.h"
 #include "NoctalEngine/Rendering/Renderer.h"
+#include "glm/gtc/matrix_transform.hpp"
 
-OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry)
+OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm::vec3(0.0f)), m_Scale(glm::mat4(1.0f))
 {
 	glCreateVertexArrays(1, &m_RendererID);
 	glBindVertexArray(m_RendererID);
@@ -37,6 +39,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry)
 				layout(location = 1) in vec4 a_Colour;
 				
 				uniform mat4 u_ViewProjection;
+				uniform mat4 u_Transform;
 
 				out vec3 v_Position;
 				out vec4 v_Colour;
@@ -45,7 +48,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry)
 				{
 					v_Position = a_Position;
 					v_Colour = a_Colour;
-					gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 				}	
 
 			)";
@@ -66,8 +69,9 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry)
 
 			)";
 
-			AddBind(std::make_unique<OpenGLShader>(vertexSource, pixelSource));
-			return;
+			AddBind(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
+			NE_ENGINE_INFO("Triangle Created");
+			break;
 		}
 
 
@@ -94,13 +98,14 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry)
 				layout(location = 0) in vec3 a_Position;
 				
 				uniform mat4 u_ViewProjection;
+				uniform mat4 u_Transform;
 
 				out vec3 v_Position;
 
 				void main()
 				{
 					v_Position = a_Position;
-					gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 				}	
 
 			)";
@@ -119,19 +124,30 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry)
 
 			)";
 
-			AddBind(std::make_unique<OpenGLShader>(vertexSource, pixelSource));
-			return;
+			AddBind(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
+			NE_ENGINE_INFO("Square Created");
+			break;
 		}
 
 	default:
 		NE_ENGINE_ASSERT(false, "Geometry case doesn't exist");
 		break;
 	}
+	
+	//Transform currently handled in Shader
+	//AddBind(std::make_unique<OpenGLTransformCBuffer>());
 }
 
 OpenGLDrawable::~OpenGLDrawable()
 {
+	NE_ENGINE_INFO("Drawable Destroyed");
 	glDeleteVertexArrays(1, &m_RendererID);
+}
+
+const glm::mat4& OpenGLDrawable::GetTransform() const
+{
+	glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position) * m_Scale;
+	return transform;
 }
 
 void OpenGLDrawable::Draw() const
