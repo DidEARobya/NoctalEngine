@@ -1,6 +1,7 @@
 #pragma once
 #include "NoctalEngine/Rendering/Bindable.h"
-#include "NoctalEngine/Rendering/IndexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
+#include "NoctalEngine/Rendering/Materials/Material.h"
 #include "glm/glm.hpp"
 
 class Drawable
@@ -16,10 +17,13 @@ public:
 
 	virtual void SetScale(const glm::mat4& scale) = 0;
 
+	virtual NoctalEngine::Material* GetMaterial() = 0;
 	virtual void Draw() const = 0;
 
 	virtual void AddBind(std::unique_ptr<Bindable> bind) = 0;
 	virtual void AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer) = 0;
+	virtual void AddMaterial(std::unique_ptr<NoctalEngine::Material> material) = 0;
+
 };
 
 

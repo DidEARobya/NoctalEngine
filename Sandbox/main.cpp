@@ -9,15 +9,17 @@ public:
 	{
 		//m_Square = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::SQUARE);
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		glm::vec4 colour(0.2f, 0.8f, 0.1f, 1.0f);
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 10; i++)
 		{
-			for (int u = 0; u < 5; u++)
+			for (int u = 0; u < 10; u++)
 			{
-				glm::vec3 position(i * 0.22f, u * 0.22f, 0.0f);
+				glm::vec3 position(i * 0.11f, u * 0.11f, 0.0f);
 				std::shared_ptr<Drawable> shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::SQUARE);
 				shape->SetPosition(position);
 				shape->SetScale(scale);
+				shape->GetMaterial()->Uniforms.Colour = colour;
 			}
 		}
 

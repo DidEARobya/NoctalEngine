@@ -2,10 +2,10 @@
 
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Rendering/Bindable.h"
-#include "NoctalEngine/Rendering/Shader.h"
-#include "NoctalEngine/Rendering/VertexBuffer.h"
-#include "NoctalEngine/Rendering/IndexBuffer.h"
-#include "NoctalEngine/Rendering/BufferLayout.h"
+#include "NoctalEngine/Rendering/Shaders/Shader.h"
+#include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "Geometry/Geometry.h"
 

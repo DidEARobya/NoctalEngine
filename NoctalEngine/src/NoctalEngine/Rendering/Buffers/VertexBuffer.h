@@ -1,5 +1,5 @@
 #pragma once
-#include "Bindable.h"
+#include "NoctalEngine/Rendering/Bindable.h"
 
 namespace NoctalEngine
 {

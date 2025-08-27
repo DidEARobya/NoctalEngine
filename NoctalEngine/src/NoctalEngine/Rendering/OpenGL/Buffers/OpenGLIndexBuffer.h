@@ -1,5 +1,5 @@
 #pragma once
-#include "NoctalEngine/Rendering/IndexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
 
 	class OpenGLIndexBuffer : public NoctalEngine::IndexBuffer
 	{

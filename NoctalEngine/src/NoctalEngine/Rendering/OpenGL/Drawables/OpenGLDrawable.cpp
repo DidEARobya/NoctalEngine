@@ -1,9 +1,9 @@
 #pragma once
 #include "OpenGLDrawable.h"
-#include "NoctalEngine/Rendering/VertexBuffer.h"
-#include "NoctalEngine/Rendering/OpenGL/OpenGLVertexBuffer.h"
-#include "NoctalEngine/Rendering/OpenGL/OpenGLShader.h"
-#include "NoctalEngine/Rendering/OpenGL/OpenGLTransformCBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
+#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShader.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLTransformCBuffer.h"
 #include "NoctalEngine/Rendering/Renderer.h"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -14,6 +14,9 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 
 	std::string vertexSource;
 	std::string pixelSource;
+
+	AddMaterial(std::make_unique<NoctalEngine::Material>());
+	NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
 
 	switch (geometry)
 	{
@@ -69,7 +72,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 
 			)";
 
-			AddBind(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
+			m_Material->BindShader(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
 			NE_ENGINE_INFO("Triangle Created");
 			break;
 		}
@@ -99,12 +102,15 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				
 				uniform mat4 u_ViewProjection;
 				uniform mat4 u_Transform;
+				uniform vec4 u_Colour;
 
 				out vec3 v_Position;
+				out vec4 v_Colour;
 
 				void main()
 				{
 					v_Position = a_Position;
+					v_Colour = u_Colour;
 					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 				}	
 
@@ -116,15 +122,16 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				layout(location = 0) out vec4 colour;
 
 				in vec3 v_Position;
+				in vec4 v_Colour;
 
 				void main()
 				{
-					colour = vec4(0.2, 0.3, 0.8, 1.0);
+					colour = v_Colour;
 				}	
 
 			)";
 
-			AddBind(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
+			m_Material->BindShader(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
 			NE_ENGINE_INFO("Square Created");
 			break;
 		}
@@ -194,6 +201,14 @@ void OpenGLDrawable::AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> i
 
 	m_IndexBuffer = indexBuffer.get();
 	m_Binds.push_back(std::move(indexBuffer));
+}
+
+void OpenGLDrawable::AddMaterial(std::unique_ptr<NoctalEngine::Material> material)
+{
+	NE_ENGINE_ASSERT(m_Material == nullptr, "Attempted to add Material a second time");
+
+	m_Material = material.get();
+	m_Binds.push_back(std::move(material));
 }
 
 GLenum OpenGLDrawable::ShaderDataTypeToOpenGLBaseType(NoctalEngine::ShaderDataType type)

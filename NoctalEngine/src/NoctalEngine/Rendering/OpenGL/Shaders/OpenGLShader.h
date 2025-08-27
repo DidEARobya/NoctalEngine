@@ -1,5 +1,5 @@
 #pragma once
-#include "NoctalEngine/Rendering/Shader.h"
+#include "NoctalEngine/Rendering/Shaders/Shader.h"
 
 class Drawable;
 
@@ -11,6 +11,7 @@ public:
 
 	virtual void Bind() override;
 	virtual void SetUniformMat4(const std::string& name, const glm::mat4 matrix) override;
+	virtual void SetUniformFloat4(const std::string& name, const glm::vec4 matrix) override;
 
 	virtual const NoctalEngine::BufferLayout* GetLayout() const override { return nullptr; };
 

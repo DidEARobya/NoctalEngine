@@ -2,9 +2,9 @@
 #include "OpenGLRenderer.h"
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
-#include "OpenGLIndexBuffer.h"
-#include "OpenGLShader.h"
-#include "OpenGLVertexBuffer.h"
+#include "Buffers/OpenGLIndexBuffer.h"
+#include "Shaders/OpenGLShader.h"
+#include "Buffers/OpenGLVertexBuffer.h"
 #include "Drawables/OpenGLDrawable.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>

@@ -1,5 +1,5 @@
 #pragma once
-#include "NoctalEngine/Rendering/BufferLayout.h"
+#include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 
 class Bindable
 {
