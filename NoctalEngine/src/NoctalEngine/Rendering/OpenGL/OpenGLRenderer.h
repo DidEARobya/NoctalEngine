@@ -27,6 +27,7 @@ public:
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
 
     virtual std::shared_ptr<Drawable>CreateDrawable(NoctalEngine::Geometry geometry) override;
+    virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) override;
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;

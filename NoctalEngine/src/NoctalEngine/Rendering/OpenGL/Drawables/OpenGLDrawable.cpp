@@ -1,9 +1,9 @@
-#pragma once
 #include "OpenGLDrawable.h"
 #include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShader.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLTransformCBuffer.h"
+#include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Renderer.h"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -76,20 +76,18 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			NE_ENGINE_INFO("Triangle Created");
 			break;
 		}
-
-
 	case NoctalEngine::Geometry::SQUARE:
 		{
 			float verticesSquare[3 * 4]
 			{
-				-0.75f, -0.75f, 0.0f,
-				 0.75f, -0.75f, 0.0f,
-				 0.75f,  0.75f, 0.0f,
-				-0.75f,  0.75f, 0.0f
+				-0.5f, -0.5f, 0.0f,
+				 0.5f, -0.5f, 0.0f,
+				 0.5f,  0.5f, 0.0f,
+				-0.5f,  0.5f, 0.0f
 			};
 
 			AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(NoctalEngine::Renderer::Instance().CreateVertexBuffer(verticesSquare, sizeof(verticesSquare), {
-				{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
+				{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"}
 				})));
 
 			uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
@@ -123,7 +121,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 
 				in vec3 v_Position;
 				in vec4 v_Colour;
-
+				
 				void main()
 				{
 					colour = v_Colour;
@@ -135,7 +133,72 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			NE_ENGINE_INFO("Square Created");
 			break;
 		}
+	case NoctalEngine::Geometry::TEX_SQUARE:
+	{
+		float verticesSquare[5 * 4]
+		{
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+		};
 
+		AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(NoctalEngine::Renderer::Instance().CreateVertexBuffer(verticesSquare, sizeof(verticesSquare), {
+			{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
+			{ NoctalEngine::ShaderDataType::FLOAT_2, "a_TexCoord"},
+			})));
+
+		uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
+		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
+
+		vertexSource = R"(
+				#version 330 core
+
+				layout(location = 0) in vec3 a_Position;
+				layout(location = 1) in vec2 a_TexCoord;
+				
+				uniform mat4 u_ViewProjection;
+				uniform mat4 u_Transform;
+				uniform vec4 u_Colour;
+
+				out vec3 v_Position;
+				out vec4 v_Colour;
+				out vec2 v_TexCoord;
+
+				void main()
+				{
+					v_Position = a_Position;
+					v_TexCoord = a_TexCoord;
+					v_Colour = u_Colour;
+					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+
+	
+				}	
+
+			)";
+
+		pixelSource = R"(
+				#version 330 core
+
+				layout(location = 0) out vec4 colour;
+				
+				uniform sampler2D u_Textures[2]; // for two textures
+				uniform sampler2D u_Texture;
+
+				in vec2 v_TexCoord;
+				in vec4 v_Colour;
+
+				void main()
+				{
+					colour = texture(u_Texture, v_TexCoord);
+				}	
+
+			)";
+
+		m_Material->BindShader(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
+		NE_ENGINE_INFO("Square Created");
+		break;
+	}
 	default:
 		NE_ENGINE_ASSERT(false, "Geometry case doesn't exist");
 		break;

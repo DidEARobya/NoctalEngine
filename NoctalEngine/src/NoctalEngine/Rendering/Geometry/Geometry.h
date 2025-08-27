@@ -5,6 +5,7 @@ namespace NoctalEngine
     enum class Geometry
     {
         TRIANGLE,
-        SQUARE
+        SQUARE,
+        TEX_SQUARE
     };
 }

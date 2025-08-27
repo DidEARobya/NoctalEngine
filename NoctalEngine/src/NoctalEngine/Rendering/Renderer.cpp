@@ -93,6 +93,13 @@ namespace NoctalEngine
 		return s_Instance->m_WrappedRenderer->CreateIndexBuffer(indices, size);
 	}
 
+	std::shared_ptr<Texture> Renderer::CreateTexture(const std::string& path)
+	{
+		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
+
+		return s_Instance->m_WrappedRenderer->CreateTexture(path);
+	}
+
 	std::shared_ptr<Drawable> Renderer::CreateDrawable(Geometry geometry)
 	{
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");

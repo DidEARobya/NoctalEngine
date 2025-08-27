@@ -6,6 +6,7 @@
 #include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
 #include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
+#include "NoctalEngine/Rendering/Textures/Texture.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "Geometry/Geometry.h"
 
@@ -36,6 +37,8 @@ public:
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 
     virtual std::shared_ptr<Drawable> CreateDrawable(NoctalEngine::Geometry geometry) = 0;
+    virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) = 0;
+
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
     virtual void DrawIndexed() = 0;
 

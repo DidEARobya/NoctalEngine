@@ -5,6 +5,7 @@
 namespace NoctalEngine
 {
 	class Shader;
+	class Texture;
 
 	class Material : public Bindable
 	{
@@ -14,9 +15,8 @@ namespace NoctalEngine
 		virtual ~Material() override = default;
 		virtual void Bind() override;
 
-		virtual const NoctalEngine::BufferLayout* GetLayout() const { return nullptr; };
-
-		void BindShader(std::unique_ptr<Shader> bind);
+		void BindTexture(std::shared_ptr<Texture> texture);
+		void BindShader(std::unique_ptr<Shader> shader);
 
 	public:
 		struct MaterialData
@@ -25,6 +25,7 @@ namespace NoctalEngine
 
 		} Uniforms;
 	private:
+		std::vector<std::shared_ptr<Texture>> m_Textures;
 		std::unique_ptr<Shader> m_Shader;
 	};
 }

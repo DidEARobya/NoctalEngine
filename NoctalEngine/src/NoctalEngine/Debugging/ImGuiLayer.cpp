@@ -1,4 +1,3 @@
-#pragma once
 #include "nepch.h"
 #include "ImGuiLayer.h"
 #include "NoctalEngine/Events/Event.h"
@@ -34,9 +33,6 @@ namespace NoctalEngine
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		io.DeltaTime = deltaTime;
-
-		bool start = true;
-		ImGui::ShowDemoWindow(&start);
 
 		if (ImGui::Begin("Simulation Speed"))
 		{

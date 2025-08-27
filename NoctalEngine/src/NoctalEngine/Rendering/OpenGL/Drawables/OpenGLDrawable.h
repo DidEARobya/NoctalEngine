@@ -36,7 +36,7 @@ private:
 
 	uint32_t m_RendererID = 0;
 
-	const class NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
-	class NoctalEngine::Material* m_Material = nullptr;
+	const NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
+	NoctalEngine::Material* m_Material = nullptr;
 	std::vector<std::unique_ptr<Bindable>> m_Binds;
 };

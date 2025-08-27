@@ -9,6 +9,7 @@ namespace NoctalEngine
     class VertexBuffer;
     class IndexBuffer;
     class BufferLayout;
+    class Texture;
 
     class Renderer
     {
@@ -34,6 +35,7 @@ namespace NoctalEngine
         Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource);
         VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
         IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
+        std::shared_ptr<Texture> CreateTexture(const std::string& path);
 
         std::shared_ptr<Drawable> CreateDrawable(Geometry geometry);
 

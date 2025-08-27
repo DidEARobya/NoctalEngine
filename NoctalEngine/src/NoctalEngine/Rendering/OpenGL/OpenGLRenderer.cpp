@@ -6,6 +6,7 @@
 #include "Shaders/OpenGLShader.h"
 #include "Buffers/OpenGLVertexBuffer.h"
 #include "Drawables/OpenGLDrawable.h"
+#include "Textures/OpenGLTexture2D.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>
@@ -27,6 +28,9 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	NE_ENGINE_INFO("GLAD successfully loaded");
 
 	NE_ENGINE_SDL_ASSERT(SDL_GL_SetSwapInterval(1));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -149,6 +153,11 @@ std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry 
 	m_Drawables.push_back(drawable);
 
 	return drawable;
+}
+
+std::shared_ptr<NoctalEngine::Texture> OpenGLRenderer::CreateTexture(const std::string& path)
+{
+	return std::make_shared<OpenGLTexture2D>(path);
 }
 
 void OpenGLRenderer::DrawIndexed()
