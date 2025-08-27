@@ -1,13 +1,13 @@
 ﻿#pragma once
 #include <NoctalEngine.h>
 #include "NoctalEngine/Application/AppLayer.h"
+#include "glm/gtc/type_ptr.hpp"
 
 class AppLayer : public NoctalEngine::AppLayer
 {
 public:
 	AppLayer() : NoctalEngine::AppLayer(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_CameraSpeed(2.0f)
 	{
-		//m_Square = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::SQUARE);
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		glm::vec4 colour(0.2f, 0.8f, 0.1f, 1.0f);
 
@@ -20,6 +20,8 @@ public:
 				shape->SetPosition(position);
 				shape->SetScale(scale);
 				shape->GetMaterial()->Uniforms.Colour = colour;
+
+				m_Squares.push_back(shape);
 			}
 		}
 
@@ -28,12 +30,19 @@ public:
 
 	~AppLayer() override
 	{
-		m_Triangle.reset();
-		//m_Square.reset();
 	}
 
 	void OnUpdate(float deltaTime) override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Triangle", glm::value_ptr(m_Colour));
+		ImGui::End();
+
+		for (auto& square : m_Squares)
+		{
+			square->GetMaterial()->Uniforms.Colour = m_Colour;
+		}
+
 		if (NoctalEngine::InputManager::IsKeyDown(KEY_LEFT))
 		{
 			m_CameraPosition.x -= m_CameraSpeed * NoctalEngine::Application::DeltaTime();
@@ -96,7 +105,8 @@ private:
 	float m_CameraSpeed;
 
 	std::shared_ptr<Drawable> m_Triangle;
-	//std::shared_ptr<Drawable> m_Square;
+	std::vector<std::shared_ptr<Drawable>> m_Squares;
+	glm::vec4 m_Colour;
 };
 
 class Sandbox : public NoctalEngine::Application

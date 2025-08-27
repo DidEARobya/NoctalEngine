@@ -12,6 +12,5 @@ namespace NoctalEngine
 
 		virtual void SetUniformMat4(const std::string& name, const glm::mat4& matrix) = 0;
 
-		virtual const BufferLayout* GetLayout() const override = 0;
 	};
 }

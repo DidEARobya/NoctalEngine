@@ -6,6 +6,4 @@ class Bindable
 public:
 	virtual ~Bindable() = default;
 	virtual void Bind() = 0;
-
-	virtual const NoctalEngine::BufferLayout* GetLayout() const = 0;
 };

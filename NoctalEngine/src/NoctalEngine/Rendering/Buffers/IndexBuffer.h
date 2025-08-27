@@ -11,7 +11,6 @@ namespace NoctalEngine
 
 		virtual uint32_t GetCount() const = 0;
 
-		virtual const BufferLayout* GetLayout() const override = 0;
 	protected:
 	};
 }

@@ -11,8 +11,6 @@ public:
 	virtual ~OpenGLTransformCBuffer() override;
 	virtual void Bind() override;
 
-	virtual const NoctalEngine::BufferLayout* GetLayout() const override { return nullptr; };
-
 	virtual void SetUniformMat4(const std::string& name, const glm::mat4& matrix = glm::mat4(1.0f)) override;
 
 private:

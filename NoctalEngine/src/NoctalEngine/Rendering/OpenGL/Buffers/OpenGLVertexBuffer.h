@@ -10,8 +10,6 @@ public:
 
 	virtual void Bind() override;
 
-	virtual const NoctalEngine::BufferLayout* GetLayout() const override { return &m_Layout; };
-
 private:
 	GLenum ShaderDataTypeToOpenGLBaseType(NoctalEngine::ShaderDataType type);
 

@@ -43,6 +43,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				
 				uniform mat4 u_ViewProjection;
 				uniform mat4 u_Transform;
+				uniform vec4 u_Colour;
 
 				out vec3 v_Position;
 				out vec4 v_Colour;
@@ -50,7 +51,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				void main()
 				{
 					v_Position = a_Position;
-					v_Colour = a_Colour;
+					v_Colour = u_Colour;
 					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 				}	
 
@@ -67,7 +68,6 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				void main()
 				{
 					colour = vec4(v_Position * 0.5 + 0.5, 1.0);
-					colour = v_Colour;
 				}	
 
 			)";
@@ -175,19 +175,6 @@ void OpenGLDrawable::AddBind(std::unique_ptr<Bindable> bind)
 
 	glBindVertexArray(m_RendererID);
 	bind->Bind();
-
-	if (bind->GetLayout() != nullptr)
-	{
-		uint32_t index = 0;
-		const auto& layout = *bind->GetLayout();
-
-		for (const auto& element : layout)
-		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, element.Count(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)element.Offset);
-			index++;
-		}
-	}
 
 	m_Binds.push_back(std::move(bind));
 }
