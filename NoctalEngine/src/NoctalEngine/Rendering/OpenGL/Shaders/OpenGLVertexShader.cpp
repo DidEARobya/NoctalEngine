@@ -5,7 +5,7 @@
 OpenGLVertexShader::OpenGLVertexShader(const std::string& vertexFilePath) : m_ShaderID(0), m_IsValid(false)
 {
 	std::string vertexSource;
-	std::ifstream in(vertexFilePath, std::ios::in, std::ios::binary);
+	std::ifstream in(vertexFilePath, std::ios::in | std::ios::binary);
 
 	if (in)
 	{

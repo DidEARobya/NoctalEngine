@@ -5,7 +5,7 @@
 OpenGLFragmentShader::OpenGLFragmentShader(const std::string& fragmentFilePath) : m_ShaderID(0), m_IsValid(false)
 {
 	std::string fragmentSource;
-	std::ifstream in(fragmentFilePath, std::ios::in, std::ios::binary);
+	std::ifstream in(fragmentFilePath, std::ios::in | std::ios::binary);
 
 	if (in)
 	{

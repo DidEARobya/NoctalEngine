@@ -2,13 +2,11 @@
 #include "NoctalEngine/Rendering/Shaders/Shader.h"
 
 class Drawable;
-class OpenGLFragmentShader;
-class OpenGLVertexShader;
 
 class OpenGLShaderProgram : public NoctalEngine::Shader
 {
 public:
-	OpenGLShaderProgram(std::shared_ptr<OpenGLVertexShader> vertexShader, std::shared_ptr<OpenGLFragmentShader> fragmentShader, const Drawable& parent);
+	OpenGLShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath, const Drawable& parent);
 	~OpenGLShaderProgram();
 
 	virtual void Bind() override;

@@ -2,8 +2,6 @@
 #include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
-#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLVertexShader.h"
-#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLFragmentShader.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLTransformCBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Renderer.h"
@@ -35,8 +33,8 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesTri, sizeof(indicesTri) / sizeof(uint32_t))));
 
 			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-				std::make_shared<OpenGLVertexShader>(ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl"),
-				std::make_shared<OpenGLFragmentShader>(ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl"),
+				ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl",
+				ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl",
 				*this);
 
 			if (shader->IsValid() == true)
@@ -69,8 +67,8 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-				std::make_shared<OpenGLVertexShader>(ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl"),
-				std::make_shared<OpenGLFragmentShader>(ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl"),
+				ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl",
+				ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl",
 				*this);
 
 			if (shader->IsValid() == true)
@@ -104,8 +102,8 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 		std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-			std::make_shared<OpenGLVertexShader>(ASSET_DIR "Shaders/OpenGL/TextureVS.glsl"),
-			std::make_shared<OpenGLFragmentShader>(ASSET_DIR "Shaders/OpenGL/TextureFS.glsl"),
+			ASSET_DIR "Shaders/OpenGL/TextureVS.glsl",
+			ASSET_DIR "Shaders/OpenGL/TextureFS.glsl",
 			*this);
 
 		if (shader->IsValid() == true)

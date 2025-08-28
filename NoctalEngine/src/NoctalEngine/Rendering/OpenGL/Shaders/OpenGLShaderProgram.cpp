@@ -7,16 +7,19 @@
 #include "OpenGLVertexShader.h"
 #include "OpenGLFragmentShader.h"
 
-OpenGLShaderProgram::OpenGLShaderProgram(std::shared_ptr<OpenGLVertexShader> vertexShader, std::shared_ptr<OpenGLFragmentShader> fragmentShader, const Drawable& parent) : m_Parent(parent), m_IsValid(false)
-{	
-	// Link shaders together into a program.
+OpenGLShaderProgram::OpenGLShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath, const Drawable& parent) : m_Parent(parent), m_IsValid(false)
+{	// Link shaders together into a program.
 	m_RendererID = glCreateProgram();
+
+	std::shared_ptr<OpenGLVertexShader> vertexShader = std::make_shared<OpenGLVertexShader>(vertexShaderFilePath);
 
 	if (vertexShader->IsValid() == false)
 	{
 		NE_ENGINE_ERROR("OpenGLShader Creation Failed: No valid VertexShader");
 		return;
 	}
+
+	std::shared_ptr<OpenGLFragmentShader> fragmentShader = std::make_shared<OpenGLFragmentShader>(fragmentShaderFilePath);
 
 	if (fragmentShader->IsValid() == false)
 	{

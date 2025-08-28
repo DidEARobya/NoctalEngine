@@ -23,7 +23,8 @@ target_include_directories(Sandbox PUBLIC
                     ${CMAKE_SOURCE_DIR}/NoctalEngine/vendor/glm/glm
 )
 
+set(PROJECT_DIT_PATH "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/")
 set(ASSET_DIR_PATH "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/Assets/")
-target_compile_definitions(Sandbox PUBLIC ASSET_DIR="${ASSET_DIR_PATH}")
+target_compile_definitions(Sandbox PUBLIC ASSET_DIR="${ASSET_DIR_PATH}" PROJECT_DIR="${PROJECT_DIR_PATH}")
 
 # TODO: Add tests and install targets if needed.
