@@ -25,9 +25,9 @@ public:
 			}
 		}
 
-		m_CheckerBoard = NoctalEngine::Renderer::Instance().CreateTexture("Assets/Textures/Checkerboard.png");
-		m_ChernoLogo = NoctalEngine::Renderer::Instance().CreateTexture("Assets/Textures/ChernoLogo.png");
-
+		m_CheckerBoard = NoctalEngine::Renderer::Instance().CreateTexture("Textures/Checkerboard.png");
+		m_ChernoLogo = NoctalEngine::Renderer::Instance().CreateTexture("Textures/ChernoLogo.png");
+		
 		m_Square = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TEX_SQUARE);
 		m_Square->SetPosition(m_Square->GetPosition() + glm::vec3(0.3f, 0.0f, 0.0f));
 		m_Square->SetScale(glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));

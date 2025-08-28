@@ -8,10 +8,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path)
 	int height;
 	int channels;
 
-	std::string directory = "D:/Github/C++/NoctalEngine/Sandbox/";
-	directory.append(path);
-
-	stbi_uc* data = stbi_load(directory.c_str(), &width, &height, &channels, 0);
+	stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 	NE_ENGINE_ASSERT(data, "Failed to load {} - Reason: {}", path, stbi_failure_reason());
 
 	m_Width = width;

@@ -3,7 +3,7 @@
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
 #include "Buffers/OpenGLIndexBuffer.h"
-#include "Shaders/OpenGLShader.h"
+#include "Shaders/OpenGLShaderProgram.h"
 #include "Buffers/OpenGLVertexBuffer.h"
 #include "Drawables/OpenGLDrawable.h"
 #include "Textures/OpenGLTexture2D.h"

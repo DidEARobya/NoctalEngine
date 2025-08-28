@@ -1,7 +1,9 @@
 #include "OpenGLDrawable.h"
 #include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
-#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShader.h"
+#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
+#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLVertexShader.h"
+#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLFragmentShader.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLTransformCBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Renderer.h"
@@ -11,9 +13,6 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 {
 	glCreateVertexArrays(1, &m_RendererID);
 	glBindVertexArray(m_RendererID);
-
-	std::string vertexSource;
-	std::string pixelSource;
 
 	AddMaterial(std::make_unique<NoctalEngine::Material>());
 	NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
@@ -35,44 +34,20 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			uint32_t indicesTri[3] = { 0, 1, 2 };
 			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesTri, sizeof(indicesTri) / sizeof(uint32_t))));
 
-			vertexSource = R"(
-				#version 330 core
+			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
+				std::make_shared<OpenGLVertexShader>(ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl"),
+				std::make_shared<OpenGLFragmentShader>(ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl"),
+				*this);
 
-				layout(location = 0) in vec3 a_Position;
-				layout(location = 1) in vec4 a_Colour;
-				
-				uniform mat4 u_ViewProjection;
-				uniform mat4 u_Transform;
-				uniform vec4 u_Colour;
+			if (shader->IsValid() == true)
+			{
+				m_Material->BindShader(std::move(shader));
+			}
+			else
+			{
+				NE_ENGINE_ERROR("Drawable Created, but Shader Failed to bind");
+			}
 
-				out vec3 v_Position;
-				out vec4 v_Colour;
-
-				void main()
-				{
-					v_Position = a_Position;
-					v_Colour = u_Colour;
-					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-				}	
-
-			)";
-
-			pixelSource = R"(
-				#version 330 core
-
-				layout(location = 0) out vec4 colour;
-
-				in vec3 v_Position;
-				in vec4 v_Colour;
-
-				void main()
-				{
-					colour = vec4(v_Position * 0.5 + 0.5, 1.0);
-				}	
-
-			)";
-
-			m_Material->BindShader(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
 			NE_ENGINE_INFO("Triangle Created");
 			break;
 		}
@@ -93,43 +68,20 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
 			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
-			vertexSource = R"(
-				#version 330 core
+			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
+				std::make_shared<OpenGLVertexShader>(ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl"),
+				std::make_shared<OpenGLFragmentShader>(ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl"),
+				*this);
 
-				layout(location = 0) in vec3 a_Position;
-				
-				uniform mat4 u_ViewProjection;
-				uniform mat4 u_Transform;
-				uniform vec4 u_Colour;
+			if (shader->IsValid() == true)
+			{
+				m_Material->BindShader(std::move(shader));
+			}
+			else
+			{
+				NE_ENGINE_ERROR("Drawable Created, but Shader Failed to bind");
+			}
 
-				out vec3 v_Position;
-				out vec4 v_Colour;
-
-				void main()
-				{
-					v_Position = a_Position;
-					v_Colour = u_Colour;
-					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-				}	
-
-			)";
-
-			pixelSource = R"(
-				#version 330 core
-
-				layout(location = 0) out vec4 colour;
-
-				in vec3 v_Position;
-				in vec4 v_Colour;
-				
-				void main()
-				{
-					colour = v_Colour;
-				}	
-
-			)";
-
-			m_Material->BindShader(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
 			NE_ENGINE_INFO("Square Created");
 			break;
 		}
@@ -151,51 +103,20 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 		uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
 		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
-		vertexSource = R"(
-				#version 330 core
+		std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
+			std::make_shared<OpenGLVertexShader>(ASSET_DIR "Shaders/OpenGL/TextureVS.glsl"),
+			std::make_shared<OpenGLFragmentShader>(ASSET_DIR "Shaders/OpenGL/TextureFS.glsl"),
+			*this);
 
-				layout(location = 0) in vec3 a_Position;
-				layout(location = 1) in vec2 a_TexCoord;
-				
-				uniform mat4 u_ViewProjection;
-				uniform mat4 u_Transform;
-				uniform vec4 u_Colour;
+		if (shader->IsValid() == true)
+		{
+			m_Material->BindShader(std::move(shader));
+		}
+		else
+		{
+			NE_ENGINE_ERROR("Drawable Created, but Shader Failed to bind");
+		}
 
-				out vec3 v_Position;
-				out vec4 v_Colour;
-				out vec2 v_TexCoord;
-
-				void main()
-				{
-					v_Position = a_Position;
-					v_TexCoord = a_TexCoord;
-					v_Colour = u_Colour;
-					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-
-	
-				}	
-
-			)";
-
-		pixelSource = R"(
-				#version 330 core
-
-				layout(location = 0) out vec4 colour;
-				
-				uniform sampler2D u_Textures[2]; // for two textures
-				uniform sampler2D u_Texture;
-
-				in vec2 v_TexCoord;
-				in vec4 v_Colour;
-
-				void main()
-				{
-					colour = texture(u_Texture, v_TexCoord);
-				}	
-
-			)";
-
-		m_Material->BindShader(std::make_unique<OpenGLShader>(vertexSource, pixelSource, *this));
 		NE_ENGINE_INFO("Square Created");
 		break;
 	}

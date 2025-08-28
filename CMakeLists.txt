@@ -14,6 +14,9 @@ endif()
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(outputdir "${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 
+set(SOURCE_DIR_PATH "${CMAKE_SOURCE_DIR}")
+add_compile_definitions(SOURCE_DIR="${SOURCE_DIR_PATH}")
+
 project (NoctalEngine)
 add_subdirectory (NoctalEngine)
 
@@ -22,6 +25,8 @@ project (Sandbox)
 add_subdirectory(Sandbox)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sandbox)
+
+
 
 
 

@@ -2,12 +2,14 @@
 #include "NoctalEngine/Rendering/Shaders/Shader.h"
 
 class Drawable;
+class OpenGLFragmentShader;
+class OpenGLVertexShader;
 
-class OpenGLShader : public NoctalEngine::Shader
+class OpenGLShaderProgram : public NoctalEngine::Shader
 {
 public:
-	OpenGLShader(const std::string& vertexSource, const std::string& pixelSource, const Drawable& parent);
-	~OpenGLShader();
+	OpenGLShaderProgram(std::shared_ptr<OpenGLVertexShader> vertexShader, std::shared_ptr<OpenGLFragmentShader> fragmentShader, const Drawable& parent);
+	~OpenGLShaderProgram();
 
 	virtual void Bind() override;
 
@@ -18,7 +20,12 @@ public:
 	virtual void SetUniformFloat3(const std::string& name, const glm::vec3 value) override;
 	virtual void SetUniformFloat4(const std::string& name, const glm::vec4 value) override;
 	virtual void SetUniformInt(const std::string& name, const int value) override;
+
+	const bool IsValid() const { return m_IsValid; };
+
 private:
 	uint32_t m_RendererID = 0;
 	const Drawable& m_Parent;
+	bool m_IsValid;
+
 };
