@@ -1,4 +1,3 @@
-#include "nepch.h"
 #include "OpenGLRenderer.h"
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
@@ -9,6 +8,10 @@
 #include "Buffers/OpenGLVertexBuffer.h"
 #include "Drawables/OpenGLDrawable.h"
 #include "Textures/OpenGLTexture2D.h"
+#include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
+#include "NoctalEngine/Rendering/Textures/Texture.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>

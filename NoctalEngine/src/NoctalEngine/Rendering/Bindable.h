@@ -1,6 +1,4 @@
 #pragma once
-#include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
-
 class Bindable
 {
 public:

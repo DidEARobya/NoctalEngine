@@ -1,6 +1,5 @@
 #pragma once
 #include "NoctalEngine/Rendering/WrappedRenderer.h"
-
 #include <SDL3/SDL.h>
 
 class OpenGLRenderer : public WrappedRenderer

@@ -1,19 +1,18 @@
 #pragma once
-
-#include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Rendering/Bindable.h"
-#include "NoctalEngine/Rendering/Shaders/Shader.h"
-#include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
-#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
-#include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
-#include "NoctalEngine/Rendering/Textures/Texture.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "NoctalEngine/Rendering/Shaders/ShaderLibrary.h"
 #include "Geometry/Geometry.h"
 
 namespace NoctalEngine
 {
+    class Window;
     class Renderer;
+    class Shader;
+    class VertexBuffer;
+    class IndexBuffer;
+    class Texture;
+    class BufferLayout;
 }
 
 struct SDL_Window;

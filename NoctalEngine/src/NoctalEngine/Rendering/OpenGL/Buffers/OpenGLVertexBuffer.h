@@ -1,5 +1,6 @@
 #pragma once
 #include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "GLAD/glad.h"
 
 class OpenGLVertexBuffer : public NoctalEngine::VertexBuffer
