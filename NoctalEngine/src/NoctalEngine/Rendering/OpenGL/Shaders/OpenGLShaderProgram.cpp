@@ -1,4 +1,3 @@
-#pragma once
 #include "OpenGLShaderProgram.h"
 #include "GLAD/glad.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -8,21 +7,21 @@
 #include "OpenGLFragmentShader.h"
 #include "NoctalEngine/Rendering/Shaders/Shader.h"
 
-OpenGLShaderProgram::OpenGLShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath, const Drawable& parent) : m_Parent(parent), m_IsValid(false)
+OpenGLShaderProgram::OpenGLShaderProgram(const std::string& vertexShaderName, const std::string& fragmentShaderName, const Drawable& parent) : m_Parent(parent), m_IsValid(false)
 {	// Link shaders together into a program.
 	m_RendererID = glCreateProgram();
 
-	std::shared_ptr<Shader> vertexShader = NoctalEngine::Renderer::Instance().GetShader(vertexShaderFilePath);
+	std::shared_ptr<Shader> vertexShader = NoctalEngine::Renderer::Instance().GetShader(vertexShaderName);
 
-	if (vertexShader->IsValid() == false)
+	if (vertexShader == nullptr || vertexShader->IsValid() == false)
 	{
 		NE_ENGINE_ERROR("OpenGLShader Creation Failed: No valid VertexShader");
 		return;
 	}
 
-	std::shared_ptr<Shader> fragmentShader = std::make_shared<OpenGLFragmentShader>(fragmentShaderFilePath);
+	std::shared_ptr<Shader> fragmentShader = NoctalEngine::Renderer::Instance().GetShader(fragmentShaderName);
 
-	if (fragmentShader->IsValid() == false)
+	if (fragmentShader == nullptr || fragmentShader->IsValid() == false)
 	{
 		NE_ENGINE_ERROR("OpenGLShader Creation Failed: No valid FragmentShader");
 		return;

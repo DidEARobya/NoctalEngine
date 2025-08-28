@@ -94,6 +94,7 @@ namespace NoctalEngine
 			return it->second;
 		}
 
+		NE_ENGINE_ERROR("ShaderLibrary failed to find: {}", name);
 		return nullptr;
 	}
 

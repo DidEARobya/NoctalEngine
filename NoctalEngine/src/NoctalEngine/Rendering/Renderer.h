@@ -32,8 +32,10 @@ namespace NoctalEngine
         const char* GetRenderer();
         const char* GetVersion();
 
+        std::shared_ptr<Shader> LoadShader(const std::string& filePath);
+        std::shared_ptr<Shader> LoadShader(const std::string& customName, const std::string& filePath);
         std::shared_ptr<Shader> GetShader(const std::string& shaderName);
-        std::shared_ptr<Shader> CreateShader(const std::string& filePath);
+
         VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
         IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
         std::shared_ptr<Texture> CreateTexture(const std::string& path, const std::string& assetDir = ASSET_DIR);
@@ -44,6 +46,10 @@ namespace NoctalEngine
         void DrawIndexed();
 
         const glm::mat4& GetCameraViewProjectionMatrix() const;
+
+    protected:
+        friend class ShaderLibrary;
+        std::shared_ptr<Shader> CreateShader(const std::string& filePath);
 
     protected:
         static std::unique_ptr<Renderer> s_Instance;

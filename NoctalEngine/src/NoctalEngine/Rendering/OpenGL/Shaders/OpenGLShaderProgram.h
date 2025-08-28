@@ -6,7 +6,7 @@ class Drawable;
 class OpenGLShaderProgram : public NoctalEngine::Shader
 {
 public:
-	OpenGLShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath, const Drawable& parent);
+	OpenGLShaderProgram(const std::string& vertexShaderName, const std::string& fragmentShaderName, const Drawable& parent);
 	~OpenGLShaderProgram();
 
 	virtual void Bind() override;

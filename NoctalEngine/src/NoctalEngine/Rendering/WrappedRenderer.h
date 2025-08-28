@@ -11,14 +11,22 @@
 #include "NoctalEngine/Rendering/Shaders/ShaderLibrary.h"
 #include "Geometry/Geometry.h"
 
-class Renderer;
+namespace NoctalEngine
+{
+    class Renderer;
+}
+
 struct SDL_Window;
 
 class WrappedRenderer
 {
 public:
-    WrappedRenderer() = default;
     virtual ~WrappedRenderer() = default;
+
+protected:
+    friend class NoctalEngine::Renderer;
+
+    WrappedRenderer() = default;
 
     virtual void Init(const NoctalEngine::Window* windowRef) = 0;
     virtual void Destroy() = 0;
@@ -33,8 +41,21 @@ public:
     virtual const char* GetRenderer() = 0;
     virtual const char* GetVersion() = 0;
 
+    std::shared_ptr<NoctalEngine::Shader> LoadShader(const std::string& filePath)
+    {
+        NE_ENGINE_ASSERT(m_ShaderLibrary, "Shader Library doesn't exist");
+        return m_ShaderLibrary->LoadShader(filePath);
+    }
+
+    std::shared_ptr<NoctalEngine::Shader> LoadShader(const std::string& customName, const std::string& filePath)
+    {
+        NE_ENGINE_ASSERT(m_ShaderLibrary, "Shader Library doesn't exist");
+        return m_ShaderLibrary->LoadShader(customName, filePath);
+    }
+
     virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) = 0;
     virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) = 0;
+
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 

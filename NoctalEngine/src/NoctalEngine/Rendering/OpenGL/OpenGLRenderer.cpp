@@ -64,10 +64,14 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	ImGui_ImplSDL3_InitForOpenGL(windowRef->GetSDLWindow(), m_GLContext);
 
 	m_ShaderLibrary = std::make_unique<NoctalEngine::ShaderLibrary>();
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/Texture.vert");
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/Texture.frag");
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColour.vert");
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColour.frag");
+
+	//Load Engine Shaders, false to avoid sorting after each new load
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureVS.vert", false);
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureFS.frag", false);
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourVS.vert", false);
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourFS.frag", false);
+
+	m_ShaderLibrary->SortShaders();
 }
 
 void OpenGLRenderer::Destroy()
@@ -151,7 +155,7 @@ std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::GetShader(const std::strin
 std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::CreateShader(const std::string& filePath)
 {
 	std::filesystem::path path(filePath);
-	const char* type = path.extension().string().c_str();
+	std::string type = path.extension().string();
 
 	if (type == ".vert")
 	{

@@ -1,4 +1,3 @@
-#pragma once
 #include "Material.h"
 #include "NoctalEngine/Rendering/Shaders/Shader.h"
 #include "NoctalEngine/Rendering/Textures/Texture.h"

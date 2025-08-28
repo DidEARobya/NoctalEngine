@@ -7,7 +7,7 @@ class OpenGLRenderer : public WrappedRenderer
 {
 public:
     OpenGLRenderer() = default;
-    ~OpenGLRenderer() = default;
+    virtual ~OpenGLRenderer() override = default;
 
     virtual void Init(const NoctalEngine::Window* windowRef) override;
     virtual void Destroy() override;
@@ -24,6 +24,7 @@ public:
 
     virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) override;
     virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) override;
+
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) override;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
 
@@ -32,6 +33,8 @@ public:
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
+
+protected:
 
 private:
     NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
