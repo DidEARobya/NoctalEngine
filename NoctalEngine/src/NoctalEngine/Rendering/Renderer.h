@@ -32,7 +32,8 @@ namespace NoctalEngine
         const char* GetRenderer();
         const char* GetVersion();
 
-        Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource);
+        std::shared_ptr<Shader> GetShader(const std::string& shaderName);
+        std::shared_ptr<Shader> CreateShader(const std::string& filePath);
         VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
         IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
         std::shared_ptr<Texture> CreateTexture(const std::string& path, const std::string& assetDir = ASSET_DIR);

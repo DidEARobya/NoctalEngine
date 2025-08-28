@@ -22,7 +22,8 @@ public:
     virtual const char* GetRenderer() override;
     virtual const char* GetVersion() override;
 
-    virtual NoctalEngine::Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource) override;
+    virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) override;
+    virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) override;
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) override;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
 

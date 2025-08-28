@@ -6,12 +6,13 @@
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "OpenGLVertexShader.h"
 #include "OpenGLFragmentShader.h"
+#include "NoctalEngine/Rendering/Shaders/Shader.h"
 
 OpenGLShaderProgram::OpenGLShaderProgram(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath, const Drawable& parent) : m_Parent(parent), m_IsValid(false)
 {	// Link shaders together into a program.
 	m_RendererID = glCreateProgram();
 
-	std::shared_ptr<OpenGLVertexShader> vertexShader = std::make_shared<OpenGLVertexShader>(vertexShaderFilePath);
+	std::shared_ptr<Shader> vertexShader = NoctalEngine::Renderer::Instance().GetShader(vertexShaderFilePath);
 
 	if (vertexShader->IsValid() == false)
 	{
@@ -19,7 +20,7 @@ OpenGLShaderProgram::OpenGLShaderProgram(const std::string& vertexShaderFilePath
 		return;
 	}
 
-	std::shared_ptr<OpenGLFragmentShader> fragmentShader = std::make_shared<OpenGLFragmentShader>(fragmentShaderFilePath);
+	std::shared_ptr<Shader> fragmentShader = std::make_shared<OpenGLFragmentShader>(fragmentShaderFilePath);
 
 	if (fragmentShader->IsValid() == false)
 	{

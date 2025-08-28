@@ -8,6 +8,7 @@
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "NoctalEngine/Rendering/Textures/Texture.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
+#include "NoctalEngine/Rendering/Shaders/ShaderLibrary.h"
 #include "Geometry/Geometry.h"
 
 class Renderer;
@@ -32,7 +33,8 @@ public:
     virtual const char* GetRenderer() = 0;
     virtual const char* GetVersion() = 0;
 
-    virtual NoctalEngine::Shader* CreateShader(const std::string& vertexSource, const std::string& pixelSource) = 0;
+    virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) = 0;
+    virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) = 0;
     virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
     virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 
@@ -47,6 +49,7 @@ public:
 protected:
     SDL_Window* m_Window = nullptr;  
     std::vector<std::shared_ptr<Drawable>> m_Drawables;
+    std::unique_ptr<NoctalEngine::ShaderLibrary> m_ShaderLibrary;
 
     glm::mat4 m_CameraViewProjectionMatrix = { 0.0f };
 };

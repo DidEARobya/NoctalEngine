@@ -3,7 +3,9 @@
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
 #include "Buffers/OpenGLIndexBuffer.h"
-#include "Shaders/OpenGLShaderProgram.h"
+#include "Shaders/OpenGLVertexShader.h"
+#include "Shaders/OpenGLFragmentShader.h"
+#include "NoctalEngine/Rendering/Shaders/Shader.h"
 #include "Buffers/OpenGLVertexBuffer.h"
 #include "Drawables/OpenGLDrawable.h"
 #include "Textures/OpenGLTexture2D.h"
@@ -12,6 +14,7 @@
 #include <backends/imgui_impl_sdl3.h>
 #include <glm/glm.hpp>
 #include <GLAD/include/glad/glad.h>
+#include <filesystem>
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
@@ -59,6 +62,12 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 
 	ImGui_ImplOpenGL3_Init();
 	ImGui_ImplSDL3_InitForOpenGL(windowRef->GetSDLWindow(), m_GLContext);
+
+	m_ShaderLibrary = std::make_unique<NoctalEngine::ShaderLibrary>();
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/Texture.vert");
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/Texture.frag");
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColour.vert");
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColour.frag");
 }
 
 void OpenGLRenderer::Destroy()
@@ -132,9 +141,29 @@ const char* OpenGLRenderer::GetVersion()
 	return (const char*)glGetString(GL_VERSION);
 }
 
-NoctalEngine::Shader* OpenGLRenderer::CreateShader(const std::string& vertexSource, const std::string& pixelSource)
+std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::GetShader(const std::string& shaderName)
 {
-	return nullptr;//new OpenGLShader(vertexSource, pixelSource);
+	NE_ENGINE_ASSERT(m_ShaderLibrary, "ShaderLibrary doesn't exist");
+
+	return m_ShaderLibrary->GetShader(shaderName);
+}
+
+std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::CreateShader(const std::string& filePath)
+{
+	std::filesystem::path path(filePath);
+	const char* type = path.extension().string().c_str();
+
+	if (type == ".vert")
+	{
+		return std::make_shared<OpenGLVertexShader>(filePath);
+	}
+	else if (type == ".frag")
+	{
+		return std::make_shared<OpenGLFragmentShader>(filePath);
+	}
+
+	NE_ENGINE_ASSERT(false, "{} shader type not supported", type);
+	return nullptr;
 }
 
 NoctalEngine::VertexBuffer* OpenGLRenderer::CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout)

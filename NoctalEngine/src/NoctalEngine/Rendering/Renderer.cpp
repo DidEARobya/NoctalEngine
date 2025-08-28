@@ -73,11 +73,17 @@ namespace NoctalEngine
 		return s_Instance->m_WrappedRenderer->GetVersion();
 	}	
 	
-	Shader* Renderer::CreateShader(const std::string& vertexSource, const std::string& pixelSource)
+	std::shared_ptr<Shader> Renderer::GetShader(const std::string& shaderName)
 	{
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
 
-		return s_Instance->m_WrappedRenderer->CreateShader(vertexSource, pixelSource);
+		return s_Instance->m_WrappedRenderer->GetShader(shaderName);
+	}	
+	std::shared_ptr<Shader> Renderer::CreateShader(const std::string& filePath)
+	{
+		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
+
+		return s_Instance->m_WrappedRenderer->CreateShader(filePath);
 	}
 
 	VertexBuffer* Renderer::CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout)

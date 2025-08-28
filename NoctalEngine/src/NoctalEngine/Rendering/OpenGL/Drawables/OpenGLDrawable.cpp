@@ -67,8 +67,8 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-				ASSET_DIR "Shaders/OpenGL/SolidColourVS.glsl",
-				ASSET_DIR "Shaders/OpenGL/SolidColourFS.glsl",
+				"SolidColourVS",
+				"SolidColourFS",
 				*this);
 
 			if (shader->IsValid() == true)
@@ -102,8 +102,8 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 		std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-			ASSET_DIR "Shaders/OpenGL/TextureVS.glsl",
-			ASSET_DIR "Shaders/OpenGL/TextureFS.glsl",
+			"TextureVS",
+			"TextureFS.glsl",
 			*this);
 
 		if (shader->IsValid() == true)
