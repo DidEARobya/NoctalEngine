@@ -175,16 +175,6 @@ std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::CreateShader(const std::st
 	return nullptr;
 }
 
-NoctalEngine::VertexBuffer* OpenGLRenderer::CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout)
-{
-	return new OpenGLVertexBuffer(vertices, size, layout);
-}
-
-NoctalEngine::IndexBuffer* OpenGLRenderer::CreateIndexBuffer(uint32_t* indices, uint32_t size)
-{
-	return new OpenGLIndexBuffer(indices, size);
-}
-
 std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry geometry)
 {
 	std::shared_ptr<Drawable> drawable = std::make_shared<OpenGLDrawable>(geometry);

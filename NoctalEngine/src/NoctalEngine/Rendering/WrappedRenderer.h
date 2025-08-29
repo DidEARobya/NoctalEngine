@@ -55,9 +55,6 @@ protected:
     virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) = 0;
     virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) = 0;
 
-    virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) = 0;
-    virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) = 0;
-
     virtual std::shared_ptr<Drawable> CreateDrawable(NoctalEngine::Geometry geometry) = 0;
     virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) = 0;
 

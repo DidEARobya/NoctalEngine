@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (Sandbox "main.cpp")
+add_executable (Sandbox "main.cpp" "src/Sandbox2D.h" "src/Sandbox2D.cpp")
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY 
     "$<$<CONFIG:Debug>:MultiThreadedDebug>;$<$<CONFIG:Release>:MultiThreaded>"

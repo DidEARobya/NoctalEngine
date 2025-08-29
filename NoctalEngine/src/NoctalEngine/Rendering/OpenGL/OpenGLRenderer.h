@@ -24,9 +24,6 @@ public:
     virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) override;
     virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) override;
 
-    virtual NoctalEngine::VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) override;
-    virtual NoctalEngine::IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size) override;
-
     virtual std::shared_ptr<Drawable>CreateDrawable(NoctalEngine::Geometry geometry) override;
     virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) override;
 

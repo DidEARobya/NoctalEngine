@@ -87,18 +87,6 @@ namespace NoctalEngine
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
 		return s_Instance->m_WrappedRenderer->CreateShader(filePath);
 	}
-
-	VertexBuffer* Renderer::CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout)
-	{
-		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
-		return s_Instance->m_WrappedRenderer->CreateVertexBuffer(vertices, size, layout);
-	}
-	IndexBuffer* Renderer::CreateIndexBuffer(uint32_t* indices, uint32_t size)
-	{
-		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
-		return s_Instance->m_WrappedRenderer->CreateIndexBuffer(indices, size);
-	}
-
 	std::shared_ptr<Texture> Renderer::CreateTexture(const std::string& path, const std::string& assetDir)
 	{
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");

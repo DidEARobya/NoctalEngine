@@ -36,10 +36,7 @@ namespace NoctalEngine
         std::shared_ptr<Shader> LoadShader(const std::string& customName, const std::string& filePath);
         std::shared_ptr<Shader> GetShader(const std::string& shaderName);
 
-        VertexBuffer* CreateVertexBuffer(float* vertices, uint32_t size, const BufferLayout& layout);
-        IndexBuffer* CreateIndexBuffer(uint32_t* indices, uint32_t size);
         std::shared_ptr<Texture> CreateTexture(const std::string& path, const std::string& assetDir = ASSET_DIR);
-
         std::shared_ptr<Drawable> CreateDrawable(Geometry geometry);
 
         void SetIndexBuffer(IndexBuffer* indexBuffer);

@@ -2,6 +2,7 @@
 #include "OpenGLDrawable.h"
 #include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLIndexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLTransformCBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
@@ -27,11 +28,12 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				 0.0f,  0.5f, 0.0f,		1.0, 1.0f, 0.0f, 1.0f
 			};
 
-			AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(NoctalEngine::Renderer::Instance().CreateVertexBuffer(verticesTri, sizeof(verticesTri), { { NoctalEngine::ShaderDataType::FLOAT_3, "a_Position" },
+			AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(verticesTri, sizeof(verticesTri),{ 
+				{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position" },
 				{ NoctalEngine::ShaderDataType::FLOAT_4, "a_Colour" } })));
 
 			uint32_t indicesTri[3] = { 0, 1, 2 };
-			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesTri, sizeof(indicesTri) / sizeof(uint32_t))));
+			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(indicesTri, sizeof(indicesTri) / sizeof(uint32_t))));
 
 			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
 				"SolidColourVS",
@@ -60,12 +62,12 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 				-0.5f,  0.5f, 0.0f
 			};
 
-			AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(NoctalEngine::Renderer::Instance().CreateVertexBuffer(verticesSquare, sizeof(verticesSquare), {
+			AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(verticesSquare, sizeof(verticesSquare), {
 				{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"}
 				})));
 
 			uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
-			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
+			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 			std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
 				"SolidColourVS",
@@ -94,13 +96,13 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(NoctalEngine::Renderer::Instance().CreateVertexBuffer(verticesSquare, sizeof(verticesSquare), {
+		AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(verticesSquare, sizeof(verticesSquare), {
 			{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
 			{ NoctalEngine::ShaderDataType::FLOAT_2, "a_TexCoord"},
 			})));
 
 		uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
-		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(NoctalEngine::Renderer::Instance().CreateIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
+		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 		std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
 			"TextureVS",
