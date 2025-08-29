@@ -1,4 +1,4 @@
-#pragma once
+#include "nepch.h"
 #include "Window.h"
 #include "OpenGL/OpenGLWindow.h"
 

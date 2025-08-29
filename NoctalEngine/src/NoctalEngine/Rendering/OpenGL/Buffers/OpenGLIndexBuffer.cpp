@@ -1,4 +1,4 @@
-#pragma once
+#include "nepch.h"
 #include "OpenGLIndexBuffer.h"
 #include "NoctalEngine/Rendering/Renderer.h"
 #include "glad/glad.h"

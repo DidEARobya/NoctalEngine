@@ -1,4 +1,4 @@
-#pragma once
+#include "nepch.h"
 #include "OpenGLVertexBuffer.h"
 #include "glad/glad.h"
 

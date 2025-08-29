@@ -6,6 +6,10 @@
 project(GLAD)
 add_library(GLAD include/glad/glad.h src/glad.c)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY 
+    "$<$<CONFIG:Debug>:MultiThreadedDebug>;$<$<CONFIG:Release>:MultiThreaded>"
+)
+
 target_include_directories(GLAD PUBLIC include/)
 
 # TODO: Add tests and install targets if needed.

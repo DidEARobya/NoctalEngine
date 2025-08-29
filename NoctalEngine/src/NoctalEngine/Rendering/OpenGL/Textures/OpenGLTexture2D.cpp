@@ -1,3 +1,4 @@
+#include "nepch.h"
 #include "OpenGLTexture2D.h"
 #include <GLAD/glad.h>
 #include <stb_image/stb_image.h>

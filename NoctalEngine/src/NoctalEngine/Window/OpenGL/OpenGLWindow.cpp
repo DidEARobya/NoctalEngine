@@ -1,4 +1,3 @@
-#pragma once
 #include "nepch.h"
 #include "OpenGLWindow.h"
 #include "NoctalEngine/Input/InputManager.h"

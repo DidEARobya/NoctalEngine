@@ -1,4 +1,4 @@
-#pragma once
+#include "nepch.h"
 #include "OrthographicCamera.h"
 #include "glm/gtc/matrix_transform.hpp"
 

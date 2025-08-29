@@ -1,3 +1,4 @@
+#include "nepch.h"
 #include "OpenGLRenderer.h"
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
