@@ -13,6 +13,7 @@
 #include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "NoctalEngine/Rendering/Textures/Texture.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLUniformBufferObject.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>
@@ -76,6 +77,9 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourFS.frag", false);
 
 	m_ShaderLibrary->SortShaders();
+
+	m_FrameBuffer = std::make_unique<OpenGLFrameUniformBufferObject>();
+	//m_ObjectBuffer = std::make_shared<OpenGLObjectUniformBufferObject>();
 }
 
 void OpenGLRenderer::Destroy()
@@ -102,9 +106,12 @@ void OpenGLRenderer::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	int32_t index = 0;
+
 	for (auto& drawable : m_Drawables)
 	{
 		drawable.get()->Draw();
+		index++;
 	}
 
 	ImGui::Render();
@@ -112,6 +119,10 @@ void OpenGLRenderer::Render()
 
 void OpenGLRenderer::EndRender()
 {
+	FrameData frame({ NoctalEngine::Application::Get().GetCameraViewProjection() });
+	m_FrameBuffer->UpdateFrameData(frame);
+	m_FrameBuffer->Bind();
+
 	m_CameraViewProjectionMatrix = NoctalEngine::Application::Get().GetCameraViewProjection();
 
 	ImGuiIO& io = ImGui::GetIO();

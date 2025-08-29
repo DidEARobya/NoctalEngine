@@ -3,9 +3,8 @@
 
 namespace NoctalEngine
 {
-	class IndexBuffer : public Bindable
+	class ConstantBuffer : public Bindable
 	{
-	public:
-		virtual uint32_t GetCount() const = 0;
+
 	};
 }

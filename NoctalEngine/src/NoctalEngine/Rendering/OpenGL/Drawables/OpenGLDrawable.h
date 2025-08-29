@@ -2,8 +2,9 @@
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "NoctalEngine/Rendering/Geometry/Geometry.h"
-#include "GLAD/glad.h"
-#include "glm/glm.hpp"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLUniformBufferObject.h"
+#include <GLAD/glad.h>
+#include <glm/glm.hpp>
 
 class OpenGLDrawable : public Drawable
 {
@@ -39,4 +40,6 @@ private:
 	const NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
 	NoctalEngine::Material* m_Material = nullptr;
 	std::vector<std::unique_ptr<Bindable>> m_Binds;
+
+	std::unique_ptr<OpenGLObjectUniformBufferObject> m_ObjectBuffer = nullptr;
 };

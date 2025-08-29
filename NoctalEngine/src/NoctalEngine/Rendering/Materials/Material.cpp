@@ -5,7 +5,7 @@
 
 namespace NoctalEngine
 {
-	Material::Material() : Uniforms({ glm::vec4(1.0f, 0.0f, 1.0f, 1.0f) })
+	Material::Material() : Uniforms({ glm::vec4(0.0f, 1.0f, 1.0f, 1.0f) })
 	{
 	}
 	void Material::Bind()

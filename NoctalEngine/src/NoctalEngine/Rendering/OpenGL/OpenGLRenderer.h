@@ -1,5 +1,6 @@
 #pragma once
 #include "NoctalEngine/Rendering/WrappedRenderer.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLUniformBufferObject.h"
 #include <SDL3/SDL.h>
 
 class OpenGLRenderer : public WrappedRenderer
@@ -30,9 +31,10 @@ public:
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
 
-protected:
-
 private:
     NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
     SDL_GLContext m_GLContext = nullptr;
+
+    std::unique_ptr<OpenGLFrameUniformBufferObject> m_FrameBuffer = nullptr;
+    //std::shared_ptr<OpenGLObjectUniformBufferObject> m_ObjectBuffer = nullptr;
 };

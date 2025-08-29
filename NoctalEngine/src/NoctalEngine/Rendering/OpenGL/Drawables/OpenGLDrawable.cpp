@@ -126,8 +126,7 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 		break;
 	}
 	
-	//Transform currently handled in Shader
-	//AddBind(std::make_unique<OpenGLTransformCBuffer>());
+	m_ObjectBuffer = std::make_unique<OpenGLObjectUniformBufferObject>();
 }
 
 OpenGLDrawable::~OpenGLDrawable()
@@ -150,6 +149,10 @@ void OpenGLDrawable::Draw() const
 	{
 		bindable->Bind();
 	}
+
+	ObjectData data({ GetTransform() });
+	m_ObjectBuffer->UpdateObjectData(data);
+	m_ObjectBuffer->Bind();
 
 	NoctalEngine::Renderer::Instance().DrawIndexed();
 }

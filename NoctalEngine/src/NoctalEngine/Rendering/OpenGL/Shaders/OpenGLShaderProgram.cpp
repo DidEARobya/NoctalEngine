@@ -65,8 +65,6 @@ OpenGLShaderProgram::~OpenGLShaderProgram()
 void OpenGLShaderProgram::Bind()
 {
 	glUseProgram(m_RendererID);
-	SetUniformMat4("u_ViewProjection", NoctalEngine::Renderer::Instance().GetCameraViewProjectionMatrix());
-	SetUniformMat4("u_Transform", m_Parent.GetTransform());
 }
 
 void OpenGLShaderProgram::SetUniformMat3(const std::string& name, const glm::mat3 value)

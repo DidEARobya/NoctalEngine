@@ -5,8 +5,5 @@ namespace NoctalEngine
 {
 	class VertexBuffer : public Bindable
 	{
-	public:
-		virtual ~VertexBuffer() override = default;
-		virtual void Bind() override {};
 	};
 }
