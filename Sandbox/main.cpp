@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <NoctalEngine.h>
+#include <NoctalEngine/EntryPoint.h>
 #include "glm/gtc/type_ptr.hpp"
 
 class AppLayer : public NoctalEngine::AppLayer
@@ -45,7 +46,7 @@ public:
 	void OnUpdate(float deltaTime) override
 	{
 		ImGui::Begin("Settings");
-		ImGui::ColorEdit3("Tile Map", glm::value_ptr(m_Colour));
+		ImGui::ColorEdit4("Tile Map", glm::value_ptr(m_Colour));
 		ImGui::End();
 
 		if (m_Squares.front()->GetMaterial()->Uniforms.Colour != m_Colour)
