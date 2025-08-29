@@ -11,16 +11,18 @@ namespace NoctalEngine
     class WindowResizeEvent final : public Event
     {
     public:
-        WindowResizeEvent(const float width, const float height) : m_Width(width), m_Height(height) {}
+        WindowResizeEvent(const uint32_t width, const uint32_t height) : m_Width(width), m_Height(height) 
+        {
+        }
 
         EVENT_TYPE(WINDOW_RESIZE)
 
-        inline float GetWidth() const { return m_Width; }
-        inline float GetHeight() const { return m_Height; }
+        inline uint32_t GetWidth() const { return m_Width; }
+        inline uint32_t GetHeight() const { return m_Height; }
 
     private:
-        float m_Width;
-        float m_Height;
+        uint32_t m_Width;
+        uint32_t m_Height;
     };
     class OnUpdateEvent final : public Event
     {

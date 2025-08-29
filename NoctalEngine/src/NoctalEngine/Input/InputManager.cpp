@@ -36,7 +36,9 @@ namespace NoctalEngine
             }
             if (input.type == SDL_EventType::SDL_EVENT_WINDOW_RESIZED)
             {
-                WindowResizeEvent event((float)focussedWindow->GetWidth(), (float)focussedWindow->GetHeight());
+                focussedWindow->UpdateSize();
+
+                WindowResizeEvent event(focussedWindow->GetWidth(), focussedWindow->GetHeight());
                 focussedWindow->WindowData.eventCallback(event);
             }
             //---- WINDOW EVENTS ----

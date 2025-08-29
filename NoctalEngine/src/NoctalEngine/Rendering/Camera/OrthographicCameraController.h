@@ -17,6 +17,7 @@ namespace NoctalEngine
 		void OnEvent(Event& e);
 
 		const glm::mat4& GetViewProjectionMatrix() const { return m_Camera.m_ViewProjectionMatrix; };
+		void SetAspectRatio(const float aspectRatio) { m_AspectRatio = aspectRatio; };
 
 	private:
 		bool OnMouseScrolled(const MouseScrollEvent& event);

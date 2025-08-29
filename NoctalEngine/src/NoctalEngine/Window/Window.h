@@ -1,7 +1,6 @@
 #pragma once
 #include "NoctalEngine/Core.h"
-
-struct SDL_Window;
+#include <SDL3/SDL.h>
 
 namespace NoctalEngine
 {
@@ -19,10 +18,10 @@ namespace NoctalEngine
 		TestGraphicsAPI TestAPI;
 
 		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
+		uint32_t Width;
+		uint32_t Height;
 
-		WindowProperties(TestGraphicsAPI testApi = TestGraphicsAPI::OPEN_GL, const std::string& title = "Noctal Engine", unsigned int width = 1280, unsigned int height = 720) : TestAPI(testApi), Title(title), Width(width), Height(height) {}
+		WindowProperties(TestGraphicsAPI testApi = TestGraphicsAPI::OPEN_GL, const std::string& title = "Noctal Engine", uint32_t width = 1280, uint32_t height = 720) : TestAPI(testApi), Title(title), Width(width), Height(height) {}
 	};
 
 	class Window
@@ -33,8 +32,10 @@ namespace NoctalEngine
 
 		virtual void OnUpdate() = 0;
 
-		unsigned int GetWidth() const { return WindowData.Width; };
-		unsigned int GetHeight() const { return WindowData.Height; };
+		int GetWidth() const { return WindowData.Width; };
+		int GetHeight() const { return WindowData.Height; };
+
+		void UpdateSize() { SDL_GetWindowSize(m_Window, (int*)&WindowData.Width, (int*)&WindowData.Height); };
 
 		virtual void SetVSync(bool enable) = 0;
 		virtual bool IsVSync() const = 0;
@@ -53,8 +54,8 @@ namespace NoctalEngine
 		struct WindowData
 		{
 			std::string Title;
-			unsigned int Width = 0;
-			unsigned int Height = 0;
+			uint32_t Width = 0;
+			uint32_t Height = 0;
 			std::function<void(Event&)> eventCallback;
 		};
 

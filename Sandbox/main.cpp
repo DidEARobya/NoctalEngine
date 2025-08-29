@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <NoctalEngine.h>
-#include "NoctalEngine/Application/AppLayer.h"
 #include "glm/gtc/type_ptr.hpp"
 
 class AppLayer : public NoctalEngine::AppLayer

@@ -2,13 +2,14 @@
 #include "NoctalEngine/Core.h"
 #include "NoctalEngine/Input/LayerStack.h"
 #include "NoctalEngine/Utility/Timer.h"
-#include "NoctalEngine/Rendering/Camera/OrthographicCamera.h"
+#include "NoctalEngine/Rendering/Camera/OrthographicCameraController.h"
 
 namespace NoctalEngine
 {
 	class Window;
 	class Event;
 	class WindowClosedEvent;
+	class WindowResizeEvent;
 	class Layer;
 	class ImGuiLayer;
 	class AppLayer;
@@ -26,6 +27,7 @@ namespace NoctalEngine
 		void PushOverlay(Layer* layer);
 
 		bool CloseApplication(const WindowClosedEvent& closeEvent);
+		bool ResizeApplication(const WindowResizeEvent& resizeEvent);
 
 		virtual const glm::mat4& GetCameraViewProjection() const = 0;
 
@@ -49,6 +51,8 @@ namespace NoctalEngine
 		inline static Application* s_Instance;
 
 		float m_DeltaTime;
+
+		bool m_Minimized;
 	};
 
 	Application* CreateApplication();

@@ -2,7 +2,6 @@
 #include "nepch.h"
 #include "OpenGLWindow.h"
 #include "NoctalEngine/Input/InputManager.h"
-#include <SDL3/SDL.h>
 
 namespace NoctalEngine
 {
@@ -52,7 +51,7 @@ namespace NoctalEngine
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-		m_Window = SDL_CreateWindow(properties.Title.c_str(), properties.Width, properties.Height, SDL_WINDOW_OPENGL);
+		m_Window = SDL_CreateWindow(properties.Title.c_str(), properties.Width, properties.Height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 		NE_ENGINE_SDL_ASSERT(m_Window);
 		NE_ENGINE_INFO("SDL successfully created Window");
 	}

@@ -12,7 +12,7 @@
 
 namespace NoctalEngine
 {
-	Application::Application()
+	Application::Application() : m_Minimized(false)
 	{
 		s_Instance = this;
 
@@ -49,16 +49,19 @@ namespace NoctalEngine
 			m_DeltaTime = m_Timer.Mark();
 			m_Window->OnUpdate();
 
-			Renderer::Instance().BeginRender();
-
-			for (Layer* layer : m_LayerStack)
+			if (m_Minimized == false)
 			{
-				layer->OnUpdate(m_DeltaTime);
+				Renderer::Instance().BeginRender();
+
+				for (Layer* layer : m_LayerStack)
+				{
+					layer->OnUpdate(m_DeltaTime);
+				}
+
+				Renderer::Instance().Render();
+				Renderer::Instance().EndRender();
 			}
 
-			Renderer::Instance().Render();
-			Renderer::Instance().EndRender();
-			
 			//OnUpdateEvent event;
 			//OnEvent(event);
 		}
@@ -81,11 +84,24 @@ namespace NoctalEngine
 		m_AppRunning = false;
 		return true;
 	}
+	bool Application::ResizeApplication(const WindowResizeEvent& resizeEvent)
+	{
+		if (resizeEvent.GetWidth() == 0 || resizeEvent.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
 
+		m_Minimized = false;
+		NoctalEngine::Renderer::Instance().OnWindowResize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
+		return true;
+	}
 	void Application::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowClosedEvent>(NOCTAL_BIND_EVENT_FN(CloseApplication));
+		dispatcher.Dispatch<WindowResizeEvent>(NOCTAL_BIND_EVENT_FN(ResizeApplication));
+
 
 		for (auto iterator = m_LayerStack.end(); iterator != m_LayerStack.begin();)
 		{
