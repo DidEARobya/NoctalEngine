@@ -113,10 +113,4 @@ namespace NoctalEngine
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
 		return s_Instance->m_WrappedRenderer->DrawIndexed();
 	}
-
-	const glm::mat4& Renderer::GetCameraViewProjectionMatrix() const
-	{
-		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
-		return s_Instance->m_WrappedRenderer->GetCameraViewProjectionMatrix();
-	}
 }

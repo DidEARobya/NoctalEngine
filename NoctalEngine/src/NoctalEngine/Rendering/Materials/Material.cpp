@@ -10,6 +10,8 @@ namespace NoctalEngine
 	}
 	void Material::Bind()
 	{
+		NE_SCOPE_TIMER("Material::Bind", "Bind");
+
 		if (m_Shader == nullptr)
 		{
 			return;

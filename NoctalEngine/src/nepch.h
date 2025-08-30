@@ -13,6 +13,7 @@
 //#include <unordered_set>
 
 #include "NoctalEngine/Debugging/Logger.h"
+#include "NoctalEngine/Debugging/ImGuiLayer.h"
 
 #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #include "ImGui/imgui.h"

@@ -32,6 +32,8 @@ public:
     virtual void DrawIndexed() override;
 
 private:
+    FrameData m_FrameData;
+
     NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
     SDL_GLContext m_GLContext = nullptr;
 

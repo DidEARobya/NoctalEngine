@@ -4,10 +4,11 @@
 #include "NoctalEngine/Events/KeyboardEvents.h"
 #include "NoctalEngine/Events/MouseEvents.h"
 #include "NoctalEngine/Events/WindowEvents.h"
+#include "NoctalEngine/Window/Window.h"
 #include "ImGui/backends/imgui_impl_sdl3.cpp"
 #include "NoctalEngine/Input/InputManager.h"
 #include "NoctalEngine/Rendering/Renderer.h"
-#include <unordered_map>
+#include <map>
 
 namespace NoctalEngine
 {
@@ -54,25 +55,50 @@ namespace NoctalEngine
 			ImGui::Text("Version: %s", Renderer::Instance().GetVersion());
 		}
 
-		ImGui::End();	
+		ImGui::End();
 
 		if (ImGui::Begin("Profiler"))
 		{
-			NOCTAL_SCOPE_TIMER("ImGuiLayer", "Profiler Display");
+			NE_SCOPE_TIMER("ImGuiLayer", "Profiler Display");
 
-			std::unordered_map<std::string, std::vector<ScopeTimerResult>> groupedResults;
+			ImGui::Checkbox("Group Results", &m_GroupScopeTimerResults);
+
+			std::map<std::string, std::vector<ScopeTimerResult>> groupedResults;
 
 			for (auto& result : m_ScopeTimerResults)
 			{
-				groupedResults[result.ClassName].push_back(result);
+				auto& vec = groupedResults[result.ClassName];
+
+				if (m_GroupScopeTimerResults == false)
+				{
+					vec.push_back(result);
+					continue;
+				}
+
+				// Check if a result with the same ScopeTag already exists
+				auto it = std::find_if(vec.begin(), vec.end(),
+					[&result](const ScopeTimerResult& existing) {
+						return existing.ScopeTag == result.ScopeTag;
+					});
+
+				if (it != vec.end())
+				{
+					// If found, accumulate the time
+					it->TimeElapsed += result.TimeElapsed;
+				}
+				else
+				{
+					// Otherwise, add as new
+					vec.push_back(result);
+				}
 			}
 
 			for (auto& [header, results] : groupedResults)
 			{
 				std::sort(results.begin(), results.end(),
-					[](const auto& a, const auto& b) 
-					{ 
-						return a.TimeElapsed > b.TimeElapsed; 
+					[](const auto& a, const auto& b)
+					{
+						return a.TimeElapsed > b.TimeElapsed;
 					});
 
 				if (ImGui::CollapsingHeader(header.c_str()))
@@ -89,14 +115,17 @@ namespace NoctalEngine
 
 		ImGui::End();
 	}
+
 	void ImGuiLayer::ShowDockSpace(bool* display)
 	{
-		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking |
-			ImGuiWindowFlags_NoTitleBar |
-			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoBringToFrontOnFocus |
+		ImGuiWindowFlags windowFlags = 
+			ImGuiWindowFlags_NoDocking			    |
+			ImGuiWindowFlags_NoTitleBar				|
+			ImGuiWindowFlags_NoCollapse				|
+			ImGuiWindowFlags_NoResize				|
+			ImGuiWindowFlags_NoMove					|
+			ImGuiWindowFlags_NoBringToFrontOnFocus  |
+			ImGuiWindowFlags_NoBackground           |
 			ImGuiWindowFlags_NoNavFocus;
 
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -104,20 +133,15 @@ namespace NoctalEngine
 		ImGui::SetNextWindowSize(viewport->WorkSize);
 		ImGui::SetNextWindowViewport(viewport->ID);
 
-		// This removes background/border so it's "invisible"
-		windowFlags |= ImGuiWindowFlags_NoBackground;
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		ImGui::Begin("InvisibleDockSpace", display, windowFlags);
+		ImGui::Begin("DockSpace", display, windowFlags);
 		ImGui::PopStyleVar(3);
 
-		// DockSpace ID: needs to be consistent across frames
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
-			ImGuiDockNodeFlags_PassthruCentralNode);
+		ImGuiID id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 
 		ImGui::End();
 	}

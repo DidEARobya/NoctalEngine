@@ -35,8 +35,6 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	NE_ENGINE_ASSERT(status, "GLAD failed to initialise");
 	NE_ENGINE_INFO("GLAD successfully loaded");
 
-	NE_ENGINE_SDL_ASSERT(SDL_GL_SetSwapInterval(1));
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -93,6 +91,8 @@ void OpenGLRenderer::Destroy()
 
 void OpenGLRenderer::BeginRender()
 {
+	NE_SCOPE_TIMER("Renderer::BeginRender", "BeginFrame");
+
 	ImGuiIO& io = ImGui::GetIO();
 	NoctalEngine::Application& app = NoctalEngine::Application::Get();
 	io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
@@ -106,14 +106,18 @@ void OpenGLRenderer::BeginRender()
 
 void OpenGLRenderer::Render()
 {
+	NE_SCOPE_TIMER("Renderer::Render", "Render");
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	int32_t index = 0;
-
-	for (auto& drawable : m_Drawables)
 	{
-		drawable.get()->Draw();
-		index++;
+		NE_SCOPE_TIMER("Renderer::Render", "DrawDrawables");
+		int32_t index = 0;
+
+		for (auto& drawable : m_Drawables)
+		{
+			drawable.get()->Draw();
+			index++;
+		}
 	}
 
 	ImGui::Render();
@@ -121,26 +125,33 @@ void OpenGLRenderer::Render()
 
 void OpenGLRenderer::EndRender()
 {
-	FrameData frame({ NoctalEngine::Application::Get().GetCameraViewProjection() });
-	m_FrameBuffer->UpdateFrameData(frame);
-	m_FrameBuffer->Bind();
-
-	m_CameraViewProjectionMatrix = NoctalEngine::Application::Get().GetCameraViewProjection();
-
-	ImGuiIO& io = ImGui::GetIO();
-
-	ImGui::EndFrame();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	NE_SCOPE_TIMER("Renderer::EndFrame", "EndFrame");
 	{
-		SDL_Window* window = SDL_GL_GetCurrentWindow();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(window, m_GLContext);
+		NE_SCOPE_TIMER("Renderer::EndFrame", "FrameBufferUpdate");
+		m_FrameData.ViewProjection = NoctalEngine::Application::Get().GetCameraViewProjection();
+		m_FrameBuffer->UpdateFrameData(m_FrameData);
+		m_FrameBuffer->Bind();
+	}
+	{
+		NE_SCOPE_TIMER("Renderer::EndFrame", "ImGuiEndFrame");
+		ImGuiIO& io = ImGui::GetIO();
+
+		ImGui::EndFrame();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			SDL_Window* window = SDL_GL_GetCurrentWindow();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			SDL_GL_MakeCurrent(window, m_GLContext);
+		}
 	}
 
-	NE_ENGINE_SDL_ASSERT(SDL_GL_SwapWindow(m_Window));
+	{
+		NE_SCOPE_TIMER("Renderer::EndFrame", "SwapWindow");
+		NE_ENGINE_SDL_ASSERT(SDL_GL_SwapWindow(m_Window));
+	}
 }
 
 void OpenGLRenderer::OnWindowResize(const uint32_t width, const uint32_t height)

@@ -4,6 +4,8 @@
 
 namespace NoctalEngine
 {
+	class Window;
+
 	class ImGuiLayer : public Layer
 	{
 	public:
@@ -27,11 +29,12 @@ namespace NoctalEngine
 
 	private:
 		static std::vector<ScopeTimerResult> m_ScopeTimerResults;
+		bool m_GroupScopeTimerResults;
 	};
 }
 
 #ifdef NE_ENABLE_PROFILER
-	#define NOCTAL_SCOPE_TIMER(className, scopeTag)                                             \
+	#define NE_SCOPE_TIMER(className, scopeTag)                                             \
 	struct ScopeTimerGuard##__LINE__                                                            \
 	{                                                                                           \
 		std::string m_ClassName;                                                                \

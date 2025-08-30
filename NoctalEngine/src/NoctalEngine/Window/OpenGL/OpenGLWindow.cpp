@@ -21,7 +21,7 @@ namespace NoctalEngine
 
 	void OpenGLWindow::SetVSync(bool enabled)
 	{
-		SDL_GL_SetSwapInterval(enabled);
+		NE_ENGINE_SDL_ASSERT(SDL_GL_SetSwapInterval(enabled));
 	}
 
 	bool OpenGLWindow::IsVSync() const

@@ -2,9 +2,12 @@
 #include <NoctalEngine/EntryPoint.h>
 #include "glm/gtc/type_ptr.hpp"
 #include "NoctalEngine/Debugging/ImGuiLayer.h"
+#include "NoctalEngine/Window/Window.h"
 
 Sandbox2D::Sandbox2D() : NoctalEngine::AppLayer(-1.6f, 1.6f, -0.9f, 0.9f), m_Colour({ glm::vec4(1.0f, 0.0f, 1.0f, 1.0f) })
 {
+	m_EnableVSync = NoctalEngine::Application::Get().GetWindow().IsVSync();
+
 	m_CheckerBoard = NoctalEngine::Renderer::Instance().CreateTexture("Textures/Checkerboard.png");
 	m_ChernoLogo = NoctalEngine::Renderer::Instance().CreateTexture("Textures/ChernoLogo.png");
 
@@ -57,7 +60,7 @@ Sandbox2D::~Sandbox2D()
 
 void Sandbox2D::OnUpdate(float deltaTime)
 {
-	NOCTAL_SCOPE_TIMER("Sandbox2D", "OnUpdate");
+	NE_SCOPE_TIMER("Sandbox2D", "OnUpdate");
 
 	if (m_Shapes.front()->GetMaterial()->GetColour() != m_Colour)
 	{
@@ -105,7 +108,24 @@ void Sandbox2D::OnEvent(NoctalEngine::Event& event)
 
 void Sandbox2D::LateUpdate(float deltaTime)
 {
+	static bool vSync = m_EnableVSync;
+
 	ImGui::Begin("Settings");
+	ImGui::Checkbox("VSync", &vSync);
+
+	ToggleVSync(vSync);
+
 	ImGui::ColorEdit4("Tile Map", glm::value_ptr(m_Colour));
 	ImGui::End();
+}
+
+void Sandbox2D::ToggleVSync(bool val)
+{
+	if (m_EnableVSync == val)
+	{
+		return;
+	}
+
+	m_EnableVSync = val;
+	NoctalEngine::Application::Get().GetWindow().SetVSync(m_EnableVSync);
 }

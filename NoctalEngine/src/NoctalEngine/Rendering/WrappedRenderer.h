@@ -60,13 +60,8 @@ protected:
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
     virtual void DrawIndexed() = 0;
-
-    const glm::mat4& GetCameraViewProjectionMatrix() const { return m_CameraViewProjectionMatrix; };
-
 protected:
     SDL_Window* m_Window = nullptr;  
     std::vector<std::shared_ptr<Drawable>> m_Drawables;
     std::unique_ptr<NoctalEngine::ShaderLibrary> m_ShaderLibrary;
-
-    glm::mat4 m_CameraViewProjectionMatrix = { 0.0f };
 };

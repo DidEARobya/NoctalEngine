@@ -42,8 +42,6 @@ namespace NoctalEngine
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         void DrawIndexed();
 
-        const glm::mat4& GetCameraViewProjectionMatrix() const;
-
     protected:
         friend class ShaderLibrary;
         std::shared_ptr<Shader> CreateShader(const std::string& filePath);

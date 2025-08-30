@@ -12,6 +12,9 @@ public:
 	virtual void LateUpdate(float deltaTime) override;
 
 private:
+	void ToggleVSync(bool val);
+
+private:
 	std::shared_ptr<Drawable> m_Shape;
 	std::shared_ptr<Drawable> m_Shape2;
 	std::shared_ptr<Drawable> m_Shape3;
@@ -22,4 +25,6 @@ private:
 
 	std::shared_ptr<NoctalEngine::Texture> m_CheckerBoard;
 	std::shared_ptr<NoctalEngine::Texture> m_ChernoLogo;
+
+	bool m_EnableVSync;
 };
