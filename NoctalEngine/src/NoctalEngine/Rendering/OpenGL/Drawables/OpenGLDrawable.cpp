@@ -105,8 +105,8 @@ OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm
 		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
 
 		std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-			"TextureVS",
-			"TextureFS",
+			"ColouredTextureVS",
+			"ColouredTextureFS",
 			*this);
 
 		if (shader->IsValid() == true)

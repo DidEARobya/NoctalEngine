@@ -75,6 +75,8 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureFS.frag", false);
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourVS.vert", false);
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourFS.frag", false);
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/ColouredTextureVS.vert", false);
+	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/ColouredTextureFS.frag", false);
 
 	m_ShaderLibrary->SortShaders();
 

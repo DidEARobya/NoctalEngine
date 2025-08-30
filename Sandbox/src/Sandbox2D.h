@@ -11,8 +11,10 @@ public:
 	virtual void OnEvent(NoctalEngine::Event& event) override;
 
 private:
-	std::shared_ptr<Drawable> m_Square;
-	std::shared_ptr<Drawable> m_Square2;
+	std::shared_ptr<Drawable> m_Shape;
+	std::shared_ptr<Drawable> m_Shape2;
+	std::shared_ptr<Drawable> m_Shape3;
+	std::shared_ptr<Drawable> m_Shape4;
 
 	std::vector<std::shared_ptr<Drawable>> m_Squares;
 	glm::vec4 m_Colour;

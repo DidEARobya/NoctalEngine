@@ -15,10 +15,10 @@ public:
 	//virtual void Update(float deltaTime) noexcept = 0;
 	virtual const glm::mat4& GetTransform() const override;
 
-	virtual void SetPosition(const glm::vec3& position) { m_Position = position; };
-	virtual glm::vec3 GetPosition() { return m_Position; };
+	virtual void SetPosition(const glm::vec2& position) { m_Position = glm::vec3(position, 0.0f); };
+	virtual glm::vec2 GetPosition() { return m_Position; };
 
-	virtual void SetScale(const glm::mat4& scale) { m_Scale = scale; };;
+	virtual void SetScale(const glm::vec2& scale) { m_Scale = glm::scale(glm::mat4(1.0f), { scale.x , scale.y, 1.0f }); };;
 
 	virtual NoctalEngine::Material* GetMaterial() override { return m_Material; };
 
