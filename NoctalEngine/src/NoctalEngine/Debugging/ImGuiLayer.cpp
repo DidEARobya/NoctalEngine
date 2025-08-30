@@ -10,6 +10,8 @@
 
 namespace NoctalEngine
 {
+	std::vector<ImGuiLayer::ScopeTimerResult> ImGuiLayer::m_ScopeTimerResults;
+
 	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer")
 	{
 
@@ -52,6 +54,19 @@ namespace NoctalEngine
 		}
 
 		ImGui::End();	
+
+		if (ImGui::Begin("Profiler"))
+		{
+			for (auto& result : m_ScopeTimerResults)
+			{
+				char label[50];
+				strcpy(label, result.ScopeTag);
+				strcpy(label, ": %0.3fms");
+				ImGui::Text(label);
+			}
+		}
+
+		ImGui::End();
 	}
 	void ImGuiLayer::ShowDockSpace(bool* display)
 	{

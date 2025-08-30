@@ -4,7 +4,6 @@
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLIndexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
-#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLTransformCBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Renderer.h"
 #include "glm/gtc/matrix_transform.hpp"

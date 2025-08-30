@@ -1,6 +1,7 @@
 #include "Sandbox2D.h"
 #include <NoctalEngine/EntryPoint.h>
 #include "glm/gtc/type_ptr.hpp"
+#include "NoctalEngine/Debugging/ImGuiLayer.h"
 
 Sandbox2D::Sandbox2D() : NoctalEngine::AppLayer(-1.6f, 1.6f, -0.9f, 0.9f), m_Colour({ glm::vec4(1.0f, 0.0f, 1.0f, 1.0f) })
 {
@@ -56,6 +57,8 @@ Sandbox2D::~Sandbox2D()
 
 void Sandbox2D::OnUpdate(float deltaTime)
 {
+	NOCTAL_SCOPE_TIMER("Sandbox2D::OnUpdate");
+
 	if (m_Shapes.front()->GetMaterial()->GetColour() != m_Colour)
 	{
 		for (auto& square : m_Shapes)
