@@ -7,6 +7,7 @@
 #include "ImGui/backends/imgui_impl_sdl3.cpp"
 #include "NoctalEngine/Input/InputManager.h"
 #include "NoctalEngine/Rendering/Renderer.h"
+#include <unordered_map>
 
 namespace NoctalEngine
 {
@@ -57,18 +58,30 @@ namespace NoctalEngine
 
 		if (ImGui::Begin("Profiler"))
 		{
-			std::sort(
-				m_ScopeTimerResults.begin(),
-				m_ScopeTimerResults.end(),
-				[](const NoctalEngine::ImGuiLayer::ScopeTimerResult& a,
-					const NoctalEngine::ImGuiLayer::ScopeTimerResult& b)
-				{
-					return a.TimeElapsed > b.TimeElapsed; // Descending
-				});
+			NOCTAL_SCOPE_TIMER("ImGuiLayer", "Profiler Display");
+
+			std::unordered_map<std::string, std::vector<ScopeTimerResult>> groupedResults;
 
 			for (auto& result : m_ScopeTimerResults)
 			{
-				ImGui::Text("Process %s took %.3fms to complete", (const char*)result.ScopeTag.c_str(), result.TimeElapsed);
+				groupedResults[result.ClassName].push_back(result);
+			}
+
+			for (auto& [header, results] : groupedResults)
+			{
+				std::sort(results.begin(), results.end(),
+					[](const auto& a, const auto& b) 
+					{ 
+						return a.TimeElapsed > b.TimeElapsed; 
+					});
+
+				if (ImGui::CollapsingHeader(header.c_str()))
+				{
+					for (auto& result : results)
+					{
+						ImGui::Text("Process %s took %.3fms to complete", result.ScopeTag.c_str(), result.TimeElapsed);
+					}
+				}
 			}
 
 			m_ScopeTimerResults.clear();

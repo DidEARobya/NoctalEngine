@@ -57,7 +57,7 @@ Sandbox2D::~Sandbox2D()
 
 void Sandbox2D::OnUpdate(float deltaTime)
 {
-	NOCTAL_SCOPE_TIMER("Sandbox2D::OnUpdate");
+	NOCTAL_SCOPE_TIMER("Sandbox2D", "OnUpdate");
 
 	if (m_Shapes.front()->GetMaterial()->GetColour() != m_Colour)
 	{

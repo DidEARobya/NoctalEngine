@@ -53,7 +53,7 @@ namespace NoctalEngine
 			if (m_Minimized == false)
 			{
 				{
-					NOCTAL_SCOPE_TIMER("Renderer::BeginRender");
+					NOCTAL_SCOPE_TIMER("Renderer", "BeginRender");
 					Renderer::Instance().BeginRender();
 				}
 
@@ -65,12 +65,12 @@ namespace NoctalEngine
 				m_GameLayer->LateUpdate(m_DeltaTime);
 
 				{
-					NOCTAL_SCOPE_TIMER("Renderer::Render");
+					NOCTAL_SCOPE_TIMER("Renderer", "Render");
 					Renderer::Instance().Render();
 				}
 
 				{
-					NOCTAL_SCOPE_TIMER("Renderer::EndRender");
+					NOCTAL_SCOPE_TIMER("Renderer", "EndRender");
 					Renderer::Instance().EndRender();
 				}
 			}
