@@ -52,7 +52,10 @@ namespace NoctalEngine
 
 			if (m_Minimized == false)
 			{
-				Renderer::Instance().BeginRender();
+				{
+					NOCTAL_SCOPE_TIMER("Renderer::BeginRender");
+					Renderer::Instance().BeginRender();
+				}
 
 				for (Layer* layer : m_LayerStack)
 				{
@@ -61,8 +64,15 @@ namespace NoctalEngine
 
 				m_GameLayer->LateUpdate(m_DeltaTime);
 
-				Renderer::Instance().Render();
-				Renderer::Instance().EndRender();
+				{
+					NOCTAL_SCOPE_TIMER("Renderer::Render");
+					Renderer::Instance().Render();
+				}
+
+				{
+					NOCTAL_SCOPE_TIMER("Renderer::EndRender");
+					Renderer::Instance().EndRender();
+				}
 			}
 
 			//OnUpdateEvent event;

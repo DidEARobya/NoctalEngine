@@ -9,7 +9,7 @@ namespace NoctalEngine
 	public:
 		struct ScopeTimerResult
 		{
-			const char* ScopeTag;
+			std::string ScopeTag;
 			float TimeElapsed;
 		};
 
@@ -38,7 +38,7 @@ namespace NoctalEngine
         ~ScopeTimerGuard##__LINE__() {                                        \
             NoctalEngine::ImGuiLayer::ScopeTimerResult result;                                          \
             result.ScopeTag = m_Name;                                             \
-            result.TimeElapsed = m_Timer.TimeElapsed(); /* use your function */ \
+            result.TimeElapsed = m_Timer.TimeElapsedMs(); /* use your function */ \
             NoctalEngine::ImGuiLayer::AddScopeTimerResult(result);            \
         }                                                                     \
     } timerGuard##__LINE__(profileTag);

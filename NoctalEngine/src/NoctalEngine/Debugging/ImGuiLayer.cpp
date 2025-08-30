@@ -57,13 +57,21 @@ namespace NoctalEngine
 
 		if (ImGui::Begin("Profiler"))
 		{
+			std::sort(
+				m_ScopeTimerResults.begin(),
+				m_ScopeTimerResults.end(),
+				[](const NoctalEngine::ImGuiLayer::ScopeTimerResult& a,
+					const NoctalEngine::ImGuiLayer::ScopeTimerResult& b)
+				{
+					return a.TimeElapsed > b.TimeElapsed; // Descending
+				});
+
 			for (auto& result : m_ScopeTimerResults)
 			{
-				char label[50];
-				strcpy(label, result.ScopeTag);
-				strcpy(label, ": %0.3fms");
-				ImGui::Text(label);
+				ImGui::Text("Process %s took %.3fms to complete", (const char*)result.ScopeTag.c_str(), result.TimeElapsed);
 			}
+
+			m_ScopeTimerResults.clear();
 		}
 
 		ImGui::End();
