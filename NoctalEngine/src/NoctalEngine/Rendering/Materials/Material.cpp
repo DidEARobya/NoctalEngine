@@ -17,26 +17,53 @@ namespace NoctalEngine
 
 		m_Shader->Bind();
 
-		uint32_t index = 0;
-		for (const auto& texture : m_Textures)
+		if (m_BaseTexture != nullptr)
 		{
-			texture->SetTextureIndex(index);
-			texture->Bind();
-			index++;
+			m_BaseTexture->SetTextureIndex(0);
+			m_BaseTexture->Bind();
 		}
+
+		//uint32_t index = 1;
+
+		//for (const auto& texture : m_SubTextures)
+		//{
+		//	texture->SetTextureIndex(index);
+		//	texture->Bind();
+		//	index++;
+		//}
 	}
 
-	void Material::BindTexture(std::shared_ptr<Texture> texture)
+	void Material::SetBaseTexture(std::shared_ptr<Texture> texture)
 	{
-		NE_ENGINE_ASSERT(m_Shader || texture, "Bind Shader before binding textures");
-		m_Textures.push_back(texture);
+		NE_ENGINE_ASSERT(m_Shader, "Bind Shader before binding textures");
+
+		if (texture == nullptr)
+		{
+			NE_ENGINE_ERROR("Tried to bind invalid Texture");
+			return;
+		}
+
+		m_BaseTexture.reset();
+		m_BaseTexture = texture;
 
 		m_Shader->Bind();
 		m_Shader->SetUniformInt("u_Texture", 0);
-		m_Shader->SetUniformInt("u_UseTexture", 1);
 	}
 
-	void Material::BindShader(std::unique_ptr<Shader> shader)
+	//Setup doesn't work, come back when creating MaterialUniformBufferObject
+	//void Material::BindSubTexture(std::shared_ptr<Texture> texture)
+	//{
+	//	NE_ENGINE_ASSERT(m_Shader, "Bind Shader before binding textures");
+	//	NE_ENGINE_ASSERT(texture, "Tried to bind invalid Texture");
+
+	//	m_SubTextures.push_back(texture);
+
+	//	m_Shader->Bind();
+	//	m_Shader->SetUniformInt("u_Texture", 0);
+	//	m_Shader->SetUniformInt("u_UseTexture", 1);
+	//}
+
+	void Material::SetShader(std::unique_ptr<Shader> shader)
 	{
 		NE_ENGINE_ASSERT(m_Shader == nullptr, "Attempted to add Shader a second time");
 		m_Shader = std::move(shader);

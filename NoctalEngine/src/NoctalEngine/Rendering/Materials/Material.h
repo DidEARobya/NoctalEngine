@@ -15,8 +15,11 @@ namespace NoctalEngine
 		virtual ~Material() override = default;
 		virtual void Bind() override;
 
-		void BindTexture(std::shared_ptr<Texture> texture);
-		void BindShader(std::unique_ptr<Shader> shader);
+		void SetBaseTexture(std::shared_ptr<Texture> texture);
+		//Setup doesn't work, come back when creating MaterialUniformBufferObject
+		//void BindSubTexture(std::shared_ptr<Texture> texture);
+
+		void SetShader(std::unique_ptr<Shader> shader);
 
 		void SetColour(glm::vec4 colour);
 		const glm::vec4 GetColour() const { return m_Uniforms.Colour; };
@@ -28,7 +31,8 @@ namespace NoctalEngine
 
 		} m_Uniforms;
 
-		std::vector<std::shared_ptr<Texture>> m_Textures;
+		std::shared_ptr<Texture> m_BaseTexture;
+		//std::vector<std::shared_ptr<Texture>> m_SubTextures;
 		std::unique_ptr<Shader> m_Shader;
 	};
 }

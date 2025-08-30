@@ -12,6 +12,10 @@ namespace NoctalEngine
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnUpdate(float deltaTime) override;
+
+    private:
+		void ShowDockSpace(bool* display);
+
 		//void OnEvent(Event& event) override;
 	};
 }

@@ -3,6 +3,21 @@
 #include <GLAD/glad.h>
 #include <stb_image/stb_image.h>
 
+OpenGLTexture2D::OpenGLTexture2D()
+{
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+
+	glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	unsigned char whitePixel[4] = { 255, 255, 255, 255 };
+	glTextureStorage2D(m_RendererID, 1, GL_RGBA8, 1, 1);          // Allocate storage
+	glTextureSubImage2D(m_RendererID, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
+}
+
 OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path)
 {
 	int width;
@@ -36,6 +51,9 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path)
 
 	glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, fileFormat, GL_UNSIGNED_BYTE, data);
 

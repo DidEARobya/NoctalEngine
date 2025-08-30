@@ -8,6 +8,7 @@
 #include "NoctalEngine/Input/InputManager.h"
 #include "NoctalEngine/Input/Layer.h"
 #include "NoctalEngine/Debugging/ImGuiLayer.h"
+#include "AppLayer.h"
 #include <conio.h>
 
 namespace NoctalEngine
@@ -57,6 +58,8 @@ namespace NoctalEngine
 				{
 					layer->OnUpdate(m_DeltaTime);
 				}
+
+				m_GameLayer->LateUpdate(m_DeltaTime);
 
 				Renderer::Instance().Render();
 				Renderer::Instance().EndRender();

@@ -4,6 +4,9 @@
 
 Sandbox2D::Sandbox2D() : NoctalEngine::AppLayer(-1.6f, 1.6f, -0.9f, 0.9f), m_Colour({ glm::vec4(1.0f, 0.0f, 1.0f, 1.0f) })
 {
+	m_CheckerBoard = NoctalEngine::Renderer::Instance().CreateTexture("Textures/Checkerboard.png");
+	m_ChernoLogo = NoctalEngine::Renderer::Instance().CreateTexture("Textures/ChernoLogo.png");
+
 	glm::vec2 scale(0.1f);
 	glm::vec4 colour(0.2f, 0.8f, 0.1f, 1.0f);
 	m_Colour = colour;
@@ -13,40 +16,37 @@ Sandbox2D::Sandbox2D() : NoctalEngine::AppLayer(-1.6f, 1.6f, -0.9f, 0.9f), m_Col
 		for (int y = 0; y < 20; y++)
 		{
 			glm::vec3 position = glm::vec3(-1.5f, -1.0f, -1.0f) + glm::vec3(x * 0.105f, y * 0.105f, 0.0f);
-			std::shared_ptr<Drawable> shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TEX_SQUARE);
+			std::shared_ptr<Drawable> shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD);
 			shape->SetPosition(position);
 			shape->SetScale(scale);
 			shape->GetMaterial()->SetColour(colour);
 
-			m_Squares.push_back(shape);
+			m_Shapes.push_back(shape);
 		}
 	}
 
-	m_CheckerBoard = NoctalEngine::Renderer::Instance().CreateTexture("Textures/Checkerboard.png");
-	m_ChernoLogo = NoctalEngine::Renderer::Instance().CreateTexture("Textures/ChernoLogo.png");
-
-	m_Shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TEX_SQUARE);
+	m_Shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD);
 	m_Shape->SetPosition(m_Shape->GetPosition() + glm::vec2(0.1f, 0.0f));
 	m_Shape->SetScale(glm::vec2(1.0f));
-	m_Shape->GetMaterial()->BindTexture(m_CheckerBoard);
+	m_Shape->GetMaterial()->SetBaseTexture(m_CheckerBoard);
 	m_Shape->GetMaterial()->SetColour({ 1.0f, 1.0f, 1.0f, 1.0f });
 
-	m_Shape2 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TEX_SQUARE);
+	m_Shape2 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD);
 	m_Shape2->SetPosition(m_Shape2->GetPosition() + glm::vec2(0.1f, 0.0f));
 	m_Shape2->SetScale(glm::vec2(1.0f));
-	m_Shape2->GetMaterial()->BindTexture(m_ChernoLogo);
+	m_Shape2->GetMaterial()->SetBaseTexture(m_ChernoLogo);
 	m_Shape2->GetMaterial()->SetColour({ 1.0f, 1.0f, 1.0f, 1.0f });
 
-	m_Shape3 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TEX_SQUARE);
+	m_Shape3 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD);
 	m_Shape3->SetPosition(m_Shape->GetPosition() + glm::vec2(1.5f, 0.0f));
 	m_Shape3->SetScale(glm::vec2(1.0f));
-	m_Shape3->GetMaterial()->BindTexture(m_CheckerBoard);
+	m_Shape3->GetMaterial()->SetBaseTexture(m_CheckerBoard);
 	m_Shape3->GetMaterial()->SetColour({ 0.0f, 1.0f, 1.0f, 0.5f });
 
-	m_Shape4 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TEX_SQUARE);
+	m_Shape4 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD);
 	m_Shape4->SetPosition(m_Shape2->GetPosition() + glm::vec2(1.5f, 0.0f));
 	m_Shape4->SetScale(glm::vec2(1.0f));
-	m_Shape4->GetMaterial()->BindTexture(m_ChernoLogo);
+	m_Shape4->GetMaterial()->SetBaseTexture(m_ChernoLogo);
 	m_Shape4->GetMaterial()->SetColour({ 1.0f, 1.0f, 1.0f, 1.5f });
 }
 
@@ -56,13 +56,9 @@ Sandbox2D::~Sandbox2D()
 
 void Sandbox2D::OnUpdate(float deltaTime)
 {
-	ImGui::Begin("Settings");
-	ImGui::ColorEdit4("Tile Map", glm::value_ptr(m_Colour));
-	ImGui::End();
-
-	if (m_Squares.front()->GetMaterial()->GetColour() != m_Colour)
+	if (m_Shapes.front()->GetMaterial()->GetColour() != m_Colour)
 	{
-		for (auto& square : m_Squares)
+		for (auto& square : m_Shapes)
 		{
 			square->GetMaterial()->SetColour(m_Colour);
 		}
@@ -102,4 +98,11 @@ void Sandbox2D::OnUpdate(float deltaTime)
 void Sandbox2D::OnEvent(NoctalEngine::Event& event)
 {
 	NoctalEngine::AppLayer::OnEvent(event);
+}
+
+void Sandbox2D::LateUpdate(float deltaTime)
+{
+	ImGui::Begin("Settings");
+	ImGui::ColorEdit4("Tile Map", glm::value_ptr(m_Colour));
+	ImGui::End();
 }

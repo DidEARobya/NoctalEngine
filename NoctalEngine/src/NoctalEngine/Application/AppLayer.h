@@ -23,6 +23,8 @@ namespace NoctalEngine
 		virtual void OnUpdate(float deltaTime) override { m_CameraController.Update(deltaTime); };
 		virtual void OnEvent(Event& event) override { m_CameraController.OnEvent(event); };
 
+		virtual void LateUpdate(float deltaTime) {};
+
 		const glm::mat4& GetCameraViewProjection() const { return m_CameraController.GetViewProjectionMatrix(); }
 	
 	protected:

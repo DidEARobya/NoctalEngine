@@ -4,6 +4,7 @@
 class OpenGLTexture2D : public NoctalEngine::Texture2D
 {
 public:
+	OpenGLTexture2D();
 	OpenGLTexture2D(const std::string& path);
 	virtual ~OpenGLTexture2D() override;
 

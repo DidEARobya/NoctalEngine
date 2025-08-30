@@ -34,6 +34,9 @@ namespace NoctalEngine
 		ImGuiIO& io = ImGui::GetIO();
 		io.DeltaTime = deltaTime;
 
+		bool dockDisplay = true;
+		ShowDockSpace(&dockDisplay);
+
 		if (ImGui::Begin("Simulation Speed"))
 		{
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -49,6 +52,38 @@ namespace NoctalEngine
 		}
 
 		ImGui::End();	
+	}
+	void ImGuiLayer::ShowDockSpace(bool* display)
+	{
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoBringToFrontOnFocus |
+			ImGuiWindowFlags_NoNavFocus;
+
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos);
+		ImGui::SetNextWindowSize(viewport->WorkSize);
+		ImGui::SetNextWindowViewport(viewport->ID);
+
+		// This removes background/border so it's "invisible"
+		windowFlags |= ImGuiWindowFlags_NoBackground;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::Begin("InvisibleDockSpace", display, windowFlags);
+		ImGui::PopStyleVar(3);
+
+		// DockSpace ID: needs to be consistent across frames
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f),
+			ImGuiDockNodeFlags_PassthruCentralNode);
+
+		ImGui::End();
 	}
 }
 
