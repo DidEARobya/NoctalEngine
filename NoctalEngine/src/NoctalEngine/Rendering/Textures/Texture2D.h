@@ -3,7 +3,7 @@
 
 namespace NoctalEngine
 {
-	class Texture2D : public Texture
+	class TEXCOORD : public Texture
 	{
 	};
 }

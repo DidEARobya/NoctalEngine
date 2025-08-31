@@ -6,52 +6,52 @@
 #include "NoctalEngine/Rendering/Geometry/Triangle.h"
 
 OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBaseObject(position, scale)
-{	//To Implement later
-	//if (IsStaticInitialised() == false)
-	//{
-	//	
-	//}
-	//else
-	//{
-	//	SetIndexFromStatic();
-	//}
-
-	auto shape = NoctalEngine::Triangle::MakeTextured<Vertex>();
-
-	glCreateVertexArrays(1, &m_RendererID);
-	glBindVertexArray(m_RendererID);
-
-	SetMaterial(std::make_unique<NoctalEngine::Material>());
-	NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
-
-	float vertices[3 * 5]
+{
+	if (IsStaticInitialised() == false)
 	{
-		-0.5f, -0.5f, 0.0f,		0.0, 0.0f,
-		 0.5f, -0.5f, 0.0f,		1.0, 0.0f,
-		 0.0f,  0.5f, 0.0f,		0.5, 1.0f
-	};
+		glCreateVertexArrays(1, &m_RendererID);
+		glBindVertexArray(m_RendererID);
 
-	AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(shape.m_Vertices, {
-		{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
-		{ NoctalEngine::ShaderDataType::FLOAT_2, "a_TexCoord"},
-		})));
+		SetRendererID(m_RendererID);
 
-	uint32_t indices[3] = { 0, 1, 2 };
-	SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
+		auto shape = NoctalEngine::Triangle::MakeTextured<Vertex>();
 
-	std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-		"ColouredTextureVS",
-		"ColouredTextureFS",
-		*this);
+		NoctalEngine::VertexBufferData vbuf(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
 
-	if (shader->IsValid() == true)
-	{
-		m_Material->SetShader(std::move(shader));
-		m_Material->SetBaseTexture(std::make_shared<OpenGLTexture2D>());
+		for (unsigned int i = 0; i < shape.m_Vertices.size(); i++)
+		{
+			vbuf.EmplaceBack(
+				shape.m_Vertices[i].Pos,
+				shape.m_Vertices[i].TexCoord
+			);
+		}
+
+		AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(vbuf)));
+		SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
+
+		SetStaticMaterial(std::make_unique<NoctalEngine::Material>());
+		NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
+
+		std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
+			"ColouredTextureVS",
+			"ColouredTextureFS",
+			*this);
+
+		if (shader->IsValid() == true)
+		{
+			m_Material->SetShader(std::move(shader));
+			m_Material->SetBaseTexture(std::make_shared<OpenGLTexture2D>());
+		}
+		else
+		{
+			NE_ENGINE_ERROR("Drawable Created, but Shader Failed to bind");
+		}
 	}
 	else
 	{
-		NE_ENGINE_ERROR("Drawable Created, but Shader Failed to bind");
+		SetRendererIDFromStatic();
+		SetIndexFromStatic();
+		SetMaterialFromStatic();
 	}
 
 	m_ObjectBuffer = std::make_unique<OpenGLObjectUniformBufferObject>();

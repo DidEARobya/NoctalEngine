@@ -1,7 +1,7 @@
 #pragma once
 #include "NoctalEngine/Rendering/Textures/Texture2D.h"
 
-class OpenGLTexture2D : public NoctalEngine::Texture2D
+class OpenGLTexture2D : public NoctalEngine::TEXCOORD
 {
 public:
 	OpenGLTexture2D();

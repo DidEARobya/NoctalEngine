@@ -7,7 +7,6 @@
 
 OpenGLQuad::OpenGLQuad(glm::vec2 position, glm::vec2 scale) : OpenGLBaseObject(position, scale)
 {
-
 	if (IsStaticInitialised() == false)
 	{
 		glCreateVertexArrays(1, &m_RendererID);
@@ -17,12 +16,17 @@ OpenGLQuad::OpenGLQuad(glm::vec2 position, glm::vec2 scale) : OpenGLBaseObject(p
 
 		auto shape = NoctalEngine::Quad::MakeTextured<Vertex>();
 
-		AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(shape.m_Vertices, {
-		{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
-		{ NoctalEngine::ShaderDataType::FLOAT_2, "a_TexCoord"},
-			})));
+		NoctalEngine::VertexBufferData vbuf(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
 
+		for (unsigned int i = 0; i < shape.m_Vertices.size(); i++)
+		{
+			vbuf.EmplaceBack(
+				shape.m_Vertices[i].Pos,
+				shape.m_Vertices[i].TexCoord
+			);
+		}
 
+		AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(vbuf)));
 		SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
 
 		SetStaticMaterial(std::make_unique<NoctalEngine::Material>());

@@ -55,8 +55,8 @@ GLenum OpenGLDrawable::ShaderDataTypeToOpenGLBaseType(NoctalEngine::ShaderDataTy
 	switch (type)
 	{
 	case NoctalEngine::ShaderDataType::FLOAT:		    return GL_FLOAT;
-	case NoctalEngine::ShaderDataType::FLOAT_2:			return GL_FLOAT;
-	case NoctalEngine::ShaderDataType::FLOAT_3:			return GL_FLOAT;
+	case NoctalEngine::ShaderDataType::POS_2D:			return GL_FLOAT;
+	case NoctalEngine::ShaderDataType::POS_3D:			return GL_FLOAT;
 	case NoctalEngine::ShaderDataType::FLOAT_4:			return GL_FLOAT;
 	case NoctalEngine::ShaderDataType::MAT_3:		    return GL_FLOAT;
 	case NoctalEngine::ShaderDataType::MAT_4:		    return GL_FLOAT;

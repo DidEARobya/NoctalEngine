@@ -6,8 +6,8 @@ namespace NoctalEngine
 	{
 		NONE = 0,
 		FLOAT, 
-		FLOAT_2,
-		FLOAT_3,
+		POS_2D,
+		POS_3D,
 		FLOAT_4,
 		MAT_3, 
 		MAT_4,
@@ -23,8 +23,8 @@ namespace NoctalEngine
 		switch (type)
 		{
 			case ShaderDataType::FLOAT:		    return 4;
-			case ShaderDataType::FLOAT_2:		return 4 * 2;
-			case ShaderDataType::FLOAT_3:		return 4 * 3;
+			case ShaderDataType::POS_2D:		return 4 * 2;
+			case ShaderDataType::POS_3D:		return 4 * 3;
 			case ShaderDataType::FLOAT_4:		return 4 * 4;
 			case ShaderDataType::MAT_3:		    return 4 * 3 * 3;
 			case ShaderDataType::MAT_4:		    return 4 * 4 * 4;
@@ -57,8 +57,8 @@ namespace NoctalEngine
 			switch (Type)
 			{
 				case ShaderDataType::FLOAT:		    return 1;
-				case ShaderDataType::FLOAT_2:		return 2;
-				case ShaderDataType::FLOAT_3:		return 3;
+				case ShaderDataType::POS_2D:		return 2;
+				case ShaderDataType::POS_3D:		return 3;
 				case ShaderDataType::FLOAT_4:		return 4;
 				case ShaderDataType::MAT_3:		    return 3 * 3;
 				case ShaderDataType::MAT_4:		    return 4 * 4;
@@ -83,7 +83,7 @@ namespace NoctalEngine
 		};
 
 		inline const std::vector<BufferElement>& GetElements() { return m_Elements; };
-		inline uint32_t GetStride() const { return m_Stride; };
+		inline uint32_t GetStride() const { return m_Size; };
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
@@ -93,18 +93,18 @@ namespace NoctalEngine
 		void CalculateOffsetsAndStride()
 		{
 			uint32_t offset = 0;
-			m_Stride = 0;
+			m_Size = 0;
 
 			for (auto& element : m_Elements)
 			{
 				element.Offset = offset;
 				offset += element.Size;
-				m_Stride += element.Size;
+				m_Size += element.Size;
 			}
 		}
 
 	private:
 		std::vector<BufferElement> m_Elements;
-		uint32_t m_Stride;
+		uint32_t m_Size;
 	};
 }
