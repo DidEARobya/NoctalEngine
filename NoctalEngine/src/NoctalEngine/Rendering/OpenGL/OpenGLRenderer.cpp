@@ -6,19 +6,16 @@
 #include "Shaders/OpenGLVertexShader.h"
 #include "Shaders/OpenGLFragmentShader.h"
 #include "NoctalEngine/Rendering/Shaders/Shader.h"
-#include "Buffers/OpenGLVertexBuffer.h"
 #include "Drawables/OpenGLDrawable.h"
 #include "Textures/OpenGLTexture2D.h"
-#include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
-#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "NoctalEngine/Rendering/Textures/Texture.h"
-#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLUniformBufferObject.h"
+#include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLBaseObject.h"
+#include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLQuad.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>
-#include <glm/glm.hpp>
-#include <GLAD/include/glad/glad.h>
+#include <GLAD/glad.h>
 #include <filesystem>
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
@@ -199,9 +196,9 @@ std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::CreateShader(const std::st
 	return nullptr;
 }
 
-std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry geometry)
+std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(glm::vec2 position, glm::vec2 scale)
 {
-	std::shared_ptr<Drawable> drawable = std::make_shared<OpenGLDrawable>(geometry);
+	std::shared_ptr<Drawable> drawable = std::make_shared<OpenGLQuad>(position, scale);
 	m_Drawables.push_back(drawable);
 
 	return drawable;

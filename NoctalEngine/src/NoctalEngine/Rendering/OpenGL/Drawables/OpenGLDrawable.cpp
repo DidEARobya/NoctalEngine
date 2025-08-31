@@ -1,96 +1,11 @@
 #include "nepch.h"
 #include "OpenGLDrawable.h"
-#include "NoctalEngine/Rendering/Buffers/VertexBuffer.h"
-#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
-#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLIndexBuffer.h"
-#include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
-#include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Renderer.h"
-#include "glm/gtc/matrix_transform.hpp"
-
-OpenGLDrawable::OpenGLDrawable(NoctalEngine::Geometry geometry) : m_Position(glm::vec3(0.0f)), m_Scale(glm::mat4(1.0f))
-{
-	glCreateVertexArrays(1, &m_RendererID);
-	glBindVertexArray(m_RendererID);
-
-	AddMaterial(std::make_unique<NoctalEngine::Material>());
-	NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
-
-	switch (geometry)
-	{
-	case NoctalEngine::Geometry::TRIANGLE:
-		{
-			float verticesTri[3 * 5]
-			{
-				-0.5f, -0.5f, 0.0f,		0.0, 0.0f,
-				 0.5f, -0.5f, 0.0f,		1.0, 0.0f,
-				 0.0f,  0.5f, 0.0f,		0.5, 1.0f
-			};
-
-			AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(verticesTri, sizeof(verticesTri),{ 
-				{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position" },
-				{ NoctalEngine::ShaderDataType::FLOAT_2, "a_TexCoord" } })));
-
-			uint32_t indicesTri[3] = { 0, 1, 2 };
-			AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(indicesTri, sizeof(indicesTri) / sizeof(uint32_t))));
-
-			NE_ENGINE_INFO("Triangle Created");
-			break;
-		}
-	case NoctalEngine::Geometry::QUAD:
-	{
-		float verticesSquare[5 * 4]
-		{
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
-		};
-
-		AddBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(verticesSquare, sizeof(verticesSquare), {
-			{ NoctalEngine::ShaderDataType::FLOAT_3, "a_Position"},
-			{ NoctalEngine::ShaderDataType::FLOAT_2, "a_TexCoord"},
-			})));
-
-		uint32_t indicesSquare[6] = { 0, 1, 2, 2, 3, 0 };
-		AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(indicesSquare, sizeof(indicesSquare) / sizeof(uint32_t))));
-
-		NE_ENGINE_INFO("Square Created");
-		break;
-	}
-	default:
-		NE_ENGINE_ASSERT(false, "Geometry case doesn't exist");
-		break;
-	}
-	
-	std::unique_ptr<OpenGLShaderProgram> shader = std::make_unique<OpenGLShaderProgram>(
-		"ColouredTextureVS",
-		"ColouredTextureFS",
-		*this);
-
-	if (shader->IsValid() == true)
-	{
-		m_Material->SetShader(std::move(shader));
-		m_Material->SetBaseTexture(std::make_shared<OpenGLTexture2D>());
-	}
-	else
-	{
-		NE_ENGINE_ERROR("Drawable Created, but Shader Failed to bind");
-	}
-
-	m_ObjectBuffer = std::make_unique<OpenGLObjectUniformBufferObject>();
-}
 
 OpenGLDrawable::~OpenGLDrawable()
 {
 	NE_ENGINE_INFO("Drawable Destroyed");
 	glDeleteVertexArrays(1, &m_RendererID);
-}
-
-const glm::mat4& OpenGLDrawable::GetTransform() const
-{
-	glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position) * m_Scale;
-	return transform;
 }
 
 void OpenGLDrawable::Draw() const
@@ -102,6 +17,12 @@ void OpenGLDrawable::Draw() const
 		bindable->Bind();
 	}
 
+	//To implement later
+	//for (auto& bindable : GetStaticBinds())
+	//{
+	//	bindable->Bind();
+	//}
+
 	ObjectData data({ GetTransform() });
 	m_ObjectBuffer->UpdateObjectData(data);
 	m_ObjectBuffer->Bind();
@@ -112,20 +33,12 @@ void OpenGLDrawable::Draw() const
 void OpenGLDrawable::AddBind(std::unique_ptr<Bindable> bind)
 {
 	NE_ENGINE_ASSERT(typeid(*bind) != typeid(NoctalEngine::IndexBuffer), "Must use AddIndexBuffer to bind index buffer");
-
-	glBindVertexArray(m_RendererID);
-	bind->Bind();
-
 	m_Binds.push_back(std::move(bind));
 }
 
-void OpenGLDrawable::AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer)
+void OpenGLDrawable::SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer)
 {
 	NE_ENGINE_ASSERT(m_IndexBuffer == nullptr, "Attempted to add Index Buffer a second time");
-
-	glBindVertexArray(m_RendererID);
-	indexBuffer->Bind();
-
 	m_IndexBuffer = indexBuffer.get();
 	m_Binds.push_back(std::move(indexBuffer));
 }
@@ -133,7 +46,6 @@ void OpenGLDrawable::AddIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> i
 void OpenGLDrawable::AddMaterial(std::unique_ptr<NoctalEngine::Material> material)
 {
 	NE_ENGINE_ASSERT(m_Material == nullptr, "Attempted to add Material a second time");
-
 	m_Material = material.get();
 	m_Binds.push_back(std::move(material));
 }

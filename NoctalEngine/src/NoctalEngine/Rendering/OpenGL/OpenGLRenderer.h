@@ -25,18 +25,18 @@ public:
     virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) override;
     virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) override;
 
-    virtual std::shared_ptr<Drawable>CreateDrawable(NoctalEngine::Geometry geometry) override;
+    virtual std::shared_ptr<Drawable>CreateDrawable(glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f)) override;
     virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) override;
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
 
 private:
-    FrameData m_FrameData;
-
     NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
     SDL_GLContext m_GLContext = nullptr;
 
     std::unique_ptr<OpenGLFrameUniformBufferObject> m_FrameBuffer = nullptr;
+    FrameData m_FrameData;
+
     //std::shared_ptr<OpenGLObjectUniformBufferObject> m_ObjectBuffer = nullptr;
 };

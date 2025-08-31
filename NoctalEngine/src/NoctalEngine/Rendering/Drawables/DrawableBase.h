@@ -9,8 +9,8 @@ protected:
 	{
 		return !_staticBinds.empty();
 	}
-	virtual static void AddStaticBind(std::unique_ptr<Bindable> bind) = 0
-	virtual void AddStaticIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) = 0;
+	virtual static void AddStaticBind(std::unique_ptr<Bindable> bind) = 0;
+	virtual void SetStaticIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) = 0;
 
 	void SetIndexFromStatic(NoctalEngine::IndexBuffer& indexBuffer) noexcept(!IS_DEBUG)
 	{

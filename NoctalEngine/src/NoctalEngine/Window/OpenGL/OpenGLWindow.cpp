@@ -29,7 +29,8 @@ namespace NoctalEngine
 		int returnVal;
 
 		NE_ENGINE_SDL_ASSERT(SDL_GL_GetSwapInterval(&returnVal))
-		return returnVal < 1;
+
+		return returnVal == 1;
 	}
 
 	void OpenGLWindow::Init(const WindowProperties& properties)
