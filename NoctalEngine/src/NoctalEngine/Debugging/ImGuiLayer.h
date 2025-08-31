@@ -13,7 +13,7 @@ namespace NoctalEngine
 		{
 			std::string ClassName;
 			std::string ScopeTag;
-			float TimeElapsed;
+			float TimeElapsed = 0.0f;
 		};
 
 		ImGuiLayer();

@@ -2,6 +2,7 @@
 #include "NoctalEngine/Rendering/Bindable.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "NoctalEngine/Rendering/Shaders/ShaderLibrary.h"
+#include "Geometry/Geometry.h"
 
 namespace NoctalEngine
 {
@@ -54,7 +55,7 @@ protected:
     virtual std::shared_ptr<NoctalEngine::Shader> GetShader(const std::string& shaderName) = 0;
     virtual std::shared_ptr<NoctalEngine::Shader> CreateShader(const std::string& filePath) = 0;
 
-    virtual std::shared_ptr<Drawable> CreateDrawable(glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f)) = 0;
+    virtual std::shared_ptr<Drawable> CreateDrawable(NoctalEngine::Geometry type, glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f)) = 0;
     virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) = 0;
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;

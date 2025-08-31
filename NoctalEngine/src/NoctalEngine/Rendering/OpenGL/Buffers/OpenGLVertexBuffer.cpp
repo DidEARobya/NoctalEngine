@@ -1,22 +1,5 @@
 #include "nepch.h"
 #include "OpenGLVertexBuffer.h"
-#include "glad/glad.h"
-
-OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, const NoctalEngine::BufferLayout& layout) : m_Stride(size), m_Layout(layout)
-{
-	glCreateBuffers(1, &m_RendererID);
-	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
-	glBufferData(GL_ARRAY_BUFFER, m_Stride, vertices, GL_STATIC_DRAW);
-
-	uint32_t index = 0;
-
-	for (const auto& element : m_Layout)
-	{
-		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(index, element.Count(), ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)element.Offset);
-		index++;
-	}
-}
 
 OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {

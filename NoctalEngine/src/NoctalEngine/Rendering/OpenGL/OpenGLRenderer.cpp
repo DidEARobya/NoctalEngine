@@ -10,13 +10,22 @@
 #include "Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
 #include "NoctalEngine/Rendering/Textures/Texture.h"
-#include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLBaseObject.h"
 #include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLQuad.h"
+#include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLTriangle.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <GLAD/glad.h>
 #include <filesystem>
+
+struct RendererData
+{
+	const uint32_t MaxQuads = 10000;
+	const uint32_t MaxVerts = MaxQuads * 4;
+	const uint32_t MaxIndices = MaxQuads * 6;
+};
+
+static RendererData s_Data;
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
@@ -196,9 +205,31 @@ std::shared_ptr<NoctalEngine::Shader> OpenGLRenderer::CreateShader(const std::st
 	return nullptr;
 }
 
-std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(glm::vec2 position, glm::vec2 scale)
+std::shared_ptr<Drawable> OpenGLRenderer::CreateDrawable(NoctalEngine::Geometry type, glm::vec2 position, glm::vec2 scale)
 {
-	std::shared_ptr<Drawable> drawable = std::make_shared<OpenGLQuad>(position, scale);
+	std::shared_ptr<Drawable> drawable;
+
+	switch (type)
+	{
+		case NoctalEngine::Geometry::QUAD:
+			drawable = std::make_shared<OpenGLQuad>(position, scale);
+			break;
+		
+		case NoctalEngine::Geometry::TRIANGLE:
+			drawable = std::make_shared<OpenGLTriangle>(position, scale);
+			break;
+
+		default:
+			NE_ENGINE_ERROR("Geometry type is invalid");
+			return nullptr;
+	}
+ 
+	if (drawable == nullptr)
+	{
+		NE_ENGINE_ERROR("Failed to create Drawable");
+		return nullptr;
+	}
+
 	m_Drawables.push_back(drawable);
 
 	return drawable;

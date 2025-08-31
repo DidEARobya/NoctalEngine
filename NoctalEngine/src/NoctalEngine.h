@@ -10,3 +10,4 @@
 #include "NoctalEngine/Input/InputManager.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "NoctalEngine/Application/AppLayer.h"
+#include "NoctalEngine/Rendering/Geometry/Geometry.h"

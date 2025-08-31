@@ -21,26 +21,26 @@ Sandbox2D::Sandbox2D() : NoctalEngine::AppLayer(-1.6f, 1.6f, -0.9f, 0.9f), m_Col
 		for (int y = 0; y < 20; y++)
 		{
 			glm::vec3 position = glm::vec3(-1.5f, -1.0f, -1.0f) + glm::vec3(x * 0.105f, y * 0.105f, 0.0f);
-			std::shared_ptr<Drawable> shape = NoctalEngine::Renderer::Instance().CreateDrawable(position, scale);
+			std::shared_ptr<Drawable> shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::TRIANGLE, position, scale);
 			shape->GetMaterial()->SetColour(colour);
 
 			m_Shapes.push_back(shape);
 		}
 	}
 
-	m_Shape = NoctalEngine::Renderer::Instance().CreateDrawable(glm::vec2(0.1f, 0.0f));
+	m_Shape = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD, glm::vec2(0.1f, 0.0f));
 	m_Shape->GetMaterial()->SetBaseTexture(m_CheckerBoard);
 	m_Shape->GetMaterial()->SetColour({ 1.0f, 1.0f, 1.0f, 1.0f });
 
-	m_Shape2 = NoctalEngine::Renderer::Instance().CreateDrawable(m_Shape->GetPosition());
+	m_Shape2 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD, m_Shape->GetPosition());
 	m_Shape2->GetMaterial()->SetBaseTexture(m_ChernoLogo);
 	m_Shape2->GetMaterial()->SetColour({ 1.0f, 1.0f, 1.0f, 1.0f });
 
-	m_Shape3 = NoctalEngine::Renderer::Instance().CreateDrawable(m_Shape->GetPosition() + glm::vec2(1.5f, 0.0f));
+	m_Shape3 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD, m_Shape->GetPosition() + glm::vec2(1.5f, 0.0f));
 	m_Shape3->GetMaterial()->SetBaseTexture(m_CheckerBoard);
 	m_Shape3->GetMaterial()->SetColour({ 0.0f, 1.0f, 1.0f, 0.5f });
 
-	m_Shape4 = NoctalEngine::Renderer::Instance().CreateDrawable(m_Shape3->GetPosition());
+	m_Shape4 = NoctalEngine::Renderer::Instance().CreateDrawable(NoctalEngine::Geometry::QUAD, m_Shape3->GetPosition());
 	m_Shape4->GetMaterial()->SetBaseTexture(m_ChernoLogo);
 	m_Shape4->GetMaterial()->SetColour({ 1.0f, 1.0f, 1.0f, 1.5f });
 }

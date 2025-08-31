@@ -11,7 +11,7 @@ public:
 	virtual ~Drawable() = default;
 
 	//virtual void Update(float deltaTime) noexcept = 0;
-	virtual const glm::mat4& GetTransform() const = 0;
+	virtual glm::mat4 GetTransform() const = 0;
 
 	virtual void SetPosition(const glm::vec2& position) = 0;
 	virtual glm::vec2 GetPosition() = 0;

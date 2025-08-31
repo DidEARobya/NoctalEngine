@@ -4,7 +4,7 @@
 	class OpenGLIndexBuffer : public NoctalEngine::IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
+		OpenGLIndexBuffer(const std::vector<uint32_t>& indices);
 		virtual ~OpenGLIndexBuffer() override;
 
 		virtual uint32_t GetCount() const override { return m_Count; };
