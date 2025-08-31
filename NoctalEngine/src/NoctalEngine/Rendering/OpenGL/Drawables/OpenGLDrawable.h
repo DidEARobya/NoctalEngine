@@ -7,8 +7,8 @@
 class OpenGLDrawable : public Drawable
 {
 	//To implement later
-	//template<class T>
-	//friend class OpenGLDrawableBase;
+	template<class T>
+	friend class OpenGLDrawableBase;
 
 public:
 	virtual ~OpenGLDrawable() override;
@@ -19,12 +19,12 @@ public:
 
 	virtual void AddBind(std::unique_ptr<Bindable> bind) override;
 	virtual void SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer) override;
-	virtual void AddMaterial(std::unique_ptr<NoctalEngine::Material> material) override;
+	virtual void SetMaterial(std::unique_ptr<NoctalEngine::Material> material) override;
 
 private:
 	GLenum ShaderDataTypeToOpenGLBaseType(NoctalEngine::ShaderDataType type);
 	//To implement later
-	//virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
+	virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
 
 protected:
 	uint32_t m_RendererID = 0;

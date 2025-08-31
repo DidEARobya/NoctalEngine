@@ -23,5 +23,5 @@ public:
 
 	virtual void AddBind(std::unique_ptr<Bindable> bind) = 0;
 	virtual void SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer) = 0;
-	virtual void AddMaterial(std::unique_ptr<NoctalEngine::Material> material) = 0;
+	virtual void SetMaterial(std::unique_ptr<NoctalEngine::Material> material) = 0;
 };

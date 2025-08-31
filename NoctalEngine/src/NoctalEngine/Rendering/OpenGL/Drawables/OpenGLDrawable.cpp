@@ -18,10 +18,10 @@ void OpenGLDrawable::Draw() const
 	}
 
 	//To implement later
-	//for (auto& bindable : GetStaticBinds())
-	//{
-	//	bindable->Bind();
-	//}
+	for (auto& bindable : GetStaticBinds())
+	{
+		bindable->Bind();
+	}
 
 	ObjectData data({ GetTransform() });
 	m_ObjectBuffer->UpdateObjectData(data);
@@ -43,7 +43,7 @@ void OpenGLDrawable::SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> i
 	m_Binds.push_back(std::move(indexBuffer));
 }
 
-void OpenGLDrawable::AddMaterial(std::unique_ptr<NoctalEngine::Material> material)
+void OpenGLDrawable::SetMaterial(std::unique_ptr<NoctalEngine::Material> material)
 {
 	NE_ENGINE_ASSERT(m_Material == nullptr, "Attempted to add Material a second time");
 	m_Material = material.get();

@@ -21,7 +21,7 @@ OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBase
 	glCreateVertexArrays(1, &m_RendererID);
 	glBindVertexArray(m_RendererID);
 
-	AddMaterial(std::make_unique<NoctalEngine::Material>());
+	SetMaterial(std::make_unique<NoctalEngine::Material>());
 	NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
 
 	float vertices[3 * 5]

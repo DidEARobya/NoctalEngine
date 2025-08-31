@@ -66,5 +66,4 @@ public:
 
 private:
     ObjectData m_Data;
-    int32_t m_Offset;
 };

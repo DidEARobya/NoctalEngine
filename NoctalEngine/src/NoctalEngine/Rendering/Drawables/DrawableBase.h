@@ -9,6 +9,7 @@ protected:
 	{
 		return !_staticBinds.empty();
 	}
+
 	virtual static void AddStaticBind(std::unique_ptr<Bindable> bind) = 0;
 	virtual void SetStaticIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) = 0;
 

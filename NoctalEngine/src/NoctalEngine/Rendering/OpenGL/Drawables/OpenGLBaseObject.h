@@ -1,16 +1,12 @@
 #pragma once
-//#include "OpenGLDrawableBase.h"
-#include "OpenGLDrawable.h"
+#include "OpenGLDrawableBase.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "NoctalEngine/Rendering/Geometry/Geometry.h"
 
 //To implement later
-//template <class T>
-//class OpenGLBaseObject : public OpenGLDrawableBase<T>
-
-//template <class T>
-class OpenGLBaseObject : public OpenGLDrawable
+template <class T>
+class OpenGLBaseObject : public OpenGLDrawableBase<T>
 {
 public:
 	OpenGLBaseObject(glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f)) : m_Position(glm::vec3(position, 0.0f)), m_Scale(glm::scale(glm::mat4(1.0f), {scale.x , scale.y, 1.0f}))
