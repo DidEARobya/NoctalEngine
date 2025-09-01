@@ -3,31 +3,36 @@
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLIndexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexArray.h"
 #include "NoctalEngine/Rendering/Geometry/Quad.h"
 
 OpenGLQuad::OpenGLQuad(glm::vec2 position, glm::vec2 scale) : OpenGLBaseObject(position, scale)
 {
+	m_Geometry = NoctalEngine::Geometry::QUAD;
+
 	if (IsStaticInitialised() == false)
 	{
-		glCreateVertexArrays(1, &m_RendererID);
-		glBindVertexArray(m_RendererID);
+		//glCreateVertexArrays(1, &m_RendererID);
+		//glBindVertexArray(m_RendererID);
 
-		SetRendererID(m_RendererID);
+		//SetRendererID(m_RendererID);
 
 		auto shape = NoctalEngine::Quad::MakeTextured<Vertex>();
 
-		NoctalEngine::VertexBufferData vbuf(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
+		NoctalEngine::VertexBufferData bufferData(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
 
 		for (unsigned int i = 0; i < shape.m_Vertices.size(); i++)
 		{
-			vbuf.EmplaceBack(
+			bufferData.EmplaceBack(
 				shape.m_Vertices[i].Pos,
 				shape.m_Vertices[i].TexCoord
 			);
 		}
+	
+		SubmitVertexArrayToRenderer(m_Geometry, std::make_unique<OpenGLVertexArray>(bufferData, shape));
 
-		AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(vbuf)));
-		SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
+		//AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(vbuf)));
+		//SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
 
 		SetStaticMaterial(std::make_unique<NoctalEngine::Material>());
 		NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
@@ -49,8 +54,8 @@ OpenGLQuad::OpenGLQuad(glm::vec2 position, glm::vec2 scale) : OpenGLBaseObject(p
 	}
 	else
 	{
-		SetRendererIDFromStatic();
-		SetIndexFromStatic();
+		//SetRendererIDFromStatic();
+		//SetIndexFromStatic();
 		SetMaterialFromStatic();
 	}
 

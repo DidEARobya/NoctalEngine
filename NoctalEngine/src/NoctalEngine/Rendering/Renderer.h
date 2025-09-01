@@ -39,8 +39,9 @@ namespace NoctalEngine
         std::shared_ptr<Texture> CreateTexture(const std::string& path, const std::string& assetDir = ASSET_DIR);
         std::shared_ptr<Drawable> CreateDrawable(Geometry type, glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f));
 
-        void SetIndexBuffer(IndexBuffer* indexBuffer);
         void DrawIndexed();
+
+        void SubmitVertexArray(Geometry geometry, std::unique_ptr<VertexArray> vertexArray);
 
     protected:
         friend class ShaderLibrary;

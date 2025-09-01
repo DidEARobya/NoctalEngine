@@ -9,11 +9,6 @@ OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBase
 {
 	if (IsStaticInitialised() == false)
 	{
-		glCreateVertexArrays(1, &m_RendererID);
-		glBindVertexArray(m_RendererID);
-
-		SetRendererID(m_RendererID);
-
 		auto shape = NoctalEngine::Triangle::MakeTextured<Vertex>();
 
 		NoctalEngine::VertexBufferData vbuf(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
@@ -27,8 +22,6 @@ OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBase
 		}
 
 		AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(vbuf)));
-		SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
-
 		SetStaticMaterial(std::make_unique<NoctalEngine::Material>());
 		NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
 
@@ -49,8 +42,6 @@ OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBase
 	}
 	else
 	{
-		SetRendererIDFromStatic();
-		SetIndexFromStatic();
 		SetMaterialFromStatic();
 	}
 

@@ -2,6 +2,7 @@
 #include "NoctalEngine/Rendering/Bindable.h"
 #include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
 #include "NoctalEngine/Rendering/Materials/Material.h"
+#include "NoctalEngine/Rendering/Geometry/Geometry.h"
 #include "glm/glm.hpp"
 
 class Drawable
@@ -22,6 +23,7 @@ public:
 	virtual void Draw() const = 0;
 
 	virtual void AddBind(std::unique_ptr<Bindable> bind) = 0;
-	virtual void SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer) = 0;
 	virtual void SetMaterial(std::unique_ptr<NoctalEngine::Material> material) = 0;
+
+	virtual NoctalEngine::Geometry GetGeometry() = 0;
 };

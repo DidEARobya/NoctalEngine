@@ -6,53 +6,56 @@ namespace NoctalEngine
 	{
 		switch (type)
 		{
-		case POS_2D:
-			return sizeof(Map<POS_2D>::SysType);
-		case POS_3D:
-			return sizeof(Map<POS_3D>::SysType);
-		case TEXCOORD:
-			return sizeof(Map<TEXCOORD>::SysType);
+			case POS_2D:
+				return sizeof(Map<POS_2D>::SysType);
+			case POS_3D:
+				return sizeof(Map<POS_3D>::SysType);
+			case TEXCOORD:
+				return sizeof(Map<TEXCOORD>::SysType);
 		}
-		assert("Invalid element type" && false);
+
+		NE_ENGINE_ASSERT(false, "Invalid element type");
 		return 0u;
 	}
 
 	// VertexBuffer
-	VertexBufferData::VertexBufferData(VertexLayout layout)
-		:
-	layout(std::move(layout))
-	{
-	}
+	VertexBufferData::VertexBufferData(VertexLayout layout) : m_Layout(std::move(layout)) {}
+
 	const char* VertexBufferData::GetData() const
 	{
-		return buffer.data();
+		return m_Buffer.data();
 	}
+
 	const VertexLayout& VertexBufferData::GetLayout() const noexcept
 	{
-		return layout;
+		return m_Layout;
 	}
+
 	size_t VertexBufferData::Size() const 
 	{
-		return buffer.size() / layout.Size();
+		return m_Buffer.size() / m_Layout.Size();
 	}
+
 	size_t VertexBufferData::SizeBytes() const 
 	{
-		return buffer.size();
+		return m_Buffer.size();
 	}
+
 	Vertex VertexBufferData::Back() 
 	{
-		assert(buffer.size() != 0u);
-		return Vertex{ buffer.data() + buffer.size() - layout.Size(),layout };
+		NE_ENGINE_ASSERT(m_Buffer.size() != 0u, "Size is 0");
+		return Vertex{ m_Buffer.data() + m_Buffer.size() - m_Layout.Size(), m_Layout };
 	}
+
 	Vertex VertexBufferData::Front() 
 	{
-		assert(buffer.size() != 0u);
-		return Vertex{ buffer.data(),layout };
+		NE_ENGINE_ASSERT(m_Buffer.size() != 0u, "Size is 0");
+		return Vertex{ m_Buffer.data(),m_Layout };
 	}
 	Vertex VertexBufferData::operator[](size_t i) 
 	{
-		assert(i < Size());
-		return Vertex{ buffer.data() + layout.Size() * i,layout };
+		NE_ENGINE_ASSERT(i < Size(), "i less than size");
+		return Vertex{ m_Buffer.data() + m_Layout.Size() * i,m_Layout };
 	}
 	ConstVertex VertexBufferData::Back() const 
 	{

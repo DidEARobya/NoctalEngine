@@ -102,15 +102,14 @@ namespace NoctalEngine
 		return s_Instance->m_WrappedRenderer->CreateDrawable(type, position, scale);
 	}
 
-	void Renderer::SetIndexBuffer(IndexBuffer* indexBuffer)
-	{
-		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
-		return s_Instance->m_WrappedRenderer->SetIndexBuffer(indexBuffer);
-	}
-
 	void Renderer::DrawIndexed()
 	{
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
 		return s_Instance->m_WrappedRenderer->DrawIndexed();
+	}
+	void Renderer::SubmitVertexArray(Geometry geometry, std::unique_ptr<VertexArray> vertexArray)
+	{
+		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
+		return s_Instance->m_WrappedRenderer->SubmitVertexArray(geometry, std::move(vertexArray));
 	}
 }

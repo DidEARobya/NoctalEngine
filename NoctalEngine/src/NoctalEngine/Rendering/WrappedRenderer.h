@@ -2,6 +2,8 @@
 #include "NoctalEngine/Rendering/Bindable.h"
 #include "NoctalEngine/Rendering/Drawables/Drawable.h"
 #include "NoctalEngine/Rendering/Shaders/ShaderLibrary.h"
+#include "NoctalEngine/Rendering/Buffers/VertexArray.h"
+#include "NoctalEngine/Rendering/RendererData.h"
 #include "Geometry/Geometry.h"
 
 namespace NoctalEngine
@@ -58,10 +60,14 @@ protected:
     virtual std::shared_ptr<Drawable> CreateDrawable(NoctalEngine::Geometry type, glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f)) = 0;
     virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) = 0;
 
-    virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
     virtual void DrawIndexed() = 0;
+
+    virtual void SubmitVertexArray(NoctalEngine::Geometry geometry, std::unique_ptr<NoctalEngine::VertexArray> vertexArray) = 0;
+
 protected:
     SDL_Window* m_Window = nullptr;  
     std::vector<std::shared_ptr<Drawable>> m_Drawables;
     std::unique_ptr<NoctalEngine::ShaderLibrary> m_ShaderLibrary;
+
+    std::unordered_map<NoctalEngine::Geometry, std::unique_ptr<NoctalEngine::VertexArray>> m_VertexArrays;
 };

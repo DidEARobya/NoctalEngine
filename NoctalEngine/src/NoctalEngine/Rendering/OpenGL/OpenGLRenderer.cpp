@@ -18,15 +18,6 @@
 #include <GLAD/glad.h>
 #include <filesystem>
 
-struct RendererData
-{
-	const uint32_t MaxQuads = 10000;
-	const uint32_t MaxVerts = MaxQuads * 4;
-	const uint32_t MaxIndices = MaxQuads * 6;
-};
-
-static RendererData s_Data;
-
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
 	m_Window = windowRef->GetSDLWindow();
@@ -75,10 +66,10 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	m_ShaderLibrary = std::make_unique<NoctalEngine::ShaderLibrary>();
 
 	//Load Engine Shaders, false to avoid sorting after each new load
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureVS.vert", false);
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureFS.frag", false);
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourVS.vert", false);
-	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourFS.frag", false);
+	//m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureVS.vert", false);
+	//m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/TextureFS.frag", false);
+	//m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourVS.vert", false);
+	//m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/SolidColourFS.frag", false);
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/ColouredTextureVS.vert", false);
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/OpenGL/ColouredTextureFS.frag", false);
 
@@ -107,6 +98,8 @@ void OpenGLRenderer::BeginRender()
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
+	StartBatch();
+
 	glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 }
 
@@ -121,9 +114,22 @@ void OpenGLRenderer::Render()
 
 		for (auto& drawable : m_Drawables)
 		{
-			drawable.get()->Draw();
+			m_VertexArrays[NoctalEngine::Geometry::QUAD]->Bind();
+			drawable->Draw();
+
+			if (RendererData::Instance().IndicesCount >= RendererData::Instance().MaxIndices)
+			{
+				NextBatch();
+			}
+
+			m_VertexArrays[NoctalEngine::Geometry::QUAD]->IncrementIndicesCount(6);
+			RendererData::Instance().IndicesCount += 6;
+
+			RendererData::Instance().QuadVertexBufferPtr += RendererData::Instance().BytesPerQuad();
 			index++;
 		}
+
+		NE_ENGINE_INFO("QUAD COUNT: {}", index);
 	}
 
 	ImGui::Render();
@@ -138,6 +144,8 @@ void OpenGLRenderer::EndRender()
 		m_FrameBuffer->UpdateFrameData(m_FrameData);
 		m_FrameBuffer->Bind();
 	}
+	Flush();
+
 	{
 		NE_SCOPE_TIMER("Renderer::EndFrame", "ImGuiEndFrame");
 		ImGuiIO& io = ImGui::GetIO();
@@ -242,5 +250,64 @@ std::shared_ptr<NoctalEngine::Texture> OpenGLRenderer::CreateTexture(const std::
 
 void OpenGLRenderer::DrawIndexed()
 {
-	glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, m_VertexArrays[NoctalEngine::Geometry::QUAD]->GetIndices(), GL_UNSIGNED_INT, nullptr);
+	NE_ENGINE_ERROR("{}", glGetError());
+}
+
+void OpenGLRenderer::SubmitVertexArray(NoctalEngine::Geometry geometry, std::unique_ptr<NoctalEngine::VertexArray> vertexArray)
+{
+	//NE_ENGINE_ASSERT(m_VertexArrays.contains(geometry) == false, "Renderer already contains VertexArray");
+	m_VertexArrays.emplace(geometry, std::move(vertexArray));
+}
+
+void OpenGLRenderer::DrawIndexed(NoctalEngine::VertexArray* vertexArray)
+{
+	vertexArray->Bind();
+	NE_ENGINE_INFO("GetIndicesTotal(): {}", vertexArray->GetIndicesTotal());
+	//glDrawElements(GL_TRIANGLES, vertexArray->GetIndices(), GL_UNSIGNED_INT, nullptr);
+	NE_ENGINE_ERROR("{}", glGetError());
+}
+
+void OpenGLRenderer::StartBatch()
+{
+	RendererData::Instance().IndicesCount = 0;
+	RendererData::Instance().QuadVertexBufferPtr = RendererData::Instance().QuadVertexBufferBase;
+
+	m_VertexArrays[NoctalEngine::Geometry::QUAD]->ResetCount();
+	//for (auto& array : m_VertexArrays)
+	//{
+	//	NE_ENGINE_INFO("Start Batch");
+	//	array.second->ResetCount();
+	//}
+}
+
+void OpenGLRenderer::NextBatch()
+{
+	Flush();
+	StartBatch();
+}
+
+void OpenGLRenderer::Flush()
+{
+	NE_ENGINE_INFO("IndicesCount: {}", RendererData::Instance().IndicesCount);
+	NE_ENGINE_INFO("QuadVertexSize: {}", RendererData::Instance().QuadVertexSize);
+
+	if (RendererData::Instance().IndicesCount == 0)
+		return;
+
+	uint32_t dataSize = (uint32_t)(RendererData::Instance().QuadVertexBufferPtr - RendererData::Instance().QuadVertexBufferBase);
+	m_VertexArrays[NoctalEngine::Geometry::QUAD]->SetData(RendererData::Instance().QuadVertexBufferBase, dataSize);
+
+	NE_ENGINE_INFO("dataSize: {}", dataSize);
+	DrawIndexed(m_VertexArrays[NoctalEngine::Geometry::QUAD].get());
+
+	//for (auto& array : m_VertexArrays)
+	//{
+	//	if (array.second->GetIndices() == 0)
+	//	{
+	//		continue;
+	//	}
+
+	//	DrawIndexed(array.second.get());
+	//}
 }

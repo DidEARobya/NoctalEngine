@@ -28,11 +28,18 @@ public:
     virtual std::shared_ptr<Drawable>CreateDrawable(NoctalEngine::Geometry type, glm::vec2 position = glm::vec2(0.0f), glm::vec2 scale = glm::vec2(1.0f)) override;
     virtual std::shared_ptr<NoctalEngine::Texture> CreateTexture(const std::string& path) override;
 
-    virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
 
+    virtual void SubmitVertexArray(NoctalEngine::Geometry geometry, std::unique_ptr<NoctalEngine::VertexArray> vertexArray) override;
+
+    void DrawIndexed(NoctalEngine::VertexArray* vertexArray);
+
 private:
-    NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
+    void StartBatch();
+    void NextBatch();
+    void Flush();
+
+private:
     SDL_GLContext m_GLContext = nullptr;
 
     std::unique_ptr<OpenGLFrameUniformBufferObject> m_FrameBuffer = nullptr;

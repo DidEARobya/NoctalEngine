@@ -24,7 +24,7 @@ namespace NoctalEngine
 		template<> struct Map<POS_3D>
 		{
 			using SysType = glm::vec3;
-			static constexpr const char* semantic = "a_Position";
+			static constexpr const char* semantic = "Position";
 		};
 
 		template<> struct Map<TEXCOORD>
@@ -36,67 +36,81 @@ namespace NoctalEngine
 		class Element
 		{
 		public:
-			Element(ElementType type, size_t offset)
-				: type(type), offset(offset) {
-			}
+			Element(ElementType type, size_t offset) : m_Type(type), m_Offset(offset) {}
 
-			size_t GetOffsetAfter() const { return offset + Size(); }
-			size_t GetOffset() const { return offset; }
+			size_t GetOffsetAfter() const { return m_Offset + Size(); }
+			size_t GetOffset() const { return m_Offset; }
 
 			static constexpr size_t SizeOf(ElementType type);
 
 			size_t Size() const
 			{
-				switch (type)
+				switch (m_Type)
 				{
-				case POS_2D:	return sizeof(glm::vec2);
-				case POS_3D:	return sizeof(glm::vec3);
-				case TEXCOORD:  return sizeof(glm::vec2);
-				default: return 0;
+					case POS_2D:	
+						return sizeof(glm::vec2);
+					case POS_3D:	
+						return sizeof(glm::vec3);
+					case TEXCOORD:  
+						return sizeof(glm::vec2);
+					default: 
+						return 0;
 				}
 			}
 
 			uint32_t Count() const
 			{
-				switch (type)
+				switch (m_Type)
 				{
-				case POS_2D:	return 2;
-				case POS_3D:	return 3;
-				case TEXCOORD:  return 2;
-				default: return 0;
+					case POS_2D:	
+						return 2;
+					case POS_3D:	
+						return 3;
+					case TEXCOORD:  
+						return 2;
+					default: 
+						return 0;
 				}
 			}
 
-			ElementType GetType() const { return type; }
+			ElementType GetType() const { return m_Type; }
 
 		private:
-			ElementType type;
-			size_t offset;
+			ElementType m_Type;
+			size_t m_Offset;
 		};
 
 	public:
 		VertexLayout& Append(ElementType type)
 		{
-			size_t offset = elements.empty() ? 0 : elements.back().GetOffsetAfter();
-			elements.emplace_back(type, offset);
+			size_t offset = m_Elements.empty() ? 0 : m_Elements.back().GetOffsetAfter();
+			m_Elements.emplace_back(type, offset);
 			return *this;
 		}
 
 		template<ElementType Type>
 		const Element& Resolve() const
 		{
-			for (auto& e : elements)
-				if (e.GetType() == Type) return e;
-			assert(false && "Could not resolve element type");
-			return elements.front();
+			for (auto& e : m_Elements)
+			{
+				if (e.GetType() == Type)
+				{
+					return e;
+				}
+			}
+				
+			NE_ENGINE_ASSERT(false, "Could not resolve element type");
+			return m_Elements.front();
 		}
 
-		const Element& ResolveByIndex(size_t i) const { return elements[i]; }
-		size_t Size() const { return elements.empty() ? 0 : elements.back().GetOffsetAfter(); }
-		size_t GetElementCount() const noexcept { return elements.size(); }
+		const Element& ResolveByIndex(size_t i) const { return m_Elements[i]; }
+		size_t Size() const { return m_Elements.empty() ? 0 : m_Elements.back().GetOffsetAfter(); }
+		size_t GetElementCount() const noexcept { return m_Elements.size(); }
 
-	public:
-		std::vector<Element> elements;
+		const std::vector<Element>& GetElements() const { return m_Elements; };
+
+	private:
+		std::vector<Element> m_Elements;
 	};
 
 	class Vertex
@@ -106,33 +120,34 @@ namespace NoctalEngine
 		template<VertexLayout::ElementType Type>
 		auto& Attr()
 		{
-			auto pAttr = pData + layout.Resolve<Type>().GetOffset();
+			auto pAttr = m_Data + m_Layout.Resolve<Type>().GetOffset();
 			return *reinterpret_cast<typename VertexLayout::Map<Type>::SysType*>(pAttr);
 		}
 
 		template<typename T>
 		void SetAttributeByIndex(size_t i, T&& val)
 		{
-			const auto& element = layout.ResolveByIndex(i);
-			auto pAttribute = pData + element.GetOffset();
+			const auto& element = m_Layout.ResolveByIndex(i);
+			auto pAttribute = m_Data + element.GetOffset();
+
 			switch (element.GetType())
 			{
-			case VertexLayout::POS_2D:
-				SetAttribute<VertexLayout::POS_2D>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::POS_3D:
-				SetAttribute<VertexLayout::POS_3D>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::TEXCOORD:
-				SetAttribute<VertexLayout::TEXCOORD>(pAttribute, std::forward<T>(val));
-				break;
-			default:
-				assert("Bad element type" && false);
+				case VertexLayout::POS_2D:
+					SetAttribute<VertexLayout::POS_2D>(pAttribute, std::forward<T>(val));
+					break;
+				case VertexLayout::POS_3D:
+					SetAttribute<VertexLayout::POS_3D>(pAttribute, std::forward<T>(val));
+					break;
+				case VertexLayout::TEXCOORD:
+					SetAttribute<VertexLayout::TEXCOORD>(pAttribute, std::forward<T>(val));
+					break;
+				default:
+					NE_ENGINE_ASSERT(false, "Bad element type");
 			}
 		}
 
 	protected:
-		Vertex(char* pData, const VertexLayout& layout) : pData(pData), layout(layout) {}
+		Vertex(char* pData, const VertexLayout& layout) : m_Data(pData), m_Layout(layout) {}
 
 	private:
 		// enables parameter pack setting of multiple parameters by element index
@@ -153,25 +168,24 @@ namespace NoctalEngine
 			}
 			else
 			{
-				assert("Parameter attribute type mismatch" && false);
+				NE_ENGINE_ASSERT(false, "Parameter attribute type mismatch");
 			}
 		}
 	private:
-		char* pData = nullptr;
-		const VertexLayout& layout;
+		char* m_Data = nullptr;
+		const VertexLayout& m_Layout;
 	};
-
 
 	class ConstVertex
 	{
 	public:
-		ConstVertex(const Vertex& v) : vertex(v) {}
+		ConstVertex(const Vertex& v) : m_Vertex(v) {}
 
 		template<VertexLayout::ElementType Type>
-		const auto& Attr() const { return const_cast<Vertex&>(vertex).Attr<Type>(); }
+		const auto& Attr() const { return const_cast<Vertex&>(m_Vertex).Attr<Type>(); }
 
 	private:
-		Vertex vertex;
+		Vertex m_Vertex;
 	};
 
 	class VertexBufferData
@@ -182,11 +196,12 @@ namespace NoctalEngine
 		const VertexLayout& GetLayout() const noexcept;
 		size_t Size() const;
 		size_t SizeBytes() const;
+
 		template<typename ...Params>
 		void EmplaceBack(Params&&... params)
 		{
-			assert(sizeof...(params) == layout.GetElementCount() && "Param count doesn't match number of vertex elements");
-			buffer.resize(buffer.size() + layout.Size());
+			NE_ENGINE_ASSERT(sizeof...(params) == m_Layout.GetElementCount(), "Param count doesn't match number of vertex elements");
+			m_Buffer.resize(m_Buffer.size() + m_Layout.Size());
 			Back().SetAttributeByIndex(0u, std::forward<Params>(params)...);
 		}
 
@@ -197,7 +212,7 @@ namespace NoctalEngine
 		ConstVertex Front() const;
 		ConstVertex operator[](size_t i) const;
 	private:
-		std::vector<char> buffer;
-		VertexLayout layout;
+		std::vector<char> m_Buffer;
+		VertexLayout m_Layout;
 	};
 }
