@@ -12,6 +12,8 @@ namespace NoctalEngine
 			return sizeof(Map<POS_3D>::SysType);
 		case TEXCOORD:
 			return sizeof(Map<TEXCOORD>::SysType);
+		case TRANSFORM:
+			return sizeof(Map<TRANSFORM>::SysType);
 		}
 		assert("Invalid element type" && false);
 		return 0u;

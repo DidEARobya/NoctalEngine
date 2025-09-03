@@ -245,13 +245,10 @@ void OpenGLRenderer::DrawIndexed()
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
-void OpenGLRenderer::DrawIndexed(uint32_t indices, uint32_t indexCount)
+void OpenGLRenderer::DrawIndexed(uint32_t indices, uint32_t indexCount, uint32_t instanceCount)
 {
 	uint32_t count = indexCount ? indexCount : indices;
-	NE_ENGINE_INFO("Draw count: {}"
-		,
-		count);
-	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+	glDrawElementsInstanced(GL_TRIANGLES, indices, GL_UNSIGNED_INT, nullptr, instanceCount);
 }
 
 void OpenGLRenderer::StartBatch()

@@ -13,7 +13,7 @@ public:
 
 	virtual void Bind() override;
 	virtual uint32_t GetIndices() override;
-	virtual void IncrementStoredVertexData() override;
+	virtual void IncrementStoredVertexData(const glm::mat4& transform) override;
 	virtual void StartBatch() override;
 	virtual void Flush() override;
 
@@ -32,4 +32,7 @@ private:
 	const NoctalEngine::VertexBufferData m_BufferData;
 
 	uint32_t m_IndexCount = 0;
+
+	uint32_t m_InstanceBuffer;
+	std::vector<glm::mat4> m_InstanceTransforms;
 };

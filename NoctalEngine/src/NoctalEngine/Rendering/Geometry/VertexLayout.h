@@ -11,6 +11,7 @@ namespace NoctalEngine
 			POS_2D,
 			POS_3D,
 			TEXCOORD,
+			TRANSFORM
 		};
 
 		template<ElementType> struct Map;
@@ -32,7 +33,11 @@ namespace NoctalEngine
 			using SysType = glm::vec2;
 			static constexpr const char* semantic = "a_TexCoord";
 		};
-
+		template<> struct Map<TRANSFORM>
+		{
+			using SysType = glm::mat4;
+			static constexpr const char* semantic = "a_Transform";
+		};
 		class Element
 		{
 		public:
@@ -52,6 +57,7 @@ namespace NoctalEngine
 				case POS_2D:	return sizeof(glm::vec2);
 				case POS_3D:	return sizeof(glm::vec3);
 				case TEXCOORD:  return sizeof(glm::vec2);
+				case TRANSFORM: return sizeof(glm::mat4);
 				default: return 0;
 				}
 			}
@@ -63,6 +69,7 @@ namespace NoctalEngine
 				case POS_2D:	return 2;
 				case POS_3D:	return 3;
 				case TEXCOORD:  return 2;
+				case TRANSFORM: return 16;
 				default: return 0;
 				}
 			}
@@ -125,6 +132,9 @@ namespace NoctalEngine
 				break;
 			case VertexLayout::TEXCOORD:
 				SetAttribute<VertexLayout::TEXCOORD>(pAttribute, std::forward<T>(val));
+				break;
+			case VertexLayout::TRANSFORM:
+				SetAttribute<VertexLayout::TRANSFORM>(pAttribute, std::forward<T>(val));
 				break;
 			default:
 				assert("Bad element type" && false);

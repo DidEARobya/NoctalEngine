@@ -30,7 +30,7 @@ public:
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
-    virtual void DrawIndexed(uint32_t indices, uint32_t indexCount) override;
+    virtual void DrawIndexed(uint32_t indices, uint32_t indexCount, uint32_t instanceCount) override;
 
 private:
     void StartBatch();

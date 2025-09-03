@@ -41,7 +41,7 @@ namespace NoctalEngine
 
         void SetIndexBuffer(IndexBuffer* indexBuffer);
         void DrawIndexed();
-        void DrawIndexed(uint32_t indices, uint32_t indexCount);
+        void DrawIndexed(uint32_t indices, uint32_t indexCount, uint32_t instanceCount);
     protected:
         friend class ShaderLibrary;
         std::shared_ptr<Shader> CreateShader(const std::string& filePath);

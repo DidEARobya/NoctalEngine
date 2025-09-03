@@ -24,12 +24,12 @@ void OpenGLDrawable::Draw() const
 		bindable->Bind();
 	}
 
-	m_VertexArray->IncrementStoredVertexData();
+	m_VertexArray->IncrementStoredVertexData(GetTransform());
 	RendererData::AddToIndexCount(m_VertexArray->GetIndices());
 
-	ObjectData data({ GetTransform() });
-	m_ObjectBuffer->UpdateObjectData(data);
-	m_ObjectBuffer->Bind();
+	//ObjectData data({ GetTransform() });
+	//m_ObjectBuffer->UpdateObjectData(data);
+	//m_ObjectBuffer->Bind();
 }
 
 void OpenGLDrawable::AddBind(std::unique_ptr<Bindable> bind)

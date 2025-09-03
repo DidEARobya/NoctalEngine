@@ -19,6 +19,46 @@ OpenGLVertexBuffer::OpenGLVertexBuffer(const NoctalEngine::VertexBufferData& buf
 		glVertexAttribPointer(index, element.Count(), ElementTypeToOpenGLBaseType(element.GetType()), GL_FALSE, buffer.GetLayout().Size(), (const void*)element.GetOffset());
 		index++;
 	}
+
+    //for (const auto& element : buffer.GetLayout().elements)
+    //{
+    //    GLenum baseType = ElementTypeToOpenGLBaseType(element.GetType());
+
+    //    if (element.GetType() == NoctalEngine::VertexLayout::ElementType::TRANSFORM)
+    //    {
+    //        // A mat4 = 4 vec4s (4 attributes)
+    //        for (uint32_t i = 0; i < 4; i++)
+    //        {
+    //            glEnableVertexAttribArray(index + i);
+    //            glVertexAttribPointer(
+    //                index + i,
+    //                4,                              // vec4 = 4 floats
+    //                baseType,                       // GL_FLOAT
+    //                GL_FALSE,
+    //                buffer.GetLayout().Size(),      // stride = size of entire vertex/instance
+    //                (const void*)(element.GetOffset() + sizeof(float) * 4 * i) // offset to column i
+    //            );
+
+    //            // If this is per-instance data (common for transforms), you also need:
+    //            glVertexAttribDivisor(index + i, 1);
+    //        }
+
+    //        index += 4; // consumed 4 attribute slots
+    //    }
+    //    else
+    //    {
+    //        glEnableVertexAttribArray(index);
+    //        glVertexAttribPointer(
+    //            index,
+    //            element.Count(),                    // 1..4
+    //            baseType,
+    //            GL_FALSE,
+    //            buffer.GetLayout().Size(),
+    //            (const void*)element.GetOffset()
+    //        );
+    //        index++;
+    //    }
+    //}
 }
 
 OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -44,6 +84,7 @@ GLenum OpenGLVertexBuffer::ElementTypeToOpenGLBaseType(NoctalEngine::VertexLayou
 		case NoctalEngine::VertexLayout::ElementType::POS_2D:			return GL_FLOAT;
 		case NoctalEngine::VertexLayout::ElementType::POS_3D:			return GL_FLOAT;
 		case NoctalEngine::VertexLayout::ElementType::TEXCOORD:			return GL_FLOAT;
+		case NoctalEngine::VertexLayout::ElementType::TRANSFORM:        return GL_FLOAT;
 	}
 
 	NE_ENGINE_ASSERT(false, "Unknown ShaderDataType");
