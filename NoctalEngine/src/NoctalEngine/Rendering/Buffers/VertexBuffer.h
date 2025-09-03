@@ -6,5 +6,7 @@ namespace NoctalEngine
 {
 	class VertexBuffer : public Bindable
 	{
+	public:
+		virtual void SetData(const void* data, uint32_t size) = 0;
 	};
 }

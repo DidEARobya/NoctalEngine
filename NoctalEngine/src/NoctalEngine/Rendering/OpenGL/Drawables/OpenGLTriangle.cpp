@@ -1,5 +1,6 @@
 #include "OpenGLTriangle.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexBuffer.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexArray.h"
 #include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLIndexBuffer.h"
 #include "NoctalEngine/Rendering/OpenGL/Shaders/OpenGLShaderProgram.h"
 #include "NoctalEngine/Rendering/OpenGL/Textures/OpenGLTexture2D.h"
@@ -9,25 +10,22 @@ OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBase
 {
 	if (IsStaticInitialised() == false)
 	{
-		glCreateVertexArrays(1, &m_RendererID);
-		glBindVertexArray(m_RendererID);
-
-		SetRendererID(m_RendererID);
-
 		auto shape = NoctalEngine::Triangle::MakeTextured<Vertex>();
 
-		NoctalEngine::VertexBufferData vbuf(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
+		NoctalEngine::VertexBufferData bufferData(NoctalEngine::VertexLayout{}.Append(NoctalEngine::VertexLayout::POS_3D).Append(NoctalEngine::VertexLayout::TEXCOORD));
 
 		for (unsigned int i = 0; i < shape.m_Vertices.size(); i++)
 		{
-			vbuf.EmplaceBack(
+			bufferData.EmplaceBack(
 				shape.m_Vertices[i].Pos,
 				shape.m_Vertices[i].TexCoord
 			);
 		}
 
-		AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(vbuf)));
-		SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
+		SetStaticVertexArray(NoctalEngine::Geometry::TRIANGLE, bufferData, shape.m_Indices);
+
+		//AddStaticBind(std::unique_ptr<NoctalEngine::VertexBuffer>(new OpenGLVertexBuffer(bufferData)));
+		//SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer>(new OpenGLIndexBuffer(shape.m_Indices)));
 
 		SetStaticMaterial(std::make_unique<NoctalEngine::Material>());
 		NE_ENGINE_ASSERT(m_Material, "Failed to create Material");
@@ -49,8 +47,8 @@ OpenGLTriangle::OpenGLTriangle(glm::vec2 position, glm::vec2 scale) : OpenGLBase
 	}
 	else
 	{
-		SetRendererIDFromStatic();
-		SetIndexFromStatic();
+		SetVertexArrayFromStatic(NoctalEngine::Geometry::TRIANGLE);
+		//SetIndexFromStatic();
 		SetMaterialFromStatic();
 	}
 

@@ -3,29 +3,23 @@
 #include "NoctalEngine/Window/Window.h"
 #include "NoctalEngine/Application/Application.h"
 #include "Buffers/OpenGLIndexBuffer.h"
+#include "Buffers/OpenGLVertexArray.h"
 #include "Shaders/OpenGLVertexShader.h"
 #include "Shaders/OpenGLFragmentShader.h"
 #include "NoctalEngine/Rendering/Shaders/Shader.h"
 #include "Drawables/OpenGLDrawable.h"
 #include "Textures/OpenGLTexture2D.h"
 #include "NoctalEngine/Rendering/Buffers/BufferLayout.h"
+#include "NoctalEngine/Rendering/Buffers/VertexArray.h"
 #include "NoctalEngine/Rendering/Textures/Texture.h"
 #include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLQuad.h"
 #include "NoctalEngine/Rendering/OpenGL/Drawables/OpenGLTriangle.h"
+#include "NoctalEngine/Rendering/RendererData.h"
 
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <GLAD/glad.h>
 #include <filesystem>
-
-struct RendererData
-{
-	const uint32_t MaxQuads = 10000;
-	const uint32_t MaxVerts = MaxQuads * 4;
-	const uint32_t MaxIndices = MaxQuads * 6;
-};
-
-static RendererData s_Data;
 
 void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 {
@@ -85,6 +79,8 @@ void OpenGLRenderer::Init(const NoctalEngine::Window* windowRef)
 	m_ShaderLibrary->SortShaders();
 
 	m_FrameBuffer = std::make_unique<OpenGLFrameUniformBufferObject>();
+
+
 	//m_ObjectBuffer = std::make_shared<OpenGLObjectUniformBufferObject>();
 }
 
@@ -106,6 +102,7 @@ void OpenGLRenderer::BeginRender()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
+	RendererData::StartBatch();
 
 	glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 }
@@ -138,6 +135,9 @@ void OpenGLRenderer::EndRender()
 		m_FrameBuffer->UpdateFrameData(m_FrameData);
 		m_FrameBuffer->Bind();
 	}
+
+	RendererData::Flush();
+
 	{
 		NE_SCOPE_TIMER("Renderer::EndFrame", "ImGuiEndFrame");
 		ImGuiIO& io = ImGui::GetIO();
@@ -242,5 +242,30 @@ std::shared_ptr<NoctalEngine::Texture> OpenGLRenderer::CreateTexture(const std::
 
 void OpenGLRenderer::DrawIndexed()
 {
-	glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void OpenGLRenderer::DrawIndexed(uint32_t indices, uint32_t indexCount)
+{
+	uint32_t count = indexCount ? indexCount : indices;
+	NE_ENGINE_INFO("Draw count: {}"
+		,
+		count);
+	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+}
+
+void OpenGLRenderer::StartBatch()
+{
+	RendererData::StartBatch();
+}
+
+void OpenGLRenderer::NextBatch()
+{
+	Flush();
+	StartBatch();
+}
+
+void OpenGLRenderer::Flush()
+{
+	RendererData::Flush();
 }

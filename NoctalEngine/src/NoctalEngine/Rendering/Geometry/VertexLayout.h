@@ -131,7 +131,7 @@ namespace NoctalEngine
 			}
 		}
 
-	protected:
+	public:
 		Vertex(char* pData, const VertexLayout& layout) : pData(pData), layout(layout) {}
 
 	private:

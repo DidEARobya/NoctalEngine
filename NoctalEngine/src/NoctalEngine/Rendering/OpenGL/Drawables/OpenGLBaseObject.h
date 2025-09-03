@@ -4,6 +4,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "NoctalEngine/Rendering/Geometry/Geometry.h"
 
+struct Vertex
+{
+	glm::vec3 Pos;
+	glm::vec2 TexCoord;
+};
+
 //To implement later
 template <class T>
 class OpenGLBaseObject : public OpenGLDrawableBase<T>
@@ -21,12 +27,6 @@ public:
 	virtual glm::vec2 GetPosition() override { return m_Position; }
 
 	virtual void SetScale(const glm::vec2& scale) override { m_Scale = glm::scale(glm::mat4(1.0f), { scale.x , scale.y, 1.0f }); }
-
-	struct Vertex
-	{
-		glm::vec3 Pos;
-		glm::vec2 TexCoord;
-	};
 
 protected:
 	glm::vec3 m_Position;

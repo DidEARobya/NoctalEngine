@@ -19,7 +19,7 @@ OpenGLUniformBufferObject::~OpenGLUniformBufferObject()
 void OpenGLUniformBufferObject::UploadUniforms(const void* data, size_t dataSize, int offset)
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_UniformBufferObjectID);
-    glBufferSubData(GL_UNIFORM_BUFFER, offset, m_Size, data);
+    glBufferSubData(GL_UNIFORM_BUFFER, offset, dataSize, data);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "NoctalEngine/Rendering/Bindable.h"
-#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
+#include "NoctalEngine/Rendering/Buffers/VertexArray.h"
 #include "NoctalEngine/Rendering/Materials/Material.h"
 #include "glm/glm.hpp"
 
@@ -22,6 +22,6 @@ public:
 	virtual void Draw() const = 0;
 
 	virtual void AddBind(std::unique_ptr<Bindable> bind) = 0;
-	virtual void SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer) = 0;
+	virtual void SetVertexArray(std::unique_ptr<NoctalEngine::VertexArray> vertexArray) = 0;
 	virtual void SetMaterial(std::unique_ptr<NoctalEngine::Material> material) = 0;
 };

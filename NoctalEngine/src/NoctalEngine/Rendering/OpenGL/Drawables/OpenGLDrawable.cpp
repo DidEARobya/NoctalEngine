@@ -1,6 +1,9 @@
 #include "nepch.h"
 #include "OpenGLDrawable.h"
+#include "NoctalEngine/Rendering/Buffers/IndexBuffer.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexArray.h"
 #include "NoctalEngine/Rendering/Renderer.h"
+#include "NoctalEngine/Rendering/RendererData.h"
 
 OpenGLDrawable::~OpenGLDrawable()
 {
@@ -10,8 +13,6 @@ OpenGLDrawable::~OpenGLDrawable()
 
 void OpenGLDrawable::Draw() const
 {
-	glBindVertexArray(m_RendererID);
-
 	for (auto& bindable : m_Binds)
 	{
 		bindable->Bind();
@@ -23,24 +24,25 @@ void OpenGLDrawable::Draw() const
 		bindable->Bind();
 	}
 
+	m_VertexArray->IncrementStoredVertexData();
+	RendererData::AddToIndexCount(m_VertexArray->GetIndices());
+
 	ObjectData data({ GetTransform() });
 	m_ObjectBuffer->UpdateObjectData(data);
 	m_ObjectBuffer->Bind();
-
-	NoctalEngine::Renderer::Instance().DrawIndexed();
 }
 
 void OpenGLDrawable::AddBind(std::unique_ptr<Bindable> bind)
 {
-	NE_ENGINE_ASSERT(typeid(*bind) != typeid(NoctalEngine::IndexBuffer), "Must use AddIndexBuffer to bind index buffer");
+	NE_ENGINE_ASSERT(typeid(*bind) != typeid(NoctalEngine::IndexBuffer), "Must use SetIndexBuffer to bind IndexBuffer");
+	NE_ENGINE_ASSERT(typeid(*bind) != typeid(NoctalEngine::VertexArray), "Must use SetVertexArray to bind VertexArray");
 	m_Binds.push_back(std::move(bind));
 }
 
-void OpenGLDrawable::SetIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer)
+void OpenGLDrawable::SetVertexArray(std::unique_ptr<NoctalEngine::VertexArray> vertexArray)
 {
-	NE_ENGINE_ASSERT(m_IndexBuffer == nullptr, "Attempted to add Index Buffer a second time");
-	m_IndexBuffer = indexBuffer.get();
-	m_Binds.push_back(std::move(indexBuffer));
+	NE_ENGINE_ASSERT(m_VertexArray == nullptr, "Attempted to add VertexArray a second time");
+	m_VertexArray = vertexArray.get();
 }
 
 void OpenGLDrawable::SetMaterial(std::unique_ptr<NoctalEngine::Material> material)

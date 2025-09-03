@@ -1,5 +1,8 @@
 #pragma once
 #include "OpenGLDrawable.h"
+#include "NoctalEngine/Rendering/RendererData.h"
+#include "NoctalEngine/Rendering/Geometry/Geometry.h"
+#include "NoctalEngine/Rendering/OpenGL/Buffers/OpenGLVertexArray.h"
 
 template<class T>
 class OpenGLDrawableBase : public OpenGLDrawable
@@ -7,26 +10,20 @@ class OpenGLDrawableBase : public OpenGLDrawable
 protected:
 	bool IsStaticInitialised() const noexcept
 	{
-		return !s_StaticBinds.empty();
+		return s_VertexArrayPtr != nullptr;
 	}
-	static void SetRendererID(int32_t id)
-	{
-		NE_ENGINE_ASSERT(s_RendererID == 0, "Attempted to add Material a second time");
-		s_RendererID = id;
-	}
-
 	static void AddStaticBind(std::unique_ptr<Bindable> bind)
 	{
 		NE_ENGINE_ASSERT(typeid(*bind) != typeid(NoctalEngine::IndexBuffer), "Must use AddIndexBuffer to bind index buffer");
 		s_StaticBinds.push_back(std::move(bind));
 	}
-	void SetStaticIndexBuffer(std::unique_ptr<NoctalEngine::IndexBuffer> indexBuffer)
+	void SetStaticVertexArray(NoctalEngine::Geometry geometry, const NoctalEngine::VertexBufferData& bufferData, const std::vector<uint32_t>& indices)
 	{
-		NE_ENGINE_ASSERT(m_IndexBuffer == nullptr, "Attempted to add Index Buffer a second time");
-		m_IndexBuffer = indexBuffer.get();
-		s_StaticBinds.push_back(std::move(indexBuffer));
+		NE_ENGINE_ASSERT(m_VertexArray == nullptr, "Attempted to add VertexArray a second time");
+		RendererData::AddVertexArray(geometry, std::make_unique<OpenGLVertexArray>(bufferData, indices));
+		s_VertexArrayPtr = RendererData::GetVertexArray(geometry);
+		m_VertexArray = RendererData::GetVertexArray(geometry);
 	}
-
 	void SetStaticMaterial(std::unique_ptr<NoctalEngine::Material> material)
 	{
 		NE_ENGINE_ASSERT(m_Material == nullptr, "Attempted to add Material a second time");
@@ -34,22 +31,13 @@ protected:
 		s_StaticBinds.push_back(std::move(material));
 	}
 
-	void SetIndexFromStatic()
+	void SetVertexArrayFromStatic(NoctalEngine::Geometry geometry)
 	{
-		NE_ENGINE_ASSERT(m_IndexBuffer == nullptr, "Attempting to add index buffer a second time");
-
-		for (const auto& b : s_StaticBinds)
-		{
-			if (const auto p = dynamic_cast<NoctalEngine::IndexBuffer*>(b.get()))
-			{
-				m_IndexBuffer = p;
-				return;
-			}
-		}
-
-		NE_ENGINE_ASSERT(m_IndexBuffer != nullptr, "Failed to find Index Buffer in static binds");
+		NE_ENGINE_ASSERT(m_VertexArray == nullptr, "Attempting to add VertexArray a second time");
+		m_VertexArray = RendererData::GetVertexArray(geometry);
+		m_VertexArray->Bind();
+		NE_ENGINE_ASSERT(m_VertexArray != nullptr, "Failed to find static VertexArray");
 	}
-
 	void SetMaterialFromStatic()
 	{
 		NE_ENGINE_ASSERT(m_Material == nullptr, "Static Material doesn't exist");
@@ -66,12 +54,6 @@ protected:
 		NE_ENGINE_ASSERT(m_Material != nullptr, "Failed to find Material in static binds");
 	}
 
-	void SetRendererIDFromStatic()
-	{
-		NE_ENGINE_ASSERT(s_RendererID != 0, "Static RendererID doesn't exist");
-		m_RendererID = s_RendererID;
-	}
-
 private:
 	const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept override
 	{
@@ -79,12 +61,11 @@ private:
 	}
 
 private:
-	static uint32_t s_RendererID;
+	static NoctalEngine::VertexArray* s_VertexArrayPtr;
 	static std::vector<std::unique_ptr<Bindable>> s_StaticBinds;
 };
 
 template<class T>
 std::vector<std::unique_ptr<Bindable>> OpenGLDrawableBase<T>::s_StaticBinds;
-
 template<class T>
-uint32_t OpenGLDrawableBase<T>::s_RendererID = 0;
+NoctalEngine::VertexArray* OpenGLDrawableBase<T>::s_VertexArrayPtr = nullptr;

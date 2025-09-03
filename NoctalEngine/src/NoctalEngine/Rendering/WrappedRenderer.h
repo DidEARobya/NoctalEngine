@@ -60,6 +60,8 @@ protected:
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) = 0;
     virtual void DrawIndexed() = 0;
+    virtual void DrawIndexed(uint32_t indices, uint32_t indexCount) = 0;
+
 protected:
     SDL_Window* m_Window = nullptr;  
     std::vector<std::shared_ptr<Drawable>> m_Drawables;

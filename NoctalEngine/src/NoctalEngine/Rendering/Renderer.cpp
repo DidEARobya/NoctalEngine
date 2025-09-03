@@ -113,4 +113,9 @@ namespace NoctalEngine
 		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
 		return s_Instance->m_WrappedRenderer->DrawIndexed();
 	}
+	void Renderer::DrawIndexed(uint32_t indices, uint32_t indexCount)
+	{
+		NE_ENGINE_ASSERT(s_Instance->m_WrappedRenderer, "WrappedRenderer doesn't exist");
+		return s_Instance->m_WrappedRenderer->DrawIndexed(indices, indexCount);
+	}
 }

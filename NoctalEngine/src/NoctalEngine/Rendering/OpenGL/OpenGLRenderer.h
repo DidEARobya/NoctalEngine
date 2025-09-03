@@ -6,7 +6,7 @@
 class OpenGLRenderer : public WrappedRenderer
 {
 public:
-    OpenGLRenderer() = default;
+    OpenGLRenderer() : m_FrameData{} {};
     virtual ~OpenGLRenderer() override = default;
 
     virtual void Init(const NoctalEngine::Window* windowRef) override;
@@ -30,6 +30,12 @@ public:
 
     virtual void SetIndexBuffer(NoctalEngine::IndexBuffer* indexBuffer) override { m_IndexBuffer = indexBuffer; };
     virtual void DrawIndexed() override;
+    virtual void DrawIndexed(uint32_t indices, uint32_t indexCount) override;
+
+private:
+    void StartBatch();
+    void NextBatch();
+    void Flush();
 
 private:
     NoctalEngine::IndexBuffer* m_IndexBuffer = nullptr;
