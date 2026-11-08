@@ -1,13 +1,13 @@
 #include "nepch.h"
-#include "D3D12UploadRing.h"
+#include "D3D12FrameLinearAllocator.h"
 #include "NoctalEngine/Rendering/D3D12/D3D12Renderer.h"
 
-D3D12UploadRing::~D3D12UploadRing()
+D3D12FrameLinearAllocator::~D3D12FrameLinearAllocator()
 {
 	Destroy();
 }
 
-void D3D12UploadRing::Create(uint64_t bytesPerFrame, const wchar_t* debugName)
+void D3D12FrameLinearAllocator::Create(uint64_t bytesPerFrame, const wchar_t* debugName)
 {
 	D3D12Renderer& renderer = D3D12Renderer::Get();
 
@@ -23,7 +23,7 @@ void D3D12UploadRing::Create(uint64_t bytesPerFrame, const wchar_t* debugName)
 	m_GPUAddress = m_Buffer->GetGPUVirtualAddress();
 }
 
-void D3D12UploadRing::Destroy()
+void D3D12FrameLinearAllocator::Destroy()
 {
 	if (m_Buffer == nullptr)
 	{
@@ -42,7 +42,7 @@ void D3D12UploadRing::Destroy()
 	m_Buffer.Reset();
 }
 
-D3D12UploadRing::Allocation D3D12UploadRing::Allocate(uint64_t size, uint64_t alignment)
+D3D12FrameLinearAllocator::Allocation D3D12FrameLinearAllocator::Allocate(uint64_t size, uint64_t alignment)
 {
 	const D3D12Renderer& renderer = D3D12Renderer::Get();
 

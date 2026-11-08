@@ -18,7 +18,7 @@ void D3D12ConstantBuffer::SetData(const void* data, uint32_t size)
 {
 	NE_ENGINE_ASSERT(size <= m_AlignedSize, "Constant buffer data is bigger than the buffer");
 
-	D3D12UploadRing::Allocation allocation = m_Ring.Allocate(m_AlignedSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+	D3D12FrameLinearAllocator::Allocation allocation = m_Ring.Allocate(m_AlignedSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 
 	if (allocation.IsValid() == false)
 	{

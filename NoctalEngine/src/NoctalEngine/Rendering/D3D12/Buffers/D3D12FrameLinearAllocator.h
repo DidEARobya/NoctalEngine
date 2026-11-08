@@ -16,7 +16,7 @@
 //   [ frame 0 section ][ frame 1 section ]
 //     ^ alloc, alloc, alloc ->
 // ---------------------------------------------------------------------------------
-class D3D12UploadRing
+class D3D12FrameLinearAllocator
 {
 public:
 	struct Allocation
@@ -26,7 +26,7 @@ public:
 		bool IsValid() const { return CPU != nullptr; }
 	};
 
-	~D3D12UploadRing();
+	~D3D12FrameLinearAllocator();
 
 	void Create(uint64_t bytesPerFrame, const wchar_t* debugName);
 	void Destroy();

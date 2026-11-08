@@ -1,6 +1,6 @@
 #pragma once
 #include "NoctalEngine/Rendering/Buffers/ConstantBuffer.h"
-#include "D3D12UploadRing.h"
+#include "D3D12FrameLinearAllocator.h"
 
 // Constant buffer that can be updated any number of times per frame (up to MaxUpdatesPerFrame).
 // Each update gets its own 256-byte aligned slice of the upload ring, which is then bound
@@ -17,7 +17,7 @@ public:
 	virtual void SetData(const void* data, uint32_t size) override;
 
 private:
-	D3D12UploadRing m_Ring;
+	D3D12FrameLinearAllocator m_Ring;
 	uint32_t m_AlignedSize = 0;
 	uint32_t m_RootParameterIndex = 0;
 	D3D12_GPU_VIRTUAL_ADDRESS m_CurrentAddress = 0;

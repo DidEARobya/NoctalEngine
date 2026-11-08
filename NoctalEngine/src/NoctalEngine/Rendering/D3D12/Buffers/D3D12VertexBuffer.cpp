@@ -9,7 +9,7 @@ D3D12VertexBuffer::D3D12VertexBuffer(uint32_t maxBytesPerFrame, const NoctalEngi
 
 void D3D12VertexBuffer::SetData(const void* data, uint32_t size)
 {
-	D3D12UploadRing::Allocation allocation = m_Ring.Allocate(size, 16);
+	D3D12FrameLinearAllocator::Allocation allocation = m_Ring.Allocate(size, 16);
 
 	if (allocation.IsValid() == false)
 	{
