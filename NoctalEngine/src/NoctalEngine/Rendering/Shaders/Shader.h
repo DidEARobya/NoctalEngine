@@ -1,21 +1,30 @@
 #pragma once
-#include "NoctalEngine/Rendering/Bindable.h"
-#include <glm/glm.hpp>
+#include <string>
 
 namespace NoctalEngine
 {
-	class Shader : public Bindable
+	enum class ShaderStage
+	{
+		VERTEX,
+		PIXEL	// a.k.a. "fragment" shader in OpenGL
+	};
+
+	// A single compiled shader stage (vertex OR pixel), loaded from a file.
+	//
+	// Shaders are not bound directly any more. Modern APIs bake the shaders together with
+	// blend state, vertex layout, etc. into one "Pipeline" object (see Pipeline.h), and that is
+	// what gets bound. So a Shader is just the compiled code waiting to be put into a Pipeline.
+	//
+	// Uniforms (SetUniformFloat4 etc.) are gone too: per-object data now travels inside the
+	// vertices (so thousands of objects can share one draw call) and per-frame data travels
+	// in a ConstantBuffer.
+	class Shader
 	{
 	public:
-		virtual void SetUniformMat3(const std::string& name, const glm::mat3 value) = 0;
-		virtual void SetUniformMat4(const std::string& name, const glm::mat4 value)	= 0;
-		virtual void SetUniformFloat(const std::string& name, const float value) = 0;
-		virtual void SetUniformFloat2(const std::string& name, const glm::vec2 value) = 0;
-		virtual void SetUniformFloat3(const std::string& name, const glm::vec3 value) = 0;
-		virtual void SetUniformFloat4(const std::string& name, const glm::vec4 value) = 0;
-		virtual void SetUniformInt(const std::string& name, const int value) = 0;
+		virtual ~Shader() = default;
 
-		virtual const uint32_t GetID() const = 0;
-		virtual const bool IsValid() const = 0;
+		virtual ShaderStage GetStage() const = 0;
+		virtual const std::string& GetName() const = 0;
+		virtual bool IsValid() const = 0;
 	};
 }

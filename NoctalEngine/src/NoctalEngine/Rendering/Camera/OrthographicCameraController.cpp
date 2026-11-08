@@ -59,7 +59,8 @@ namespace NoctalEngine
 	}
 	bool OrthographicCameraController::OnWindowResize(const WindowResizeEvent& event)
 	{
-		m_AspectRatio -= event.GetWidth() / event.GetHeight();
+		// Was "-=" with integer division, which shrank the aspect ratio on every resize.
+		m_AspectRatio = (float)event.GetWidth() / (float)event.GetHeight();
 
 		m_Camera.m_ProjectionMatrix = glm::ortho(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel, -1.0f, 1.0f);
 		m_Camera.m_ViewProjectionMatrix = m_Camera.m_ProjectionMatrix * m_Camera.m_ViewMatrix;

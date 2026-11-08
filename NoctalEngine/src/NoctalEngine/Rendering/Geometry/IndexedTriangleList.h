@@ -17,7 +17,7 @@ public:
 	{
 		for (auto& v : m_Vertices)
 		{
-			const glm::vec4 pos = glm::vec4(v.Pos, 1.0f);
+			glm::vec4 pos = glm::vec4(v.Pos, 1.0f); // (was const, which made the next line a compile error)
 			pos = matrix * pos;
 			v.Pos = glm::vec3(pos);
 		}

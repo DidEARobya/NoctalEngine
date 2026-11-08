@@ -1,38 +1,31 @@
 #pragma once
-#include "NoctalEngine/Rendering/Bindable.h"
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace NoctalEngine
 {
-	class Shader;
 	class Texture;
 
-	class Material : public Bindable
+	// Describes how a Drawable should look: a tint colour and an optional texture.
+	//
+	// With batch rendering a Material no longer binds anything itself. Instead the batch
+	// renderer reads the colour/texture and writes them into the vertices, so objects with
+	// different materials can still be drawn in the same draw call.
+	class Material
 	{
 	public:
-		Material();
+		Material() = default;
+		~Material() = default;
 
-		virtual ~Material() override = default;
-		virtual void Bind() override;
+		void SetColour(const glm::vec4& colour) { m_Colour = colour; }
+		const glm::vec4& GetColour() const { return m_Colour; }
 
-		void SetBaseTexture(std::shared_ptr<Texture> texture);
-		//Setup doesn't work, come back when creating MaterialUniformBufferObject
-		//void BindSubTexture(std::shared_ptr<Texture> texture);
-
-		void SetShader(std::unique_ptr<Shader> shader);
-
-		void SetColour(glm::vec4 colour);
-		const glm::vec4 GetColour() const { return m_Uniforms.Colour; };
+		// nullptr = untextured (the renderer uses a 1x1 white texture, so you just see the colour).
+		void SetBaseTexture(std::shared_ptr<Texture> texture) { m_BaseTexture = std::move(texture); }
+		Texture* GetBaseTexture() const { return m_BaseTexture.get(); }
 
 	private:
-		struct MaterialData
-		{
-			glm::vec4 Colour;
-
-		} m_Uniforms;
-
+		glm::vec4 m_Colour = glm::vec4(1.0f);
 		std::shared_ptr<Texture> m_BaseTexture;
-		//std::vector<std::shared_ptr<Texture>> m_SubTextures;
-		std::unique_ptr<Shader> m_Shader;
 	};
 }

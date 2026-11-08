@@ -11,7 +11,8 @@ Once the engine is in a solid-state to start creating games, the goal is to use 
 Currently Uses:
 - CMake
 - SDL3
-- OpenGL
+- Direct3D 12 (current renderer backend, 2D batch renderer)
+- OpenGL (old renderer, no longer built)
 - GLM
 - spdlog
 - ImGui

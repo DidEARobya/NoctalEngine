@@ -1,43 +1,24 @@
 #pragma once
 #include "Drawable.h"
 
+// DrawableBase<T> gives every shape type (T) ONE shared copy of its shape data.
+//
+// This is the same idea the old version had with "static binds" (every quad shared one
+// vertex/index buffer), just adapted for batching: instead of sharing GPU buffers, every
+// QuadDrawable shares the same 4 local corners/UVs, built once on first use.
+//
+// T must provide:  static ShapeData BuildShape();
 template<class T>
 class DrawableBase : public Drawable
 {
-protected:
-	bool IsStaticInitialised() const noexcept
+public:
+	using Drawable::Drawable;
+
+	const ShapeData& GetShape() const override
 	{
-		return !_staticBinds.empty();
+		// A function-local static is created the first time this runs (thread-safe in C++11+),
+		// then reused by every instance of T.
+		static const ShapeData s_Shape = T::BuildShape();
+		return s_Shape;
 	}
-
-	virtual static void AddStaticBind(std::unique_ptr<Bindable> bind) = 0;
-	virtual void SetStaticIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) = 0;
-
-	void SetIndexFromStatic(NoctalEngine::IndexBuffer& indexBuffer) noexcept(!IS_DEBUG)
-	{
-		NE_ENGINE_ASSERT(indexBuffer == nullptr, "Attempting to add index buffer a second time");
-
-		for (const auto& b : _staticBinds)
-		{
-			if (const auto p = dynamic_cast<IndexBuffer*>(b.get()))
-			{
-				indexBuffer = p;
-				return;
-			}
-		}
-
-		NE_ENGINE_ASSERT(indexBuffer != nullptr, "Failed to find index buffer in static binds");
-	}
-
-private:
-	const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept override
-	{
-		return s_StaticBinds;
-	}
-
-private:
-	static std::vector<std::unique_ptr<Bindable>> s_StaticBinds;
 };
-
-template<class T>
-std::vector<std::unique_ptr<Bindable>> DrawableBase<T>::s_StaticBinds;

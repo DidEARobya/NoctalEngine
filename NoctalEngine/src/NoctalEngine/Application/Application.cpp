@@ -20,7 +20,7 @@ namespace NoctalEngine
 		NE_ENGINE_ASSERT(s_Instance != nullptr, "Application already exists");
 
 		WindowProperties properties = WindowProperties();
-		properties.TestAPI = TestGraphicsAPI::OPEN_GL;
+		properties.TestAPI = TestGraphicsAPI::D3D12;
 
 		WindowManager::InitWindowAPI();
 		m_Window = WindowManager::CreateWindowInternal(properties);

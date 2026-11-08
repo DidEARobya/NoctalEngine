@@ -10,7 +10,8 @@ namespace NoctalEngine
 	enum TestGraphicsAPI
 	{
 		SDL,
-		OPEN_GL
+		OPEN_GL,
+		D3D12
 	};
 
 	struct WindowProperties
