@@ -15,10 +15,7 @@
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_dx12.h>
 
-// =================================================================================
-// Lifetime
-// =================================================================================
-
+//----- LIFETIME -----
 D3D12Renderer::~D3D12Renderer()
 {
 	// Normally Destroy() has already run. This is just a safety net.
@@ -55,8 +52,6 @@ void D3D12Renderer::Init(const NoctalEngine::Window* windowRef)
 
 	InitImGui();
 
-	// Engine shaders. Names (file stems) are what the BatchRenderer2D asks for.
-	// 'false' = don't re-sort the library after every load; we sort once at the end.
 	m_ShaderLibrary = std::make_unique<NoctalEngine::ShaderLibrary>();
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/D3D12/Batch2DVS.hlsl", false);
 	m_ShaderLibrary->LoadShader(ASSET_DIR "Shaders/D3D12/Batch2DPS.hlsl", false);
@@ -86,8 +81,6 @@ void D3D12Renderer::Destroy()
 		list.clear();
 	}
 
-	// From here on, D3D12 resources being destroyed (e.g. textures still held by the game)
-	// just release themselves instead of using DeferRelease.
 	m_Initialised = false;
 
 	m_RootSignature.Reset();
@@ -125,16 +118,14 @@ void D3D12Renderer::Destroy()
 	s_Instance = nullptr;
 	NE_ENGINE_INFO("D3D12 shut down");
 }
+//----- LIFETIME -----
 
-// =================================================================================
-// Initialisation steps
-// =================================================================================
 
+//----- INITIALISATION -----
 void D3D12Renderer::EnableDebugLayer()
 {
 #ifdef _DEBUG
 	// The debug layer validates every API call and prints mistakes to the Output window.
-	// Slow, so Debug builds only. Hugely useful while learning D3D12.
 	ComPtr<ID3D12Debug> debug;
 
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug))))
@@ -152,8 +143,7 @@ void D3D12Renderer::CreateDevice()
 	factoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
 #endif
 
-	// The debug factory needs Windows' optional "Graphics Tools" feature. If it isn't installed,
-	// fall back to a normal factory instead of failing.
+	// The debug factory needs Windows' optional "Graphics Tools" feature. If it isn't installed, fall back to a normal factory instead of failing.
 	if (FAILED(CreateDXGIFactory2(factoryFlags, IID_PPV_ARGS(&m_Factory))))
 	{
 		NE_ENGINE_WARN("Couldn't create a debug DXGI factory (install 'Graphics Tools' in Windows Optional Features for D3D12 debugging)");
@@ -238,7 +228,6 @@ void D3D12Renderer::CreateDevice()
 	}
 
 	// ---- Command queue ----
-	// DIRECT = can do everything (draw, compute, copy).
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -254,8 +243,6 @@ void D3D12Renderer::CreateCommandObjects()
 		NE_D3D_CHECK(m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_CommandAllocators[i])));
 	}
 
-	// Command lists are created "open" (recording). We close it straight away because
-	// BeginFrame() always starts by resetting it.
 	NE_D3D_CHECK(m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_CommandAllocators[0].Get(), nullptr, IID_PPV_ARGS(&m_CommandList)));
 	m_CommandList->SetName(L"Main Command List");
 	NE_D3D_CHECK(m_CommandList->Close());
@@ -272,7 +259,6 @@ void D3D12Renderer::CreateCommandObjects()
 
 void D3D12Renderer::CreateSwapChain(HWND hwnd)
 {
-	// Tearing support lets us present without VSync (uncapped FPS) on flip-model swap chains.
 	ComPtr<IDXGIFactory5> factory5;
 
 	if (SUCCEEDED(m_Factory.As(&factory5)))
@@ -293,7 +279,7 @@ void D3D12Renderer::CreateSwapChain(HWND hwnd)
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.BufferCount = D3D12Config::FramesInFlight;
 	desc.Scaling = DXGI_SCALING_STRETCH;
-	desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	// The modern, fastest presentation model.
+	desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	
 	desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 	desc.Flags = m_TearingSupported ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
 
@@ -301,7 +287,6 @@ void D3D12Renderer::CreateSwapChain(HWND hwnd)
 	NE_D3D_CHECK(m_Factory->CreateSwapChainForHwnd(m_CommandQueue.Get(), hwnd, &desc, nullptr, nullptr, &swapChain1));
 	NE_D3D_CHECK(swapChain1.As(&m_SwapChain));
 
-	// We don't handle DXGI's built-in Alt+Enter fullscreen switch.
 	m_Factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
@@ -316,8 +301,7 @@ void D3D12Renderer::CreateDescriptorHeaps()
 	m_StagingHeap.Create(m_Device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12Config::StagingDescriptorCount, false, L"Staging SRV Heap");
 	m_StagingAllocator.Init(0, D3D12Config::StagingDescriptorCount);
 
-	// A "null" SRV: a valid descriptor pointing at nothing. Unused texture slots point at this,
-	// so every slot in a texture table is always valid.
+	// A "null" SRV: a valid descriptor pointing at nothing. Unused texture slots point at this, so every slot in a texture table is always valid.
 	m_NullSRVIndex = m_StagingAllocator.Allocate();
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC nullDesc = {};
@@ -372,8 +356,6 @@ void D3D12Renderer::CreateRootSignature()
 	parameters[RootParam_Textures].DescriptorTable.pDescriptorRanges = &textureRange;
 	parameters[RootParam_Textures].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-	// Same filtering the OpenGL version used: linear when shrinking, nearest (crisp pixels) when
-	// enlarging. WRAP = repeat the texture outside 0..1 UVs.
 	D3D12_STATIC_SAMPLER_DESC sampler = {};
 	sampler.Filter = D3D12_FILTER_MIN_LINEAR_MAG_MIP_POINT;
 	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -421,9 +403,9 @@ void D3D12Renderer::InitImGui()
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags  |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags  |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags  |= ImGuiConfigFlags_ViewportsEnable;
 	io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 	io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
@@ -446,8 +428,6 @@ void D3D12Renderer::InitImGui()
 	info.DSVFormat = DXGI_FORMAT_UNKNOWN;
 	info.SrvDescriptorHeap = m_ShaderHeap.GetHeap();
 
-	// ImGui asks us for descriptors (for its font atlas etc.) through these callbacks.
-	// They hand out slots from the ImGui block at the start of the shader-visible heap.
 	info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo*, D3D12_CPU_DESCRIPTOR_HANDLE* outCPU, D3D12_GPU_DESCRIPTOR_HANDLE* outGPU)
 	{
 		D3D12Renderer& renderer = D3D12Renderer::Get();
@@ -464,11 +444,9 @@ void D3D12Renderer::InitImGui()
 
 	ImGui_ImplDX12_Init(&info);
 }
+//----- INITIALISATION -----
 
-// =================================================================================
-// Frame
-// =================================================================================
-
+//----- FRAME -----
 void D3D12Renderer::BeginFrame()
 {
 	NE_SCOPE_TIMER("D3D12Renderer", "BeginFrame");
@@ -492,13 +470,12 @@ void D3D12Renderer::BeginFrame()
 	m_PendingTextureSlots.fill(m_StagingHeap.GetCPUHandle(m_NullSRVIndex));
 	m_TextureSlotsDirty = true;
 
-	// The back buffer was being shown on screen, now we want to draw into it.
+	//Assign back buffer as render target
 	const D3D12_RESOURCE_BARRIER toRenderTarget = D3D12Helpers::TransitionBarrier(m_BackBuffers[m_FrameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	m_CommandList->ResourceBarrier(1, &toRenderTarget);
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE rtv = m_RTVHeap.GetCPUHandle(m_FrameIndex);
 
-	// Same clear colour as the OpenGL version (magenta). Change it here.
 	const float clearColour[4] = { 1.0f, 0.0f, 1.0f, 1.0f };
 	m_CommandList->ClearRenderTargetView(rtv, clearColour, 0, nullptr);
 	m_CommandList->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
@@ -509,7 +486,6 @@ void D3D12Renderer::BeginFrame()
 	m_CommandList->RSSetViewports(1, &viewport);
 	m_CommandList->RSSetScissorRects(1, &scissor);
 
-	// Only one shader-visible heap can be bound at a time, so everything (us + ImGui) shares one.
 	ID3D12DescriptorHeap* heaps[] = { m_ShaderHeap.GetHeap() };
 	m_CommandList->SetDescriptorHeaps(1, heaps);
 	m_CommandList->SetGraphicsRootSignature(m_RootSignature.Get());
@@ -525,13 +501,11 @@ void D3D12Renderer::EndFrame()
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), m_CommandList.Get());
 	}
 
-	// Done drawing: the back buffer goes back to being presentable.
+	// Make back buffer presentable, drawing is finished
 	const D3D12_RESOURCE_BARRIER toPresent = D3D12Helpers::TransitionBarrier(m_BackBuffers[m_FrameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	m_CommandList->ResourceBarrier(1, &toPresent);
 
 	// ---- Submit ----
-	// Nothing has actually been drawn yet! Everything so far was just recorded.
-	// This hands the whole frame to the GPU in one go.
 	NE_D3D_CHECK(m_CommandList->Close());
 	ID3D12CommandList* lists[] = { m_CommandList.Get() };
 	m_CommandQueue->ExecuteCommandLists(1, lists);
@@ -547,7 +521,6 @@ void D3D12Renderer::EndFrame()
 	{
 		NE_SCOPE_TIMER("D3D12Renderer", "Present");
 
-		// VSync lives on the Window (so engine code doesn't change), we just read it here.
 		// Interval 1 = wait for the monitor's refresh. 0 + ALLOW_TEARING = present immediately.
 		const bool vsync = NoctalEngine::Application::Get().GetWindow().IsVSync();
 		const UINT syncInterval = vsync ? 1 : 0;
@@ -599,16 +572,13 @@ void D3D12Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
 
 	CreateRenderTargets();
 }
+//----- FRAME -----
 
-// =================================================================================
-// Synchronisation
-// =================================================================================
-
+//----- SYNCHRONISATION -----
 void D3D12Renderer::WaitForFenceValue(uint64_t fenceValue)
 {
 	if (m_Fence->GetCompletedValue() < fenceValue)
 	{
-		// Ask the fence to signal our event when it reaches the value, then sleep until it does.
 		NE_D3D_CHECK(m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent));
 		WaitForSingleObject(m_FenceEvent, INFINITE);
 	}
@@ -623,7 +593,6 @@ void D3D12Renderer::WaitForGpu()
 
 void D3D12Renderer::MoveToNextFrame()
 {
-	// "When the GPU gets here in the queue, set the fence to this value."
 	const uint64_t value = ++m_FenceValue;
 	NE_D3D_CHECK(m_CommandQueue->Signal(m_Fence.Get(), value));
 	m_FrameFenceValues[m_FrameIndex] = value;
@@ -631,7 +600,6 @@ void D3D12Renderer::MoveToNextFrame()
 	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
 	// If the GPU is still working on the frame that last used this slot, wait for it.
-	// With 2 frames in flight this usually doesn't block: the CPU is one frame ahead.
 	WaitForFenceValue(m_FrameFenceValues[m_FrameIndex]);
 
 	// That frame is done on the GPU, so anything released during it can finally go.
@@ -639,17 +607,15 @@ void D3D12Renderer::MoveToNextFrame()
 
 	m_FrameNumber++;
 }
+//----- SYNCHRONISATION -----
 
-// =================================================================================
-// Helpers for resources
-// =================================================================================
-
+//----- RESOURCE HELPERS -----
 ComPtr<ID3D12Resource> D3D12Renderer::CreateBuffer(uint64_t size, D3D12_HEAP_TYPE heapType, const wchar_t* debugName)
 {
 	const D3D12_HEAP_PROPERTIES heap = D3D12Helpers::HeapProperties(heapType);
 	const D3D12_RESOURCE_DESC desc = D3D12Helpers::BufferDesc(size);
 
-	// Upload heap resources must start (and stay) in GENERIC_READ.
+	// Upload heap resources must be in GENERIC_READ.
 	const D3D12_RESOURCE_STATES state = heapType == D3D12_HEAP_TYPE_UPLOAD ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COMMON;
 
 	ComPtr<ID3D12Resource> buffer;
@@ -665,7 +631,6 @@ ComPtr<ID3D12Resource> D3D12Renderer::CreateBuffer(uint64_t size, D3D12_HEAP_TYP
 
 void D3D12Renderer::ExecuteImmediate(const std::function<void(ID3D12GraphicsCommandList*)>& recordCommands)
 {
-	// Simple but blocking. A bigger engine would batch uploads and use a separate copy queue.
 	NE_D3D_CHECK(m_UploadAllocator->Reset());
 	NE_D3D_CHECK(m_UploadCommandList->Reset(m_UploadAllocator.Get(), nullptr));
 
@@ -685,7 +650,6 @@ void D3D12Renderer::DeferRelease(ComPtr<IUnknown> object)
 		return;
 	}
 
-	// Released when we come back round to this frame slot, i.e. after the GPU finished it.
 	m_DeferredReleases[m_FrameIndex].push_back(std::move(object));
 }
 
@@ -693,22 +657,19 @@ void D3D12Renderer::SetTextureSlot(uint32_t slot, D3D12_CPU_DESCRIPTOR_HANDLE sr
 {
 	NE_ENGINE_ASSERT(slot < NoctalEngine::RendererConfig::MaxTextureSlots, "Texture slot out of range");
 
-	// Only mark dirty if it actually changed. If two batches in a row use the same textures,
-	// the second one reuses the first one's table for free.
+	// Only mark dirty if it actually changed.
 	if (m_PendingTextureSlots[slot].ptr != srv.ptr)
 	{
 		m_PendingTextureSlots[slot] = srv;
 		m_TextureSlotsDirty = true;
 	}
 }
+//----- RESOURCE HELPERS -----
 
-// =================================================================================
-// Drawing
-// =================================================================================
-
+//----- DRAWING -----
 void D3D12Renderer::DrawIndexed(uint32_t indexCount)
 {
-	if (m_TextureSlotsDirty)
+	if (m_TextureSlotsDirty == true)
 	{
 		constexpr uint32_t slotCount = NoctalEngine::RendererConfig::MaxTextureSlots;
 
@@ -722,8 +683,7 @@ void D3D12Renderer::DrawIndexed(uint32_t indexCount)
 		const uint32_t firstIndex = D3D12Config::ImGuiDescriptorCount + m_FrameIndex * D3D12Config::PerFrameDescriptorCount + m_FrameDescriptorOffset;
 		m_FrameDescriptorOffset += slotCount;
 
-		// Copy the pending textures' SRVs (scattered around the staging heap) into that block,
-		// so the shader sees them as one contiguous array: g_Textures[0..31].
+		// Copy the pending textures' SRVs into that block, so the shader sees them as one contiguous array: g_Textures[0..31].
 		const D3D12_CPU_DESCRIPTOR_HANDLE destination = m_ShaderHeap.GetCPUHandle(firstIndex);
 		const UINT destinationSize = slotCount;
 
@@ -736,10 +696,9 @@ void D3D12Renderer::DrawIndexed(uint32_t indexCount)
 
 	m_CommandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
 }
+//----- DRAWING -----
 
-// =================================================================================
-// Resource factory
-// =================================================================================
+//----- RESOURCE FACTORY -----
 
 std::shared_ptr<NoctalEngine::Shader> D3D12Renderer::CreateShader(const std::string& filePath)
 {
@@ -775,3 +734,4 @@ std::unique_ptr<NoctalEngine::Pipeline> D3D12Renderer::CreatePipeline(const Noct
 {
 	return std::make_unique<D3D12Pipeline>(specification);
 }
+//----- RESOURCE FACTORY -----

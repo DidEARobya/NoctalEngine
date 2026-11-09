@@ -57,7 +57,7 @@ D3D12FrameLinearAllocator::Allocation D3D12FrameLinearAllocator::Allocate(uint64
 
 	if (alignedOffset + size > m_BytesPerFrame)
 	{
-		NE_ENGINE_ERROR("D3D12UploadRing is full for this frame ({} bytes requested)", size);
+		NE_ENGINE_ERROR("D3D12FrameLinearAllocator is full for this frame ({} bytes requested)", size);
 		return Allocation();
 	}
 

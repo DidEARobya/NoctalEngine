@@ -6,7 +6,7 @@ D3D12ConstantBuffer::D3D12ConstantBuffer(uint32_t size, uint32_t bindSlot)
 {
 	// D3D12 requires constant buffer addresses to be 256-byte aligned.
 	m_AlignedSize = (uint32_t)D3D12Helpers::AlignUp(size, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
-	m_Ring.Create((uint64_t)m_AlignedSize * MaxUpdatesPerFrame, L"Constant Buffer");
+	m_LinearAllocator.Create((uint64_t)m_AlignedSize * MaxUpdatesPerFrame, L"Constant Buffer");
 
 	// The root signature currently only has one CBV parameter (b0).
 	// Add more root parameters in D3D12Renderer::CreateRootSignature to support more slots.
@@ -18,7 +18,7 @@ void D3D12ConstantBuffer::SetData(const void* data, uint32_t size)
 {
 	NE_ENGINE_ASSERT(size <= m_AlignedSize, "Constant buffer data is bigger than the buffer");
 
-	D3D12FrameLinearAllocator::Allocation allocation = m_Ring.Allocate(m_AlignedSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+	D3D12FrameLinearAllocator::Allocation allocation = m_LinearAllocator.Allocate(m_AlignedSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 
 	if (allocation.IsValid() == false)
 	{

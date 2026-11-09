@@ -6,20 +6,6 @@
 #include <array>
 #include <functional>
 
-// ---------------------------------------------------------------------------------
-// D3D12Renderer
-// The Direct3D 12 backend. It owns the device, the swap chain (the images shown on screen),
-// the command list we record draws into, and the CPU/GPU synchronisation.
-//
-// The big difference from OpenGL: D3D12 does almost nothing for you.
-//   - You record commands into a command list, then submit the whole list at once.
-//   - The CPU and GPU run at the same time, so YOU must make sure the CPU doesn't overwrite
-//     or delete something the GPU is still using. That's what the fence + "frames in flight"
-//     + deferred release code below is for.
-//
-// The D3D12 resource classes (buffers, textures, pipeline) reach the device and command
-// list through D3D12Renderer::Get().
-// ---------------------------------------------------------------------------------
 class D3D12Renderer : public WrappedRenderer
 {
 public:
@@ -54,23 +40,20 @@ public:
     ComPtr<ID3D12Resource> CreateBuffer(uint64_t size, D3D12_HEAP_TYPE heapType, const wchar_t* debugName);
 
     // Records some commands, runs them on the GPU straight away and waits for them to finish.
-    // Simple way to upload data at load time (textures, static buffers).
     void ExecuteImmediate(const std::function<void(ID3D12GraphicsCommandList*)>& recordCommands);
 
     // Keeps a GPU object alive until the GPU has definitely finished with it.
     void DeferRelease(ComPtr<IUnknown> object);
 
-    // Staging (CPU-only) descriptors, used by textures for their SRV.
+    // CPU-only descriptors, used by textures for their SRV (Shader Resource View).
     uint32_t AllocateStagingDescriptor() { return m_StagingAllocator.Allocate(); }
     void FreeStagingDescriptor(uint32_t index) { m_StagingAllocator.Free(index); }
     D3D12_CPU_DESCRIPTOR_HANDLE GetStagingCPUHandle(uint32_t index) const { return m_StagingHeap.GetCPUHandle(index); }
 
-    // Called by D3D12Texture2D::Bind(): "put this texture in slot N for the next draw".
     void SetTextureSlot(uint32_t slot, D3D12_CPU_DESCRIPTOR_HANDLE srv);
 
-    // Root parameter indices (must match CreateRootSignature and the HLSL registers).
-    static constexpr uint32_t RootParam_CameraCBV = 0;  // b0
-    static constexpr uint32_t RootParam_Textures  = 1;  // t0 .. t(MaxTextureSlots-1)
+    static constexpr uint32_t RootParam_CameraCBV = 0;
+    static constexpr uint32_t RootParam_Textures  = 1; 
 
 protected:
     // ---- WrappedRenderer lifetime / frame ----
@@ -111,10 +94,10 @@ private:
 
     // ---- Core objects ----
     ComPtr<IDXGIFactory4> m_Factory;
-    ComPtr<IDXGIAdapter1> m_Adapter;            // The physical GPU
-    ComPtr<ID3D12Device> m_Device;              // Creates everything
-    ComPtr<ID3D12CommandQueue> m_CommandQueue;  // Where command lists are submitted
-    ComPtr<IDXGISwapChain3> m_SwapChain;        // The images we draw into and show on screen
+    ComPtr<IDXGIAdapter1> m_Adapter;           
+    ComPtr<ID3D12Device> m_Device;              
+    ComPtr<ID3D12CommandQueue> m_CommandQueue; 
+    ComPtr<IDXGISwapChain3> m_SwapChain;      
 
     // ---- Back buffers ----
     std::array<ComPtr<ID3D12Resource>, D3D12Config::FramesInFlight> m_BackBuffers;
@@ -132,8 +115,6 @@ private:
 
     // ---- CPU/GPU synchronisation ----
     // A fence is a counter the GPU sets when it reaches a point in the queue.
-    // We remember the value for each frame, and before reusing that frame's resources we
-    // wait until the GPU has passed it.
     ComPtr<ID3D12Fence> m_Fence;
     HANDLE m_FenceEvent = nullptr;
     uint64_t m_FenceValue = 0;
@@ -151,10 +132,7 @@ private:
     D3D12DescriptorAllocator m_StagingAllocator;
     uint32_t m_NullSRVIndex = D3D12DescriptorAllocator::InvalidIndex;
 
-    // Shader-visible heap, split into:
-    //   [0 .. ImGuiDescriptorCount)                      long-lived, handed to ImGui
-    //   then FramesInFlight blocks of PerFrameDescriptorCount   texture tables for batches,
-    //                                                     reset every frame (linear allocation)
+    // Shader-visible heap                                             
     D3D12DescriptorHeap m_ShaderHeap;
     D3D12DescriptorAllocator m_ImGuiDescriptors;
     uint32_t m_FrameDescriptorOffset = 0;
@@ -165,14 +143,12 @@ private:
     bool m_TextureSlotsDirty = true;
 
     // ---- Pipeline layout ----
-    // The root signature is the "function signature" of our shaders: what data they take
-    // (one constant buffer + a table of textures + one sampler). Shared by every 2D pipeline.
     ComPtr<ID3D12RootSignature> m_RootSignature;
 
     // ---- Misc ----
     uint32_t m_Width = 0;
     uint32_t m_Height = 0;
-    bool m_TearingSupported = false;    // Needed to present with VSync off on flip-model swap chains.
+    bool m_TearingSupported = false; 
 
     std::string m_VendorName = "Unknown";
     std::string m_RendererName = "Unknown";

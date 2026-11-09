@@ -17,7 +17,7 @@ public:
 	virtual void SetData(const void* data, uint32_t size) override;
 
 private:
-	D3D12FrameLinearAllocator m_Ring;
+	D3D12FrameLinearAllocator m_LinearAllocator;
 	uint32_t m_AlignedSize = 0;
 	uint32_t m_RootParameterIndex = 0;
 	D3D12_GPU_VIRTUAL_ADDRESS m_CurrentAddress = 0;
